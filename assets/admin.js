@@ -96,6 +96,29 @@
       throw e;
     }
   }
+  // Simpan beberapa file dalam SATU commit (Git Data API), supaya workflow hanya jalan sekali.
+  async function simpanSekaligus(files, pesan) {
+    if ((await shaFile("data/products.json")) !== produkSha || (await shaFile("data/config.json")) !== configSha) {
+      await muatData();
+      throw new Error("Data baru saja berubah di tempat lain. Data sudah dimuat ulang, silakan unggah Excel lagi.");
+    }
+    for (let coba = 0; ; coba++) {
+      const induk = (await gh("/git/ref/heads/" + repo.branch)).object.sha;
+      const pohonInduk = (await gh("/git/commits/" + induk)).tree.sha;
+      const pohon = await gh("/git/trees", { method: "POST", body: JSON.stringify({
+        base_tree: pohonInduk, tree: files.map((f) => ({ path: f.path, mode: "100644", type: "blob", content: f.teks })) }) });
+      const commit = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: pesan, tree: pohon.sha, parents: [induk] }) });
+      try {
+        await gh("/git/refs/heads/" + repo.branch, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
+        break;
+      } catch (e) {
+        // proses update harga otomatis baru saja menyimpan katalog — ulangi dari commit terbaru
+        if (e.status !== 422 || coba >= 2) throw e;
+      }
+    }
+    [produkSha, configSha] = await Promise.all([shaFile("data/products.json"), shaFile("data/config.json")]);
+  }
+
   async function simpanConfigKeGitHub(pesan) {
     configSha = await tulisFile("data/config.json", b64dariTeks(JSON.stringify(config, null, 2) + "\n"), pesan, configSha);
   }
@@ -415,8 +438,9 @@
       ["2. Isi kolom 'Harga Supplier Baru' untuk produk yang harganya berubah (angka saja, tanpa $)."],
       ["3. ATAU isi 'Ubah semua harga supplier (%)' di atas tabel untuk mengubah semua produk di kategori itu sekaligus."],
       ["   Contoh: 5 = naik 5%, -3 = turun 3%. Hanya berlaku untuk produk yang kolom Harga Supplier Baru-nya kosong."],
-      ["4. 'Margin kategori (%)' berlaku untuk semua produk di kategori tsb. Kosongkan = margin default (" + def + "%)."],
-      ["5. 'Margin Produk (%)' hanya untuk produk tertentu. Kosongkan = ikut margin kategori."],
+      ["4. 'Margin kategori (%)' berlaku untuk semua produk di kategori tsb. Kosong = tidak diubah."],
+      ["5. 'Margin Produk (%)' hanya untuk produk tertentu. Kosong = tidak diubah."],
+      ["   Untuk menghapus margin khusus, pakai menu Pengaturan Toko / Edit produk."],
       ["6. Simpan, lalu unggah di halaman Admin → Update Harga (Excel)."],
       [], ["Harga jual dihitung ulang otomatis memakai kurs terbaru setelah file diunggah."],
     ];
@@ -428,7 +452,7 @@
       const km = (config.kategori.find((x) => x.nama === k) || {}).margin_persen;
       const rows = [
         ["Kategori", k],
-        ["Margin kategori (%)", km ?? "", "Kosongkan = margin default (" + def + "%)"],
+        ["Margin kategori (%)", km ?? "", "Kosong = tidak diubah (sekarang: " + (km ?? def + "% default") + (km != null ? "%" : "") + ")"],
         ["Ubah semua harga supplier (%)", "", "Contoh: 5 = naik 5%, -3 = turun 3%"],
         [],
         HEADER,
@@ -466,7 +490,7 @@
       const cari = (awal) => rows.slice(0, hdr).find((r) => String(r[0]).toLowerCase().startsWith(awal)) || [];
       const kategori = String(cari("kategori")[1] || nama).trim();
       const mk = cari("margin kategori");
-      if (mk.length && config.kategori.some((k) => k.nama === kategori)) ubahKategori.set(kategori, angka(mk[1]));
+      if (angka(mk[1]) !== null && config.kategori.some((k) => k.nama === kategori)) ubahKategori.set(kategori, angka(mk[1]));
       const persen = angka(cari("ubah semua")[1]);
 
       for (const r of rows.slice(hdr + 1)) {
@@ -479,7 +503,7 @@
         const lama = (p.sumber || {}).harga_manual;
         if (baru !== null) { if (baru <= 0) peringatan.push(id + ": harga baru harus lebih dari 0, dilewati."); else u.harga_manual = baru; }
         else if (persen !== null && persen !== 0 && typeof lama === "number") u.harga_manual = Math.round(lama * (1 + persen / 100) * 100) / 100;
-        u.margin_persen = angka(r[5]);
+        if (angka(r[5]) !== null) u.margin_persen = angka(r[5]);
         const st = String(r[6]).trim().toLowerCase();
         if (st) u.stok = !["tidak", "habis", "no", "0", "false"].includes(st);
         ubahProduk.set(id, u);
@@ -494,12 +518,12 @@
       const p = produk.find((x) => x.id === id), s = p.sumber || {};
       const mu = s.mata_uang || "USD";
       if ("harga_manual" in u && u.harga_manual !== s.harga_manual) baris.push([id, p.nama, "Harga supplier", mu + " " + (s.harga_manual ?? "–"), mu + " " + u.harga_manual]);
-      if ((u.margin_persen ?? null) !== (p.margin_persen ?? null)) baris.push([id, p.nama, "Margin produk", (p.margin_persen ?? "ikut kategori") + (p.margin_persen != null ? "%" : ""), (u.margin_persen ?? "ikut kategori") + (u.margin_persen != null ? "%" : "")]);
+      if ("margin_persen" in u && u.margin_persen !== (p.margin_persen ?? null)) baris.push([id, p.nama, "Margin produk", (p.margin_persen ?? "ikut kategori") + (p.margin_persen != null ? "%" : ""), (u.margin_persen ?? "ikut kategori") + (u.margin_persen != null ? "%" : "")]);
       if ("stok" in u && u.stok !== (p.stok !== false)) baris.push([id, p.nama, "Stok", p.stok === false ? "Habis" : "Ada", u.stok ? "Ada" : "Habis"]);
     }
     for (const [nama, m] of rencana.ubahKategori) {
       const k = config.kategori.find((x) => x.nama === nama);
-      if ((k.margin_persen ?? null) !== m) baris.push(["–", "Kategori " + nama, "Margin kategori", (k.margin_persen ?? "default") + (k.margin_persen != null ? "%" : ""), (m ?? "default") + (m != null ? "%" : "")]);
+      if ((k.margin_persen ?? null) !== m) baris.unshift(["–", "SEMUA produk " + nama, "Margin kategori", (k.margin_persen ?? "default") + (k.margin_persen != null ? "%" : ""), m + "%"]);
     }
     return baris;
   }
@@ -524,7 +548,7 @@
       const p = produk.find((x) => x.id === id);
       p.sumber = p.sumber || {};
       if ("harga_manual" in u) p.sumber.harga_manual = u.harga_manual;
-      if (u.margin_persen === null) delete p.margin_persen; else p.margin_persen = u.margin_persen;
+      if ("margin_persen" in u) p.margin_persen = u.margin_persen;
       if ("stok" in u) p.stok = u.stok;
     }
     let configBerubah = false;
@@ -534,8 +558,10 @@
     }
     status("Menyimpan perubahan harga…", "proses");
     try {
-      if (configBerubah) await simpanConfigKeGitHub("Update margin kategori dari Excel");
-      await simpanProdukKeGitHub("Update harga dari Excel");
+      const files = [];
+      if (JSON.stringify(produk) !== cadP) files.push({ path: "data/products.json", teks: JSON.stringify(produk, null, 2) + "\n" });
+      if (configBerubah) files.push({ path: "data/config.json", teks: JSON.stringify(config, null, 2) + "\n" });
+      if (files.length) await simpanSekaligus(files, "Update harga dari Excel");
       rencana = null; $("pratinjau").innerHTML = "";
       renderTabel();
       status(pesanTerbit("Perubahan harga"));
