@@ -822,6 +822,11 @@
       KONTEN_FIELD.map(([kunci, label, baris, ket]) => label === undefined ? "<h3>" + kunci + "</h3>"
         : pasangan(label, ket, kunci, id[kunci], "en_" + kunci, en[kunci], baris)).join("") +
       '<label class="cek penuh-lebar"><input type="checkbox" name="tampilkan_kurs"' + (id.tampilkan_kurs === false ? "" : " checked") + "> Tampilkan kotak kurs USD &amp; waktu update harga</label>" +
+      '<div class="penuh-lebar"><b style="font-size:.85rem">Gambar latar halaman depan</b> <small class="muted">kosong = gambar papan sirkuit bawaan; disarankan foto lebar (misal 1600×500)</small>' +
+        '<div class="media-item" style="margin-top:6px"><img id="pratinjau-hero" src="' + esc(urlTampil(id.gambar_hero) || "assets/hero-pcb.svg") + '" alt="" style="width:120px;height:52px">' +
+        '<input name="gambar_hero" value="' + esc(id.gambar_hero || "") + '" placeholder="link gambar, atau unggah →">' +
+        '<label class="btn btn-garis kecil unggah">Unggah<input type="file" id="unggah-hero" accept="image/*"></label>' +
+        '<button type="button" class="hapus" id="hapus-hero" title="Pakai gambar bawaan">&times;</button></div></div>' +
       "<h3>Halaman kategori <small>(kosong = pakai nama kategori di menu)</small></h3>" +
       config.kategori.map((kat, i) =>
         pasangan("Judul — " + esc(kat.nama), "", "kj_" + i, kat.judul, "kje_" + i, kat.judul_en, 0) +
@@ -829,6 +834,22 @@
       '<div class="penuh-lebar"><button class="btn" type="submit">Simpan konten</button> <a class="btn btn-garis" href="./" target="_blank" rel="noopener" style="text-decoration:none">Lihat toko</a></div>';
   }
 
+  $("form-konten").addEventListener("change", async (e) => {
+    if (e.target.id !== "unggah-hero" || !e.target.files[0]) return;
+    const form = e.currentTarget; // simpan sebelum await: currentTarget kosong setelahnya
+    status("Mengunggah gambar latar…", "proses");
+    try {
+      const path = await unggahFile(e.target.files[0], "situs");
+      form.elements.gambar_hero.value = path;
+      $("pratinjau-hero").src = urlTampil(path);
+      status("✓ Gambar terunggah. Klik <b>Simpan konten</b> untuk memasangnya.");
+    } catch (err) { status("Gagal mengunggah: " + esc(err.message), "error"); }
+  });
+  $("form-konten").addEventListener("click", (e) => {
+    if (e.target.id !== "hapus-hero") return;
+    e.currentTarget.elements.gambar_hero.value = "";
+    $("pratinjau-hero").src = "assets/hero-pcb.svg";
+  });
   $("form-konten").onsubmit = async (e) => {
     e.preventDefault();
     const f = e.target.elements, cad = JSON.stringify(config);
@@ -841,6 +862,7 @@
       if (v) en[kunci] = v; else delete en[kunci];
     }
     id.tampilkan_kurs = f.tampilkan_kurs.checked;
+    id.gambar_hero = f.gambar_hero.value.trim();
     config.kategori.forEach((kat, i) => {
       kat.judul = f["kj_" + i].value.trim(); kat.deskripsi = f["kd_" + i].value.trim();
       kat.judul_en = f["kje_" + i].value.trim(); kat.deskripsi_en = f["kde_" + i].value.trim();

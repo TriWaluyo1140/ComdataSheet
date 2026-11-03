@@ -146,6 +146,9 @@
       $("link-tokopedia").innerHTML = /Tokopedia/i.test(teksToko) ? esc(teksToko).replace(/Tokopedia/i, (m) => link(m)) : link(esc(teksToko));
     } else $("link-tokopedia").innerHTML = "";
     $("kurs-box").hidden = konten("tampilkan_kurs") === false;
+    // gambar latar halaman depan dari Admin → Konten Halaman (kosong = gambar PCB bawaan)
+    const hero = ((tk.konten || {}).gambar_hero || "").trim() || "assets/hero-pcb.svg";
+    $("hero").style.setProperty("--gambar-hero", 'url("' + new URL(hero, location.href).href.replace(/"/g, "%22") + '")');
 
     // menu kategori dari config (fallback: menu bawaan di index.html)
     if (Array.isArray(tk.kategori) && tk.kategori.length) {

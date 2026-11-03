@@ -12,7 +12,7 @@ code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; }
 /* Layar kunci */
 .kunci { display: grid; place-items: center; min-height: calc(100vh - 140px); padding: 24px 16px; }
 .kartu-kunci { width: min(440px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
-.gembok { width: 64px; height: 64px; border-radius: 16px; background: #eef6f5; color: var(--brand); display: grid; place-items: center; margin: 0 auto 10px; }
+.gembok { width: 64px; height: 64px; border-radius: 16px; background: var(--brand-pucat); color: var(--brand); display: grid; place-items: center; margin: 0 auto 10px; }
 .kartu-kunci h1 { text-align: center; font-size: 1.3rem; margin: 6px 0; }
 .kartu-kunci .muted { text-align: center; }
 .kartu-kunci form { display: flex; flex-direction: column; gap: 10px; }

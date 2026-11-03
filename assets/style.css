@@ -4,9 +4,14 @@
   --text: #16202a;
   --muted: #5f6b78;
   --line: #e3e7ec;
-  --brand: #0f766e;
-  --brand-dark: #0b5c56;
-  --accent: #f59e0b;
+  --brand: #ea580c;
+  --brand-dark: #c2410c;
+  --brand-terang: #fb923c;
+  --brand-pucat: #fff7ed;
+  --hitam: #0a0a0b;
+  --hitam-2: #18181b;
+  --garis-gelap: #27272a;
+  --accent: #f97316;
   --down: #15803d;
   --up: #b91c1c;
   --wa: #25d366;
@@ -22,12 +27,12 @@ body {
 }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
 
-.topbar { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+.topbar { background: var(--hitam); border-bottom: 1px solid var(--garis-gelap); position: sticky; top: 0; z-index: 10; }
 .topbar-inner { display: flex; align-items: center; gap: 20px; min-height: 70px; }
 .menu { display: flex; gap: 4px; flex: 0 1 auto; min-width: 0; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
 .menu::-webkit-scrollbar { display: none; }
-.menu a { white-space: nowrap; padding: 8px 12px; border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; font-size: .92rem; }
-.menu a:hover { background: #eef6f5; color: var(--brand); }
+.menu a { white-space: nowrap; padding: 8px 12px; border-radius: 999px; color: #e4e4e7; text-decoration: none; font-weight: 600; font-size: .92rem; }
+.menu a:hover { background: var(--hitam-2); color: var(--brand-terang); }
 .menu a.aktif { background: var(--brand); color: #fff; }
 .cart-btn { flex-shrink: 0; margin-left: -8px; }
 @media (max-width: 760px) {
@@ -38,13 +43,17 @@ body {
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--text); text-decoration: none; }
 .brand img { height: 54px; width: auto; display: block; }
-.cart-btn { position: relative; background: none; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; cursor: pointer; color: var(--text); }
+.cart-btn { position: relative; background: none; border: 1px solid #3f3f46; border-radius: 10px; padding: 8px 10px; cursor: pointer; color: #fff; }
+.cart-btn:hover { border-color: var(--brand); color: var(--brand-terang); }
 .badge { position: absolute; top: -7px; right: -7px; background: var(--accent); color: #fff; font-size: .72rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: grid; place-items: center; padding: 0 5px; }
 
-.hero { background: linear-gradient(135deg, var(--brand), #134e4a); color: #fff; padding: 32px 0; }
+.hero { color: #fff; padding: 44px 0; border-bottom: 3px solid var(--brand);
+  background: linear-gradient(90deg, rgba(10,10,11,.95) 0%, rgba(10,10,11,.85) 45%, rgba(10,10,11,.3) 100%), var(--gambar-hero, url("hero-pcb.svg")) right center / cover no-repeat, var(--hitam); }
+.hero h1 { position: relative; padding-left: 16px; }
+.hero h1::before { content: ""; position: absolute; left: 0; top: .15em; bottom: .15em; width: 5px; border-radius: 3px; background: var(--brand); }
 .hero h1 { margin: 0 0 14px; font-size: clamp(1.3rem, 3.5vw, 2rem); }
-.kurs-box { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); padding: 10px 14px; border-radius: 10px; font-size: .9rem; }
-.kurs-box strong { font-size: 1rem; }
+.kurs-box { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(249,115,22,.5); backdrop-filter: blur(2px); padding: 10px 14px; border-radius: 10px; font-size: .9rem; }
+.kurs-box strong { font-size: 1rem; color: var(--brand-terang); }
 
 .toolbar { display: flex; gap: 10px; margin: 22px 0 16px; flex-wrap: wrap; }
 .toolbar input, .toolbar select { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: var(--card); }
@@ -58,7 +67,7 @@ body {
 .card-aksi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 14px 14px; }
 .card-aksi .btn { text-align: center; text-decoration: none; padding: 9px 8px; font-size: .9rem; }
 .btn-garis { background: var(--card) !important; color: var(--brand) !important; border: 1px solid var(--brand) !important; }
-.btn-garis:hover { background: #eef6f5 !important; }
+.btn-garis:hover { background: var(--brand-pucat) !important; }
 .card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .kat { font-size: .75rem; color: var(--brand); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
 .card h3 { margin: 0; font-size: 1rem; line-height: 1.35; min-height: 2.7em;
@@ -74,8 +83,8 @@ body {
 .btn:disabled { background: #b7c0c9; cursor: not-allowed; }
 .kosong { text-align: center; color: var(--muted); padding: 40px 0; }
 
-.footer { border-top: 1px solid var(--line); background: var(--card); color: var(--muted); font-size: .85rem; padding: 18px 0; }
-.footer a { color: var(--brand); }
+.footer { border-top: 3px solid var(--brand); background: var(--hitam); color: #a1a1aa; font-size: .85rem; padding: 22px 0; }
+.footer a { color: var(--brand-terang); }
 
 .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 20; }
 .drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(420px, 100%); background: var(--card); z-index: 30; transform: translateX(100%); transition: transform .25s; display: flex; flex-direction: column; }
@@ -151,8 +160,8 @@ body {
   background: rgba(255,255,255,.75); box-shadow: 0 0 0 1px rgba(0,0,0,.2); }
 .slide-titik button.aktif { background: var(--brand); width: 18px; border-radius: 4px; }
 @media (hover: none) { .slide-nav { opacity: 1; } }
-.subjudul { margin: -6px 0 14px; max-width: 760px; opacity: .92; white-space: pre-line; }
-.footer-kontak { color: var(--text); white-space: pre-line; }
+.subjudul { margin: -6px 0 16px; max-width: 760px; color: #d4d4d8; padding-left: 16px; white-space: pre-line; }
+.footer-kontak { color: #f4f4f5; white-space: pre-line; }
 .card .label-baris { flex-wrap: nowrap; min-width: 0; }
 .card .label-baris .kat { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .card .label-baris .jenis, .card .label-baris .stok-label { flex-shrink: 0; }
@@ -162,7 +171,11 @@ body {
 .ketersediaan.ready { color: var(--down); }
 .ketersediaan.indent { color: #b45309; }
 .ketersediaan.habis { color: var(--up); }
-.pilih-bahasa { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; flex-shrink: 0; }
-.pilih-bahasa button { border: 0; background: none; font: inherit; font-size: .78rem; font-weight: 700; color: var(--muted); padding: 5px 9px; border-radius: 999px; cursor: pointer; }
+.pilih-bahasa { display: flex; border: 1px solid #3f3f46; border-radius: 999px; padding: 2px; flex-shrink: 0; }
+.pilih-bahasa button { border: 0; background: none; font: inherit; font-size: .78rem; font-weight: 700; color: #a1a1aa; padding: 5px 9px; border-radius: 999px; cursor: pointer; }
 .pilih-bahasa button.aktif { background: var(--brand); color: #fff; }
 @media (max-width: 760px) { .pilih-bahasa { margin-left: auto; } .pilih-bahasa + .cart-btn { margin-left: 0; } }
+.hero .kurs-box { margin-left: 16px; }
+@media (max-width: 760px) {
+  .hero { padding: 30px 0; background: linear-gradient(rgba(10,10,11,.86), rgba(10,10,11,.86)), var(--gambar-hero, url("hero-pcb.svg")) 75% center / cover no-repeat, var(--hitam); }
+}
