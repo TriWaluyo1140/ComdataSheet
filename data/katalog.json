@@ -65,10 +65,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T09:46:05+00:00",
+  "diperbarui": "2026-11-03T10:00:00+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T09:46:05+00:00"
+    "diperbarui": "2026-11-03T10:00:00+00:00"
   },
   "produk": [
     {
@@ -93,7 +93,8 @@
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
       "harga_idr": 12951000,
-      "harga_sebelumnya": 12207000
+      "harga_sebelumnya": 12207000,
+      "halaman": "produk/cds-101-microhard-p2400-enclosed-wireless-modem-1w-345kbps.html"
     },
     {
       "id": "CDS-102",
@@ -114,7 +115,8 @@
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
       "harga_idr": 14570000,
-      "harga_sebelumnya": 13733000
+      "harga_sebelumnya": 13733000,
+      "halaman": "produk/cds-102-microhard-p900-enc-miniature-mesh-1w-900mhz-wireless.html"
     }
   ]
 }
