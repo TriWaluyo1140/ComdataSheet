@@ -72,7 +72,7 @@
         '<div class="card-body">' +
         '<span class="kat">' + esc(p.kategori) + "</span>" +
         "<h3>" + esc(p.nama) + "</h3>" +
-        '<p class="desk">' + esc(p.deskripsi) + "</p>" +
+        '<p class="desk" title="' + esc(p.deskripsi) + '">' + esc(p.deskripsi) + "</p>" +
         '<div class="harga">' + rupiah(p.harga_idr) + tren + "</div>" +
         '<span class="asal">Import · harga ' + esc(p.mata_uang_sumber) + " mengikuti kurs</span>" +
         '<button class="btn" data-tambah="' + esc(p.id) + '"' + (p.stok === false ? " disabled>Stok habis" : ">+ Keranjang") + "</button>" +

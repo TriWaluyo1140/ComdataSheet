@@ -6,10 +6,10 @@
     "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
     "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp."
   },
-  "diperbarui": "2026-11-03T04:12:34+00:00",
+  "diperbarui": "2026-11-03T04:23:18+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T04:12:34+00:00",
+    "diperbarui": "2026-11-03T04:23:18+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
@@ -29,66 +29,23 @@
   "peringatan": [],
   "produk": [
     {
-      "id": "CDS-001",
-      "nama": "Arduino Nano Every (Original)",
-      "kategori": "Mikrokontroler",
-      "gambar": "https://placehold.co/600x450/0f766e/ffffff?text=Arduino+Nano+Every",
-      "deskripsi": "Board ATmega4809, original dari Arduino.cc. Garansi barang asli.",
-      "berat_kg": 0.05,
-      "stok": true,
-      "toko_sumber": "Arduino Store",
-      "harga_sumber": 14.5,
-      "mata_uang_sumber": "USD",
-      "kurs_ke_idr": 18144.8994,
-      "metode_harga": "manual",
-      "harga_idr": 350000,
-      "harga_sebelumnya": null,
-      "rincian": {
-        "modal_idr": 268363,
-        "ongkir_idr": 7500,
-        "margin_persen": 25
-      }
-    },
-    {
-      "id": "CDS-002",
-      "nama": "Raspberry Pi 5 - 8GB",
-      "kategori": "Single Board Computer",
-      "gambar": "https://placehold.co/600x450/be123c/ffffff?text=Raspberry+Pi+5",
-      "deskripsi": "Raspberry Pi 5 RAM 8GB, quad-core Cortex-A76 2.4GHz.",
+      "id": "CDS-101",
+      "nama": "Microhard P2400 Enclosed Wireless Modem 1W 345kbps MHS185350 Data Transmission Station",
+      "kategori": "Sensor",
+      "gambar": "https://placehold.co/600x450/0f766e/ffffff?text=Microhard+P2400",
+      "deskripsi": "For the ultimate solution in design flexibility and cost/size sensitive applications, consider the Pico Series P2400 radio platform. Operating in the 2.4 GHz ISM band, the P2400 provides an international, economical solution with the design flexibility, features, and performance never seen before!",
       "berat_kg": 0.2,
-      "margin_persen": 15,
       "stok": true,
-      "toko_sumber": "Supplier US",
-      "harga_sumber": 80.0,
+      "toko_sumber": "Beijing Qidian Chuanghang Science And Trade Co., Ltd",
+      "harga_sumber": 285.0,
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 1743000,
+      "harga_idr": 6636000,
       "harga_sebelumnya": null,
       "rincian": {
-        "modal_idr": 1480624,
+        "modal_idr": 5274722,
         "ongkir_idr": 30000,
-        "margin_persen": 15
-      }
-    },
-    {
-      "id": "CDS-003",
-      "nama": "Logic Analyzer 24MHz 8 Channel",
-      "kategori": "Alat Ukur",
-      "gambar": "https://placehold.co/600x450/1d4ed8/ffffff?text=Logic+Analyzer",
-      "deskripsi": "Contoh produk dari supplier Alibaba. Ganti dengan produk asli Anda.",
-      "berat_kg": 0.1,
-      "stok": true,
-      "toko_sumber": "Alibaba - blackcatmark",
-      "harga_sumber": 6.5,
-      "mata_uang_sumber": "USD",
-      "kurs_ke_idr": 18144.8994,
-      "metode_harga": "manual",
-      "harga_idr": 175000,
-      "harga_sebelumnya": 180000,
-      "rincian": {
-        "modal_idr": 120301,
-        "ongkir_idr": 15000,
         "margin_persen": 25
       }
     }

@@ -44,7 +44,7 @@ body {
 .card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .kat { font-size: .75rem; color: var(--brand); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
 .card h3 { margin: 0; font-size: 1rem; }
-.desk { margin: 0; color: var(--muted); font-size: .86rem; }
+.desk { margin: 0; color: var(--muted); font-size: .86rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .harga { font-size: 1.2rem; font-weight: 700; margin-top: auto; padding-top: 6px; }
 .tren { font-size: .78rem; font-weight: 600; margin-left: 6px; }
 .tren.turun { color: var(--down); }
