@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — ComdataSheet</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
+  <link rel="stylesheet" href="assets/style.css?v=5">
+  <link rel="stylesheet" href="assets/admin.css?v=2">
+</head>
+<body class="admin">
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="./"><img src="assets/logo.svg?v=4" alt="ComdataSheet"></a>
+      <span class="admin-label">Admin</span>
+      <div class="admin-akun" id="akun" hidden>
+        <a class="btn btn-garis kecil" href="./" target="_blank">Lihat toko</a>
+        <button class="btn btn-garis kecil" id="keluar">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layar kunci -->
+  <main class="wrap kunci" id="layar-kunci">
+    <div class="kartu-kunci">
+      <div class="gembok">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </div>
+
+      <form id="form-login" hidden>
+        <h1>Masuk Admin</h1>
+        <p class="muted">Masukkan PIN admin di perangkat ini.</p>
+        <input type="password" id="pin-login" inputmode="numeric" autocomplete="current-password" placeholder="PIN" required>
+        <button class="btn penuh" type="submit">Buka kunci</button>
+        <button class="tautan" type="button" id="lupa">Lupa PIN / ganti token</button>
+      </form>
+
+      <form id="form-setup" hidden>
+        <h1>Siapkan akses admin</h1>
+        <p class="muted">Sekali saja per perangkat. Token GitHub disimpan <b>terenkripsi</b> di browser ini dan hanya bisa dibuka dengan PIN Anda.</p>
+        <label>Token GitHub
+          <input type="password" id="token-baru" autocomplete="off" placeholder="github_pat_..." required>
+        </label>
+        <details class="bantuan">
+          <summary>Cara membuat token</summary>
+          <ol>
+            <li>Buka <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Settings → Fine-grained tokens → Generate new token</a>.</li>
+            <li>Token name: <b>Admin ComdataSheet</b>. Expiration: pilih (misal 1 tahun).</li>
+            <li>Repository access: <b>Only select repositories</b> → pilih <b id="nama-repo">ComdataSheet</b>.</li>
+            <li>Permissions → Repository: <b>Contents: Read and write</b> dan <b>Actions: Read and write</b>.</li>
+            <li>Klik <b>Generate token</b>, salin, lalu tempel di atas.</li>
+          </ol>
+        </details>
+        <label>Buat PIN (min. 6 karakter)
+          <input type="password" id="pin-baru" minlength="6" autocomplete="new-password" required>
+        </label>
+        <label>Ulangi PIN
+          <input type="password" id="pin-ulang" minlength="6" autocomplete="new-password" required>
+        </label>
+        <button class="btn penuh" type="submit">Simpan &amp; masuk</button>
+      </form>
+      <p class="pesan-error" id="error-kunci" hidden></p>
+    </div>
+  </main>
+
+  <!-- Panel admin -->
+  <main class="wrap panel" id="panel" hidden>
+    <nav class="tab" role="tablist">
+      <button data-tab="produk" class="aktif">Produk</button>
+      <button data-tab="harga">Update Harga (Excel)</button>
+      <button data-tab="toko">Pengaturan Toko</button>
+    </nav>
+    <div class="status" id="status" hidden></div>
+
+    <!-- Tab Produk -->
+    <section data-isi="produk">
+      <div class="baris-aksi">
+        <select id="filter-kategori"><option value="">Semua kategori</option></select>
+        <input type="search" id="cari-admin" placeholder="Cari produk…">
+        <button class="btn" id="tambah-produk">+ Tambah produk</button>
+      </div>
+      <div class="tabel-wrap">
+        <table class="tabel" id="tabel-produk">
+          <thead><tr><th></th><th>ID</th><th>Nama</th><th>Kategori</th><th>Harga supplier</th><th>Harga jual</th><th>Stok</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Tab Update Harga -->
+    <section data-isi="harga" hidden>
+      <div class="kartu">
+        <h2>1. Unduh Excel harga</h2>
+        <p class="muted">Berisi semua produk terbaru, satu sheet per kategori. Isi kolom <b>Harga Supplier Baru</b>, atau isi
+          <b>Ubah semua harga (%)</b> untuk menaikkan/menurunkan semua harga supplier dalam satu kategori sekaligus (contoh: <code>5</code> = naik 5%, <code>-3</code> = turun 3%).</p>
+        <button class="btn" id="unduh-excel">Unduh Excel harga</button>
+      </div>
+      <div class="kartu">
+        <h2>2. Unggah Excel yang sudah diisi</h2>
+        <input type="file" id="file-excel" accept=".xlsx,.xls">
+        <div id="pratinjau"></div>
+      </div>
+      <div class="kartu">
+        <h2>Perbarui kurs sekarang</h2>
+        <p class="muted">Kurs otomatis diperbarui setiap 4 jam. Klik ini untuk memperbarui sekarang juga.</p>
+        <button class="btn btn-garis" id="jalankan-update">Perbarui kurs &amp; harga sekarang</button>
+      </div>
+    </section>
+
+    <!-- Tab Pengaturan -->
+    <section data-isi="toko" hidden>
+      <form id="form-toko" class="kartu form-grid"></form>
+    </section>
+  </main>
+
+  <!-- Editor produk -->
+  <div class="overlay" id="overlay-editor" hidden></div>
+  <aside class="editor" id="editor" hidden>
+    <div class="drawer-head">
+      <h2 id="judul-editor">Edit produk</h2>
+      <button class="tutup" id="tutup-editor" aria-label="Tutup">&times;</button>
+    </div>
+    <form id="form-produk" class="editor-body"></form>
+  </aside>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="assets/admin.js?v=1"></script>
+</body>
+</html>

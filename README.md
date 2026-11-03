@@ -44,7 +44,27 @@ Semua angka diatur di `data/config.json`:
 Jadi walau harga Alibaba diisi manual, **harga Rupiah tetap ikut naik-turun mengikuti kurs**.
 Ubah `harga_manual` hanya bila supplier mengubah harga USD-nya.
 
-## Menambah / mengubah produk
+## Halaman Admin (tanpa edit file)
+
+Buka `https://<username>.github.io/ComdataSheet/admin.html`.
+
+- **Pertama kali di tiap perangkat:** tempel token GitHub, lalu buat PIN. Token disimpan
+  terenkripsi di browser itu dan hanya bisa dibuka dengan PIN.
+- **Berikutnya:** cukup masukkan PIN.
+- **Tab Produk:** tambah/edit/hapus produk, unggah foto, dan unggah brosur/datasheet (PDF).
+  File tersimpan di folder `files/<ID produk>/`.
+- **Tab Update Harga (Excel):** unduh Excel harga per kategori, isi, unggah kembali, cek pratinjau, lalu simpan.
+- **Tab Pengaturan Toko:** nomor WhatsApp, info pembayaran, margin default, margin per kategori, ongkir, pajak.
+
+Membuat token: GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token →
+Repository access: *Only select repositories* → `ComdataSheet` → Permissions: **Contents: Read and write**
+dan **Actions: Read and write**.
+
+Jika perangkat hilang: hapus token itu di GitHub (Settings → Fine-grained tokens → Delete), lalu buat token baru.
+
+Urutan margin: **margin produk** → **margin kategori** → **margin default**.
+
+## Menambah / mengubah produk secara manual
 
 Edit `data/products.json` langsung di GitHub (klik file → ikon pensil → *Commit changes*).
 Setelah disimpan, harga dihitung dan website diperbarui otomatis dalam ±1 menit.
@@ -53,9 +73,12 @@ Setelah disimpan, harga dihitung dan website diperbarui otomatis dalam ±1 menit
 {
   "id": "CDS-004",
   "nama": "Nama produk",
-  "kategori": "Kategori",
+  "kategori": "Servos",
   "gambar": "https://link-gambar.jpg",
-  "deskripsi": "Keterangan singkat",
+  "deskripsi": "Keterangan produk",
+  "spesifikasi": { "Tegangan": "5 V", "Torsi": "20 kg.cm" },
+  "galeri": ["files/CDS-104/foto-2.jpg"],
+  "unduhan": [{ "judul": "Brosur", "url": "files/CDS-104/brosur.pdf" }],
   "berat_kg": 0.25,
   "margin_persen": 30,
   "stok": true,

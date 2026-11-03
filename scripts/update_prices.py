@@ -25,8 +25,8 @@ CONFIG_FILE = DATA / "config.json"
 PRODUCTS_FILE = DATA / "products.json"
 KATALOG_FILE = DATA / "katalog.json"  # publik, dibaca website
 INTERNAL_FILE = DATA / "internal.json"  # rincian modal & supplier, TIDAK ikut dipublikasikan
-PUBLIK_FIELD = {"id", "nama", "kategori", "gambar", "deskripsi", "berat_kg", "stok",
-                "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
+PUBLIK_FIELD = {"id", "nama", "kategori", "gambar", "galeri", "deskripsi", "spesifikasi", "unduhan",
+                "berat_kg", "stok", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
 
 # Situs yang memblokir bot (captcha). Untuk sumber ini harga USD diambil dari
 # "harga_manual", tapi kurs tetap otomatis. URL tetap disimpan sebagai catatan.
@@ -183,8 +183,11 @@ def harga_dari_sumber(sumber):
 
 # ------------------------------------------------------------- Rumus
 
-def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur):
-    margin = produk.get("margin_persen", atur["margin_persen"])
+def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=None):
+    # urutan margin: per produk -> per kategori -> default
+    margin = produk.get("margin_persen")
+    if margin is None:
+        margin = margin_kategori if margin_kategori is not None else atur["margin_persen"]
     modal = harga_sumber * kurs_ke_idr * (1 + atur["buffer_kurs_persen"] / 100)
     ongkir = produk.get("berat_kg", 0) * atur["ongkir_impor_per_kg_idr"]
     dasar = (modal + ongkir) * (1 + atur["pajak_impor_persen"] / 100)
@@ -205,6 +208,7 @@ def main():
     produk_list = load_json(PRODUCTS_FILE, [])
     lama = load_json(INTERNAL_FILE, {})
     lama_by_id = {p["id"]: p for p in lama.get("produk", [])}
+    margin_kat = {k["nama"]: k.get("margin_persen") for k in config.get("kategori", [])}
 
     rates, sumber_kurs = ambil_kurs()
     if rates is None:
@@ -246,7 +250,7 @@ def main():
             peringatan.append(f"{p['id']}: mata uang {mu} tidak dikenal, produk disembunyikan")
             continue
         kurs_ke_idr = rates["IDR"] / rates[mu]
-        harga_jual, rincian = hitung_harga_jual(harga_src, kurs_ke_idr, p, atur)
+        harga_jual, rincian = hitung_harga_jual(harga_src, kurs_ke_idr, p, atur, margin_kat.get(p.get("kategori")))
 
         # Pengaman: kalau harga lompat terlalu jauh (biasanya salah baca halaman), tahan harga lama
         batas = None if os.environ.get("ABAIKAN_BATAS") == "true" else atur.get("batas_perubahan_persen")

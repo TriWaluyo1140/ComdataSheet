@@ -4,7 +4,33 @@
   "whatsapp": "628999905602",
   "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
   "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp.",
-
+  "github": {
+    "owner": "TriWaluyo1140",
+    "repo": "ComdataSheet",
+    "branch": "main"
+  },
+  "kategori": [
+    {
+      "slug": "electronic-equipment",
+      "nama": "Electronic Equipment",
+      "margin_persen": null
+    },
+    {
+      "slug": "servos",
+      "nama": "Servos",
+      "margin_persen": null
+    },
+    {
+      "slug": "sensors",
+      "nama": "Sensors",
+      "margin_persen": null
+    },
+    {
+      "slug": "others",
+      "nama": "Others",
+      "margin_persen": null
+    }
+  ],
   "pengaturan_harga": {
     "margin_persen": 25,
     "buffer_kurs_persen": 2,

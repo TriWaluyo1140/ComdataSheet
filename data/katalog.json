@@ -4,22 +4,58 @@
     "slogan": "Barang import original, harga mengikuti kurs hari ini",
     "whatsapp": "628999905602",
     "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
-    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp."
+    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp.",
+    "github": {
+      "owner": "TriWaluyo1140",
+      "repo": "ComdataSheet",
+      "branch": "main"
+    },
+    "kategori": [
+      {
+        "slug": "electronic-equipment",
+        "nama": "Electronic Equipment",
+        "margin_persen": null
+      },
+      {
+        "slug": "servos",
+        "nama": "Servos",
+        "margin_persen": null
+      },
+      {
+        "slug": "sensors",
+        "nama": "Sensors",
+        "margin_persen": null
+      },
+      {
+        "slug": "others",
+        "nama": "Others",
+        "margin_persen": null
+      }
+    ]
   },
-  "diperbarui": "2026-11-03T05:01:24+00:00",
+  "diperbarui": "2026-11-03T04:52:54+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T05:01:24+00:00"
+    "diperbarui": "2026-11-03T04:52:54+00:00"
   },
   "produk": [
     {
       "id": "CDS-101",
       "nama": "Microhard P2400 Enclosed Wireless Modem 1W 345kbps MHS185350 Data Transmission Station",
-      "kategori": "Sensor",
+      "kategori": "Electronic Equipment",
       "gambar": "https://placehold.co/600x450/0f766e/ffffff?text=Microhard+P2400",
       "deskripsi": "For the ultimate solution in design flexibility and cost/size sensitive applications, consider the Pico Series P2400 radio platform. Operating in the 2.4 GHz ISM band, the P2400 provides an international, economical solution with the design flexibility, features, and performance never seen before!",
       "berat_kg": 0.2,
       "stok": true,
+      "spesifikasi": {
+        "Merek": "Microhard",
+        "Model": "P2400 (MHS185350)",
+        "Frekuensi": "2.4 GHz ISM",
+        "Daya pancar": "1 W",
+        "Kecepatan data": "345 kbps"
+      },
+      "galeri": [],
+      "unduhan": [],
       "mata_uang_sumber": "USD",
       "harga_idr": 6636000,
       "harga_sebelumnya": null
