@@ -365,7 +365,8 @@
       r.readAsDataURL(file);
     });
     const path = "files/" + folder + "/" + namaAman(file.name);
-    await tulisFile(path, b64, "Unggah " + path, await shaFile(path));
+    // [skip ci]: unggahan tidak memicu publikasi sendiri; website terbit saat produk disimpan
+    await tulisFile(path, b64, "Unggah " + path + " [skip ci]", await shaFile(path));
     return path;
   }
 
@@ -574,11 +575,20 @@
 
   $("jalankan-update").onclick = async () => {
     status("Menjalankan update kurs…", "proses");
+    const selesai = () => status('✓ Update kurs & harga dimulai. Selesai dalam ±1–2 menit (<a href="' + linkActions() + '" target="_blank" rel="noopener">lihat proses</a>).');
     try {
       await gh("/actions/workflows/update-harga.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: repo.branch }) });
-      status('✓ Update kurs & harga dimulai. Selesai dalam ±1–2 menit (<a href="' + linkActions() + '" target="_blank" rel="noopener">lihat proses</a>).');
+      selesai();
     } catch (err) {
-      status(err.status === 403 ? "Token belum punya izin <b>Actions: Read and write</b>. Tambahkan izin itu di pengaturan token GitHub Anda." : "Gagal: " + esc(err.message), "error");
+      if (err.status !== 403 && err.status !== 404) return status("Gagal: " + esc(err.message), "error");
+      // Token tanpa izin Actions: picu workflow lewat commit kosong (cukup izin Contents)
+      try {
+        const induk = (await gh("/git/ref/heads/" + repo.branch)).object.sha;
+        const pohon = (await gh("/git/commits/" + induk)).tree.sha;
+        const commit = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: "Perbarui kurs & harga (dari admin)", tree: pohon, parents: [induk] }) });
+        await gh("/git/refs/heads/" + repo.branch, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
+        selesai();
+      } catch (err2) { status("Gagal: " + esc(err2.message), "error"); }
     }
   };
 
