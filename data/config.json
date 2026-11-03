@@ -32,11 +32,14 @@
     }
   ],
   "pengaturan_harga": {
-    "margin_persen": 25,
-    "buffer_kurs_persen": 2,
-    "ongkir_impor_per_kg_idr": 150000,
+    "shipping_default_usd": 50,
+    "shipping_default_lokal_idr": 0,
     "pajak_impor_persen": 30,
-    "biaya_tetap_idr": 5000,
+    "margin_persen": 15,
+    "ppn_pph_persen": 12.5,
+    "buffer_kurs_persen": 0,
+    "ongkir_impor_per_kg_idr": 0,
+    "biaya_tetap_idr": 0,
     "pembulatan_idr": 1000,
     "batas_perubahan_persen": 30
   }

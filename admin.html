@@ -6,8 +6,8 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Admin — ComdataSheet</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
-  <link rel="stylesheet" href="assets/style.css?v=5">
-  <link rel="stylesheet" href="assets/admin.css?v=2">
+  <link rel="stylesheet" href="assets/style.css?v=6">
+  <link rel="stylesheet" href="assets/admin.css?v=4">
 </head>
 <body class="admin">
   <header class="topbar">
@@ -77,6 +77,7 @@
     <section data-isi="produk">
       <div class="baris-aksi">
         <select id="filter-kategori"><option value="">Semua kategori</option></select>
+        <select id="filter-jenis"><option value="">Semua supplier</option><option value="import">Import</option><option value="lokal">Lokal</option></select>
         <input type="search" id="cari-admin" placeholder="Cari produk…">
         <button class="btn" id="tambah-produk">+ Tambah produk</button>
       </div>
@@ -125,6 +126,6 @@
   </aside>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="assets/admin.js?v=3"></script>
+  <script src="assets/admin.js?v=5"></script>
 </body>
 </html>

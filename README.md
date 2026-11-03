@@ -13,25 +13,25 @@ kurs terbaru (API)  ─┤        (GitHub Actions,          (publik)
 harga toko sumber   ─┘         tiap 4 jam)        ─► data/internal.json (modal & supplier)
 ```
 
-### Rumus harga
+### Rumus harga (sama dengan Excel costing)
 
+**Supplier import**
 ```
-modal   = harga_sumber × kurs_ke_IDR × (1 + buffer_kurs_persen%)
-ongkir  = berat_kg × ongkir_impor_per_kg_idr
-dasar   = (modal + ongkir) × (1 + pajak_impor_persen%)
-jual    = dasar × (1 + margin_persen%) + biaya_tetap_idr   → dibulatkan ke atas per pembulatan_idr
+Harga Beli   = (harga supplier + shipping per unit) × kurs
+Harga Indo   = Harga Beli + Bea Masuk (30%)
+Harga Jual   = Harga Indo + Profit (15%)
+Harga Toko   = Harga Jual + PPN & PPh (12,5%)  → dibulatkan ke atas per Rp 1.000
 ```
 
-Semua angka diatur di `data/config.json`:
+**Supplier lokal** (harga dalam Rupiah, tanpa kurs & bea masuk)
+```
+Harga Beli   = harga supplier + ongkir per unit
+Harga Jual   = Harga Beli + Profit
+Harga Toko   = Harga Jual + PPN & PPh  → dibulatkan ke atas
+```
 
-| Pengaturan | Arti |
-|---|---|
-| `margin_persen` | Keuntungan default (bisa di-override per produk dengan `margin_persen`) |
-| `buffer_kurs_persen` | Cadangan bila kurs naik sebelum Anda sempat belanja |
-| `ongkir_impor_per_kg_idr` | Biaya jasa kirim / forwarder dari luar negeri per kg |
-| `pajak_impor_persen` | Bea masuk + PPN + PPh impor (isi sesuai kenyataan, default 0) |
-| `biaya_tetap_idr` | Biaya packing dll per produk |
-| `batas_perubahan_persen` | Pengaman: jika harga berubah lebih dari ini, harga lama ditahan dan muncul peringatan |
+Semua persentase, shipping default, dan margin per kategori diatur di **Admin → Pengaturan Toko**
+(tersimpan di `data/config.json`). Margin: produk → kategori → default.
 
 ## Sumber harga supplier
 

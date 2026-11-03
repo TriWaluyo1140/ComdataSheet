@@ -26,11 +26,12 @@ PRODUCTS_FILE = DATA / "products.json"
 KATALOG_FILE = DATA / "katalog.json"  # publik, dibaca website
 INTERNAL_FILE = DATA / "internal.json"  # rincian modal & supplier, TIDAK ikut dipublikasikan
 PUBLIK_FIELD = {"id", "nama", "kategori", "gambar", "galeri", "deskripsi", "spesifikasi", "unduhan",
-                "berat_kg", "stok", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
+                "berat_kg", "stok", "jenis_supplier", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
 
 # Situs yang memblokir bot (captcha). Untuk sumber ini harga USD diambil dari
 # "harga_manual", tapi kurs tetap otomatis. URL tetap disimpan sebagai catatan.
-SITUS_MANUAL = ("alibaba.com", "1688.com", "taobao.com", "tmall.com", "aliexpress.")
+SITUS_MANUAL = ("alibaba.com", "1688.com", "taobao.com", "tmall.com", "aliexpress.",
+                "tokopedia.com", "shopee.co.id", "bukalapak.com", "blibli.com", "lazada.co.id")
 
 UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -183,20 +184,54 @@ def harga_dari_sumber(sumber):
 
 # ------------------------------------------------------------- Rumus
 
-def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=None):
+def jenis_supplier(produk):
+    return "lokal" if (produk.get("sumber") or {}).get("jenis") == "lokal" else "import"
+
+
+def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=None, kurs_usd=None):
+    """Rumus costing ComdataSheet (sama dengan Excel costing):
+    Harga Beli   = (harga supplier + shipping per unit) x kurs  (+ buffer kurs, + ongkir per kg)
+    Harga Indo   = Harga Beli + Bea Masuk   (supplier lokal: tanpa kurs, buffer, ongkir per kg & bea masuk)
+    Harga Jual   = Harga Indo + Profit
+    Harga Akhir  = (Harga Jual + biaya tetap) + PPN & PPh, dibulatkan ke atas
+    """
     # urutan margin: per produk -> per kategori -> default
     margin = produk.get("margin_persen")
     if margin is None:
         margin = margin_kategori if margin_kategori is not None else atur["margin_persen"]
-    modal = harga_sumber * kurs_ke_idr * (1 + atur["buffer_kurs_persen"] / 100)
-    ongkir = produk.get("berat_kg", 0) * atur["ongkir_impor_per_kg_idr"]
-    dasar = (modal + ongkir) * (1 + atur["pajak_impor_persen"] / 100)
-    jual = dasar * (1 + margin / 100) + atur["biaya_tetap_idr"]
-    bulat = atur["pembulatan_idr"] or 1
-    return int(math.ceil(jual / bulat) * bulat), {
-        "modal_idr": round(modal),
-        "ongkir_idr": round(ongkir),
+    lokal = jenis_supplier(produk) == "lokal"
+    persen = lambda k: 0 if lokal and k in ("buffer_kurs_persen", "pajak_impor_persen") else atur.get(k, 0) / 100
+
+    # shipping per unit: dari produk (mata uang supplier) atau default
+    shipping = (produk.get("sumber") or {}).get("shipping")
+    if shipping is not None:
+        shipping_idr = shipping * kurs_ke_idr
+    elif lokal:
+        shipping_idr = atur.get("shipping_default_lokal_idr", 0)
+    else:
+        shipping_idr = atur.get("shipping_default_usd", 0) * (kurs_usd or kurs_ke_idr)
+
+    harga_beli = (harga_sumber * kurs_ke_idr + shipping_idr) * (1 + persen("buffer_kurs_persen"))
+    ongkir_kg = 0 if lokal else produk.get("berat_kg", 0) * atur.get("ongkir_impor_per_kg_idr", 0)
+    harga_beli += ongkir_kg
+    bea_masuk = harga_beli * persen("pajak_impor_persen")
+    harga_indo = harga_beli + bea_masuk
+    profit = harga_indo * margin / 100
+    harga_jual = harga_indo + profit + atur.get("biaya_tetap_idr", 0)
+    ppn_pph = harga_jual * persen("ppn_pph_persen")
+    akhir = harga_jual + ppn_pph
+    bulat = atur.get("pembulatan_idr") or 1
+    return int(math.ceil(round(akhir, 2) / bulat) * bulat), {
+        "harga_beli_idr": round(harga_beli),
+        "shipping_idr": round(shipping_idr),
+        "ongkir_kg_idr": round(ongkir_kg),
+        "bea_masuk_idr": round(bea_masuk),
+        "harga_indo_idr": round(harga_indo),
         "margin_persen": margin,
+        "profit_idr": round(profit),
+        "harga_jual_idr": round(harga_jual),
+        "ppn_pph_idr": round(ppn_pph),
+        "harga_jual_pajak_idr": round(akhir),
     }
 
 
@@ -224,7 +259,7 @@ def main():
     hasil, peringatan = [], []
     for p in produk_list:
         src = p.get("sumber", {})
-        mu = (src.get("mata_uang") or "USD").upper()
+        mu = "IDR" if jenis_supplier(p) == "lokal" else (src.get("mata_uang") or "USD").upper()
         prev = lama_by_id.get(p["id"], {})
         harga_src, metode = None, None
 
@@ -250,7 +285,8 @@ def main():
             peringatan.append(f"{p['id']}: mata uang {mu} tidak dikenal, produk disembunyikan")
             continue
         kurs_ke_idr = rates["IDR"] / rates[mu]
-        harga_jual, rincian = hitung_harga_jual(harga_src, kurs_ke_idr, p, atur, margin_kat.get(p.get("kategori")))
+        harga_jual, rincian = hitung_harga_jual(
+            harga_src, kurs_ke_idr, p, atur, margin_kat.get(p.get("kategori")), rates["IDR"] / rates["USD"])
 
         # Pengaman: kalau harga lompat terlalu jauh (biasanya salah baca halaman), tahan harga lama
         batas = None if os.environ.get("ABAIKAN_BATAS") == "true" else atur.get("batas_perubahan_persen")
@@ -267,6 +303,7 @@ def main():
         item.update(
             {
                 "toko_sumber": src.get("nama_toko", ""),
+                "jenis_supplier": jenis_supplier(p),
                 "harga_sumber": harga_src,
                 "mata_uang_sumber": mu,
                 "kurs_ke_idr": round(kurs_ke_idr, 4),

@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
   <link rel="apple-touch-icon" href="assets/logo-icon-512.png">
   <meta property="og:image" content="assets/logo-icon-512.png">
-  <link rel="stylesheet" href="assets/style.css?v=5">
+  <link rel="stylesheet" href="assets/style.css?v=6">
 </head>
 <body>
   <header class="topbar">
@@ -39,6 +39,11 @@
     <main class="wrap">
       <div class="toolbar">
         <input type="search" id="cari" placeholder="Cari produk…" aria-label="Cari produk">
+        <select id="filter-jenis" aria-label="Jenis supplier">
+          <option value="">Semua supplier</option>
+          <option value="import">Supplier import</option>
+          <option value="lokal">Supplier lokal</option>
+        </select>
       </div>
       <div class="grid" id="daftar-produk"></div>
       <p class="kosong" id="kosong" hidden>Belum ada produk di kategori ini.</p>
@@ -74,6 +79,6 @@
     </form>
   </aside>
 
-  <script src="assets/app.js?v=5"></script>
+  <script src="assets/app.js?v=7"></script>
 </body>
 </html>

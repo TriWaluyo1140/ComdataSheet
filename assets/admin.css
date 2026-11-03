@@ -79,3 +79,7 @@ code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; }
 .unggah { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .unggah input { display: none; }
 @media (max-width: 600px) { .editor-body { grid-template-columns: 1fr; } }
+.rincian { font-size: .85rem; margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; }
+.rincian td { padding: 6px 10px; }
+.lencana.import { background: #e0f2fe; color: #075985; margin-top: 3px; }
+.lencana.lokal { background: #fef3c7; color: #92400e; margin-top: 3px; }

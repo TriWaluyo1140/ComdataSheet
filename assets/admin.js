@@ -12,6 +12,7 @@
   let produk = [], produkSha = null;
   let config = {}, configSha = null;
   let katalog = { produk: [] };
+  let kurs = { IDR: 0, USD: 1 }; // jumlah per 1 USD, dari data/internal.json
 
   // ------------------------------------------------------------ Util
   function status(pesan, jenis) {
@@ -204,7 +205,9 @@
 
   // ----------------------------------------------------------- Panel
   async function muatData() {
-    const [p, c, k] = await Promise.all([ambilFile("data/products.json"), ambilFile("data/config.json"), ambilFile("data/katalog.json").catch(() => null)]);
+    const [p, c, k, i] = await Promise.all([ambilFile("data/products.json"), ambilFile("data/config.json"),
+      ambilFile("data/katalog.json").catch(() => null), ambilFile("data/internal.json").catch(() => null)]);
+    if (i) kurs = JSON.parse(i.teks).kurs.rates || kurs;
     produk = JSON.parse(p.teks); produkSha = p.sha;
     config = JSON.parse(c.teks); configSha = c.sha;
     katalog = k ? JSON.parse(k.teks) : { produk: [] };
@@ -227,6 +230,66 @@
     status("");
   });
 
+  // ---------------------------------------------- Rumus costing harga
+  // Sama persis dengan hitung_harga_jual() di scripts/update_prices.py
+  function hitungHarga(p) {
+    const a = config.pengaturan_harga || {}, s = p.sumber || {};
+    const lokal = s.jenis === "lokal";
+    const pr = (k) => lokal && (k === "buffer_kurs_persen" || k === "pajak_impor_persen") ? 0 : (a[k] || 0) / 100;
+    const mu = lokal ? "IDR" : s.mata_uang || "USD";
+    if (!kurs[mu] || !kurs.IDR || typeof s.harga_manual !== "number") return null;
+    const kursMu = kurs.IDR / kurs[mu], kursUsd = kurs.IDR / kurs.USD;
+    const kat = config.kategori.find((k) => k.nama === p.kategori) || {};
+    const margin = p.margin_persen ?? kat.margin_persen ?? a.margin_persen;
+    const shippingIdr = typeof s.shipping === "number" ? s.shipping * kursMu
+      : lokal ? (a.shipping_default_lokal_idr || 0) : (a.shipping_default_usd || 0) * kursUsd;
+    const ongkirKg = lokal ? 0 : (p.berat_kg || 0) * (a.ongkir_impor_per_kg_idr || 0);
+    const beli = (s.harga_manual * kursMu + shippingIdr) * (1 + pr("buffer_kurs_persen")) + ongkirKg;
+    const bea = beli * pr("pajak_impor_persen"), indo = beli + bea;
+    const profit = indo * margin / 100, jual = indo + profit + (a.biaya_tetap_idr || 0);
+    const pajak = jual * pr("ppn_pph_persen"), akhir = jual + pajak;
+    const bulat = a.pembulatan_idr || 1;
+    return { lokal, mu, kursMu, shippingIdr, ongkirKg, beli, bea, indo, margin, profit, jual, pajak, akhir,
+      final: Math.ceil(Math.round(akhir * 100) / 100 / bulat) * bulat };
+  }
+
+  function renderRincian() {
+    const el = $("rincian-harga");
+    if (!el) return;
+    const p = JSON.parse(JSON.stringify(draf));
+    const f = $("form-produk").elements;
+    p.sumber.harga_manual = angka(f.harga_manual.value);
+    p.sumber.shipping = angka(f.shipping.value) ?? undefined;
+    p.sumber.mata_uang = f.mata_uang.value;
+    p.sumber.jenis = f.jenis.value;
+    p.berat_kg = (angka(f.berat_g.value) || 0) / 1000;
+    p.kategori = f.kategori.value;
+    const m = angka(f.margin_persen.value); if (m === null) delete p.margin_persen; else p.margin_persen = m;
+    const r = hitungHarga(p), a = config.pengaturan_harga || {};
+    if (!r) { el.innerHTML = '<p class="muted">Isi harga supplier untuk melihat perhitungan.</p>'; return; }
+    const rp = (n) => "Rp " + Math.round(n).toLocaleString("id-ID");
+    const shipKet = typeof p.sumber.shipping === "number" ? (r.lokal ? "" : r.mu + " " + p.sumber.shipping)
+      : r.lokal ? "default" : "default US$ " + (a.shipping_default_usd || 0);
+    const baris = r.lokal ? [["Harga supplier lokal", "", rp(p.sumber.harga_manual)], [ "Ongkir per unit", shipKet, rp(r.shippingIdr)]] : [
+      ["Harga supplier", r.mu + " " + p.sumber.harga_manual.toLocaleString("id-ID") + " × " + rp(r.kursMu), rp(p.sumber.harga_manual * r.kursMu)],
+      ["Shipping per unit", shipKet, rp(r.shippingIdr)],
+    ];
+    if (!r.lokal && a.buffer_kurs_persen) baris.push(["Buffer kurs", a.buffer_kurs_persen + "%", ""]);
+    if (r.ongkirKg) baris.push(["Ongkir per kg", p.berat_kg + " kg", rp(r.ongkirKg)]);
+    baris.push(["<b>Harga Beli</b>", "", "<b>" + rp(r.beli) + "</b>"]);
+    if (!r.lokal) baris.push(["Bea Masuk", (a.pajak_impor_persen || 0) + "%", rp(r.bea)], ["<b>Harga Indo</b>", "", "<b>" + rp(r.indo) + "</b>"]);
+    baris.push(["Profit", r.margin + "%", rp(r.profit)]);
+    if (a.biaya_tetap_idr) baris.push(["Biaya tetap", "", rp(a.biaya_tetap_idr)]);
+    baris.push(
+      ["<b>Harga Jual</b>", "", "<b>" + rp(r.jual) + "</b>"],
+      ["PPN + PPh", (a.ppn_pph_persen || 0) + "%", rp(r.pajak)],
+      ["Harga Jual + Pajak", "", rp(r.akhir)],
+      ["<b>Harga di toko</b>", "dibulatkan ke atas " + rp(a.pembulatan_idr || 1), '<b class="baru">' + rp(r.final) + "</b>"]);
+    el.innerHTML = '<table class="tabel rincian">' + baris.map((b) => "<tr><td>" + b[0] + '</td><td class="muted">' + esc(b[1]) + '</td><td class="angka">' + b[2] + "</td></tr>").join("") + "</table>" +
+      '<p class="muted" style="margin:6px 0 0">' + (r.lokal ? "Supplier lokal: tanpa kurs dan bea masuk."
+        : "Kurs saat ini 1 " + esc(r.mu) + " = " + rp(r.kursMu) + ". Harga di toko dihitung ulang otomatis mengikuti kurs.") + "</p>";
+  }
+
   // ------------------------------------------------------- Tab produk
   const daftarKategori = () => config.kategori.map((k) => k.nama);
   function isiFilterKategori() {
@@ -237,14 +300,16 @@
   const hargaJual = (id) => (katalog.produk.find((x) => x.id === id) || {}).harga_idr;
 
   function renderTabel() {
-    const kat = $("filter-kategori").value, q = $("cari-admin").value.trim().toLowerCase();
-    const list = produk.filter((p) => (!kat || p.kategori === kat) && (!q || (p.id + " " + p.nama).toLowerCase().includes(q)));
+    const kat = $("filter-kategori").value, q = $("cari-admin").value.trim().toLowerCase(), jenis = $("filter-jenis").value;
+    const list = produk.filter((p) => (!kat || p.kategori === kat) && (!jenis || ((p.sumber || {}).jenis === "lokal" ? "lokal" : "import") === jenis) &&
+      (!q || (p.id + " " + p.nama).toLowerCase().includes(q)));
     $("tabel-produk").querySelector("tbody").innerHTML = list.length ? list.map((p) => {
       const s = p.sumber || {};
       return "<tr>" +
         '<td><img src="' + esc(urlTampil(p.gambar)) + '" alt="" loading="lazy"></td>' +
-        "<td>" + esc(p.id) + "</td><td>" + esc(p.nama) + "</td><td>" + esc(p.kategori) + "</td>" +
-        '<td class="angka">' + esc(s.mata_uang || "USD") + " " + (s.harga_manual ?? "–") + "</td>" +
+        "<td>" + esc(p.id) + "</td><td>" + esc(p.nama) + "</td><td>" + esc(p.kategori) +
+        '<br><span class="lencana ' + (s.jenis === "lokal" ? "lokal" : "import") + '">' + (s.jenis === "lokal" ? "Lokal" : "Import") + "</span></td>" +
+        '<td class="angka">' + (s.jenis === "lokal" ? rupiah(s.harga_manual) : esc(s.mata_uang || "USD") + " " + (s.harga_manual ?? "–")) + "</td>" +
         '<td class="angka">' + rupiah(hargaJual(p.id)) + "</td>" +
         '<td><span class="lencana ' + (p.stok === false ? "tidak" : "ya") + '">' + (p.stok === false ? "Habis" : "Ada") + "</span></td>" +
         '<td class="aksi-baris"><button class="btn kecil" data-edit="' + esc(p.id) + '">Edit</button>' +
@@ -252,6 +317,7 @@
     }).join("") : '<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Belum ada produk.</td></tr>';
   }
   $("filter-kategori").onchange = renderTabel;
+  $("filter-jenis").onchange = renderTabel;
   $("cari-admin").oninput = renderTabel;
 
   $("tabel-produk").onclick = async (e) => {
@@ -279,7 +345,7 @@
     idAsli = p ? p.id : null;
     draf = JSON.parse(JSON.stringify(p || {
       id: idBaru(), nama: "", kategori: daftarKategori()[0] || "", gambar: "", galeri: [], deskripsi: "", spesifikasi: {},
-      unduhan: [], berat_kg: 0.1, stok: true, sumber: { nama_toko: "", url: "", mata_uang: "USD", harga_manual: null },
+      unduhan: [], berat_kg: 0.1, stok: true, sumber: { jenis: "import", nama_toko: "", url: "", mata_uang: "USD", harga_manual: null },
     }));
     draf.sumber = draf.sumber || {}; draf.galeri = draf.galeri || []; draf.unduhan = draf.unduhan || [];
     $("judul-editor").textContent = p ? "Edit produk " + p.id : "Tambah produk";
@@ -295,6 +361,7 @@
     const kat = daftarKategori().includes(d.kategori) || !d.kategori ? daftarKategori() : daftarKategori().concat(d.kategori);
     const spek = Object.entries(d.spesifikasi || {}).map(([k, v]) => k + ": " + v).join("\n");
     const mu = ["USD", "CNY", "EUR", "SGD", "HKD", "JPY", "GBP", "MYR", "TWD", "KRW", "AUD"];
+    const lokal = s.jenis === "lokal";
     const foto = [d.gambar].concat(d.galeri).filter(Boolean);
     $("form-produk").innerHTML =
       '<label>ID produk<input name="id" required value="' + esc(d.id) + '"></label>' +
@@ -304,13 +371,20 @@
       '<label class="penuh-lebar">Spesifikasi <small>satu per baris, format <code>Nama: Nilai</code> (contoh: <code>Tegangan: 5 V</code>)</small><textarea name="spesifikasi" rows="5">' + esc(spek) + "</textarea></label>" +
 
       "<h3>Harga &amp; supplier</h3>" +
-      '<label>Mata uang<select name="mata_uang">' + mu.map((m) => "<option" + (m === (s.mata_uang || "USD") ? " selected" : "") + ">" + m + "</option>").join("") + "</select></label>" +
-      '<label>Harga supplier per unit<input name="harga_manual" inputmode="decimal" required value="' + esc(s.harga_manual ?? "") + '"></label>' +
+      '<label>Jenis supplier<select name="jenis"><option value="import"' + (lokal ? "" : " selected") + '>Import (luar negeri)</option><option value="lokal"' + (lokal ? " selected" : "") + ">Lokal (Indonesia)</option></select></label>" +
+      (lokal ? '<label>Mata uang<select name="mata_uang" disabled><option>IDR</option></select></label>'
+        : '<label>Mata uang<select name="mata_uang">' + mu.map((m) => "<option" + (m === (s.mata_uang || "USD") ? " selected" : "") + ">" + m + "</option>").join("") + "</select></label>") +
+      '<label>Harga supplier per unit' + (lokal ? " (Rp)" : "") + '<input name="harga_manual" inputmode="decimal" required value="' + esc(s.harga_manual ?? "") + '"></label>' +
       '<label>Berat per unit (gram)<input name="berat_g" inputmode="numeric" value="' + esc(Math.round((d.berat_kg || 0) * 1000)) + '"></label>' +
-      '<label>Margin khusus (%) <small>kosong = margin kategori/default</small><input name="margin_persen" inputmode="decimal" value="' + esc(d.margin_persen ?? "") + '"></label>' +
+      (lokal
+        ? '<label>Ongkir per unit (Rp) <small>kosong = default Rp ' + esc(((config.pengaturan_harga || {}).shipping_default_lokal_idr ?? 0).toLocaleString("id-ID")) + "</small>"
+        : '<label>Shipping per unit <small>mata uang supplier; kosong = default US$ ' + esc((config.pengaturan_harga || {}).shipping_default_usd ?? 0) + "</small>") +
+        '<input name="shipping" inputmode="decimal" value="' + esc(s.shipping ?? "") + '"></label>' +
+      '<label>Margin / profit khusus (%) <small>kosong = margin kategori/default</small><input name="margin_persen" inputmode="decimal" value="' + esc(d.margin_persen ?? "") + '"></label>' +
       '<label>Nama supplier<input name="nama_toko" value="' + esc(s.nama_toko) + '"></label>' +
       '<label>Link produk supplier<input name="url" value="' + esc(s.url) + '"></label>' +
       '<label class="cek penuh-lebar"><input type="checkbox" name="stok"' + (d.stok === false ? "" : " checked") + "> Stok tersedia</label>" +
+      '<div class="penuh-lebar"><b style="font-size:.85rem">Perhitungan harga</b><div id="rincian-harga"></div></div>' +
 
       "<h3>Foto produk</h3>" +
       '<div class="media-list">' + (foto.length ? foto.map((g, i) =>
@@ -330,6 +404,7 @@
       '<div class="penuh-lebar"><label class="btn btn-garis kecil unggah">Unggah dokumen (PDF, dll)<input type="file" id="unggah-dok" multiple></label></div>' +
 
       '<div class="tombol-simpan"><button type="button" class="btn btn-garis" id="batal-editor">Batal</button><button type="submit" class="btn">Simpan produk</button></div>';
+    renderRincian();
   }
 
   // salin isian form ke draf (dipanggil sebelum re-render & sebelum simpan)
@@ -343,8 +418,11 @@
       if (i > 0) draf.spesifikasi[baris.slice(0, i).trim()] = baris.slice(i + 1).trim();
       else if (baris.trim()) draf.spesifikasi[baris.trim()] = "";
     });
-    draf.sumber.mata_uang = v("mata_uang");
+    draf.sumber.jenis = v("jenis");
+    draf.sumber.mata_uang = draf.sumber.jenis === "lokal" ? "IDR" : v("mata_uang");
     draf.sumber.harga_manual = angka(v("harga_manual"));
+    const sh = angka(v("shipping"));
+    if (sh === null) delete draf.sumber.shipping; else draf.sumber.shipping = sh;
     draf.sumber.nama_toko = v("nama_toko");
     draf.sumber.url = v("url");
     draf.berat_kg = (angka(v("berat_g")) || 0) / 1000;
@@ -387,8 +465,15 @@
     if (t.dataset.hapusUnduhan !== undefined) { bacaForm(); draf.unduhan.splice(+t.dataset.hapusUnduhan, 1); renderEditor(); }
   });
 
+  $("form-produk").addEventListener("input", renderRincian);
   $("form-produk").addEventListener("change", async (e) => {
     const t = e.target;
+    if (t.name === "jenis") {
+      // ganti jenis supplier: shipping lama tidak berlaku (beda mata uang)
+      bacaForm(); delete draf.sumber.shipping;
+      if (draf.sumber.jenis === "import" && draf.sumber.mata_uang === "IDR") draf.sumber.mata_uang = "USD";
+      renderEditor(); return;
+    }
     if (t.id !== "unggah-foto" && t.id !== "unggah-dok") return;
     bacaForm();
     if (!draf.id) return alert("Isi ID produk terlebih dahulu.");
@@ -427,7 +512,7 @@
   $("tambah-produk").onclick = () => bukaEditor(null);
 
   // ------------------------------------------------ Tab update harga Excel
-  const HEADER = ["ID", "Nama Produk", "Mata Uang", "Harga Supplier Sekarang", "Harga Supplier Baru", "Margin Produk (%)", "Stok (Ya/Tidak)", "Harga Jual Sekarang (Rp)"];
+  const HEADER = ["ID", "Nama Produk", "Jenis Supplier", "Mata Uang", "Harga Supplier Sekarang", "Harga Supplier Baru", "Shipping per Unit", "Margin Produk (%)", "Stok (Ya/Tidak)", "Harga Jual Sekarang (Rp)"];
   const namaSheet = (s) => String(s).replace(/[\[\]:*?\/\\]/g, " ").slice(0, 31);
 
   $("unduh-excel").onclick = () => {
@@ -441,6 +526,7 @@
       ["   Contoh: 5 = naik 5%, -3 = turun 3%. Hanya berlaku untuk produk yang kolom Harga Supplier Baru-nya kosong."],
       ["4. 'Margin kategori (%)' berlaku untuk semua produk di kategori tsb. Kosong = tidak diubah."],
       ["5. 'Margin Produk (%)' hanya untuk produk tertentu. Kosong = tidak diubah."],
+      ["   'Shipping per Unit' dalam mata uang supplier. Kosong = tidak diubah (produk tanpa shipping sendiri memakai default)."],
       ["   Untuk menghapus margin khusus, pakai menu Pengaturan Toko / Edit produk."],
       ["6. Simpan, lalu unggah di halaman Admin → Update Harga (Excel)."],
       [], ["Harga jual dihitung ulang otomatis memakai kurs terbaru setelah file diunggah."],
@@ -458,11 +544,12 @@
         [],
         HEADER,
       ].concat(produk.filter((p) => p.kategori === k).map((p) => [
-        p.id, p.nama, (p.sumber || {}).mata_uang || "USD", (p.sumber || {}).harga_manual ?? "", "",
-        p.margin_persen ?? "", p.stok === false ? "Tidak" : "Ya", hargaJual(p.id) ?? "",
+        p.id, p.nama, (p.sumber || {}).jenis === "lokal" ? "Lokal" : "Import",
+        (p.sumber || {}).jenis === "lokal" ? "IDR" : (p.sumber || {}).mata_uang || "USD", (p.sumber || {}).harga_manual ?? "", "",
+        (p.sumber || {}).shipping ?? "", p.margin_persen ?? "", p.stok === false ? "Tidak" : "Ya", hargaJual(p.id) ?? "",
       ]));
       const ws = XLSX.utils.aoa_to_sheet(rows);
-      ws["!cols"] = [{ wch: 28 }, { wch: 50 }, { wch: 11 }, { wch: 22 }, { wch: 20 }, { wch: 17 }, { wch: 15 }, { wch: 22 }];
+      ws["!cols"] = [{ wch: 28 }, { wch: 50 }, { wch: 14 }, { wch: 11 }, { wch: 22 }, { wch: 20 }, { wch: 17 }, { wch: 17 }, { wch: 15 }, { wch: 22 }];
       XLSX.utils.book_append_sheet(wb, ws, namaSheet(k));
     }
     XLSX.writeFile(wb, "Update_Harga_ComdataSheet_" + new Date().toISOString().slice(0, 10) + ".xlsx");
@@ -493,6 +580,10 @@
       const mk = cari("margin kategori");
       if (angka(mk[1]) !== null && config.kategori.some((k) => k.nama === kategori)) ubahKategori.set(kategori, angka(mk[1]));
       const persen = angka(cari("ubah semua")[1]);
+      // kolom dicari dari judulnya, supaya file Excel versi lama tetap terbaca
+      const judul = rows[hdr].map((h) => String(h).toLowerCase());
+      const kol = (kata, cadangan) => { const i = judul.findIndex((h) => h.includes(kata)); return i >= 0 ? i : cadangan; };
+      const kHarga = kol("harga supplier baru", 4), kShip = kol("shipping", -1), kMargin = kol("margin produk", 5), kStok = kol("stok", 6);
 
       for (const r of rows.slice(hdr + 1)) {
         const id = String(r[0]).trim();
@@ -500,12 +591,13 @@
         const p = produk.find((x) => x.id === id);
         if (!p) { peringatan.push("ID " + id + " (sheet " + nama + ") tidak ditemukan, dilewati."); continue; }
         const u = {};
-        const baru = angka(r[4]);
+        const baru = angka(r[kHarga]);
         const lama = (p.sumber || {}).harga_manual;
         if (baru !== null) { if (baru <= 0) peringatan.push(id + ": harga baru harus lebih dari 0, dilewati."); else u.harga_manual = baru; }
         else if (persen !== null && persen !== 0 && typeof lama === "number") u.harga_manual = Math.round(lama * (1 + persen / 100) * 100) / 100;
-        if (angka(r[5]) !== null) u.margin_persen = angka(r[5]);
-        const st = String(r[6]).trim().toLowerCase();
+        if (angka(r[kMargin]) !== null) u.margin_persen = angka(r[kMargin]);
+        if (kShip >= 0 && angka(r[kShip]) !== null) u.shipping = angka(r[kShip]);
+        const st = String(r[kStok] ?? "").trim().toLowerCase();
         if (st) u.stok = !["tidak", "habis", "no", "0", "false"].includes(st);
         ubahProduk.set(id, u);
       }
@@ -520,6 +612,7 @@
       const mu = s.mata_uang || "USD";
       if ("harga_manual" in u && u.harga_manual !== s.harga_manual) baris.push([id, p.nama, "Harga supplier", mu + " " + (s.harga_manual ?? "–"), mu + " " + u.harga_manual]);
       if ("margin_persen" in u && u.margin_persen !== (p.margin_persen ?? null)) baris.push([id, p.nama, "Margin produk", (p.margin_persen ?? "ikut kategori") + (p.margin_persen != null ? "%" : ""), (u.margin_persen ?? "ikut kategori") + (u.margin_persen != null ? "%" : "")]);
+      if ("shipping" in u && u.shipping !== (s.shipping ?? null)) baris.push([id, p.nama, "Shipping per unit", s.shipping != null ? mu + " " + s.shipping : "default", mu + " " + u.shipping]);
       if ("stok" in u && u.stok !== (p.stok !== false)) baris.push([id, p.nama, "Stok", p.stok === false ? "Habis" : "Ada", u.stok ? "Ada" : "Habis"]);
     }
     for (const [nama, m] of rencana.ubahKategori) {
@@ -549,6 +642,7 @@
       const p = produk.find((x) => x.id === id);
       p.sumber = p.sumber || {};
       if ("harga_manual" in u) p.sumber.harga_manual = u.harga_manual;
+      if ("shipping" in u) p.sumber.shipping = u.shipping;
       if ("margin_persen" in u) p.margin_persen = u.margin_persen;
       if ("stok" in u) p.stok = u.stok;
     }
@@ -606,11 +700,16 @@
       field("Link Tokopedia", "tokopedia_url", c.tokopedia_url, { lebar: true }) +
       field("Info pembayaran", "info_pembayaran", c.info_pembayaran, { lebar: true, area: true }) +
       "<h3>Rumus harga</h3>" +
-      field("Margin default (%)", "h_margin_persen", h.margin_persen, { angka: true }) +
-      field("Buffer kurs (%)", "h_buffer_kurs_persen", h.buffer_kurs_persen, { angka: true, ket: "cadangan bila kurs naik" }) +
-      field("Ongkir import per kg (Rp)", "h_ongkir_impor_per_kg_idr", h.ongkir_impor_per_kg_idr, { angka: true }) +
-      field("Pajak impor (%)", "h_pajak_impor_persen", h.pajak_impor_persen, { angka: true }) +
-      field("Biaya tetap per produk (Rp)", "h_biaya_tetap_idr", h.biaya_tetap_idr, { angka: true }) +
+      '<p class="muted penuh-lebar" style="margin:0"><b>Import:</b> Harga Beli = (harga supplier + shipping) × kurs → + Bea Masuk = Harga Indo → + Profit = Harga Jual → + PPN &amp; PPh → dibulatkan ke atas.<br>' +
+      "<b>Lokal:</b> Harga Beli = harga supplier (Rp) + ongkir → + Profit = Harga Jual → + PPN &amp; PPh → dibulatkan ke atas.</p>" +
+      field("Shipping default per unit (US$)", "h_shipping_default_usd", h.shipping_default_usd, { angka: true, ket: "dipakai bila produk tidak punya shipping sendiri" }) +
+      field("Ongkir default supplier lokal (Rp)", "h_shipping_default_lokal_idr", h.shipping_default_lokal_idr, { angka: true, ket: "per unit, untuk produk lokal" }) +
+      field("Bea masuk (%)", "h_pajak_impor_persen", h.pajak_impor_persen, { angka: true, ket: "hanya produk import" }) +
+      field("Profit / margin default (%)", "h_margin_persen", h.margin_persen, { angka: true }) +
+      field("PPN + PPh (%)", "h_ppn_pph_persen", h.ppn_pph_persen, { angka: true }) +
+      field("Buffer kurs (%)", "h_buffer_kurs_persen", h.buffer_kurs_persen, { angka: true, ket: "cadangan bila kurs naik; 0 = kurs apa adanya" }) +
+      field("Ongkir tambahan per kg (Rp)", "h_ongkir_impor_per_kg_idr", h.ongkir_impor_per_kg_idr, { angka: true, ket: "0 = tidak dipakai" }) +
+      field("Biaya tetap per produk (Rp)", "h_biaya_tetap_idr", h.biaya_tetap_idr, { angka: true, ket: "0 = tidak dipakai" }) +
       field("Pembulatan harga (Rp)", "h_pembulatan_idr", h.pembulatan_idr, { angka: true }) +
       field("Batas perubahan otomatis (%)", "h_batas_perubahan_persen", h.batas_perubahan_persen, { angka: true, ket: "pengaman lonjakan harga" }) +
       "<h3>Margin per kategori <small>(kosong = margin default)</small></h3>" +
@@ -624,7 +723,7 @@
     ["nama_toko", "whatsapp", "slogan", "tokopedia_url", "info_pembayaran"].forEach((n) => { config[n] = f[n].value.trim(); });
     config.whatsapp = config.whatsapp.replace(/\D/g, "").replace(/^0/, "62");
     const h = config.pengaturan_harga = config.pengaturan_harga || {};
-    for (const n of ["margin_persen", "buffer_kurs_persen", "ongkir_impor_per_kg_idr", "pajak_impor_persen", "biaya_tetap_idr", "pembulatan_idr", "batas_perubahan_persen"]) {
+    for (const n of ["shipping_default_usd", "shipping_default_lokal_idr", "pajak_impor_persen", "margin_persen", "ppn_pph_persen", "buffer_kurs_persen", "ongkir_impor_per_kg_idr", "biaya_tetap_idr", "pembulatan_idr", "batas_perubahan_persen"]) {
       const v = angka(f["h_" + n].value);
       if (v === null) return alert("Isi angka untuk semua kolom rumus harga.");
       h[n] = v;

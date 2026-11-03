@@ -18,6 +18,8 @@
   function waktu(iso) {
     return new Date(iso).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
   }
+  const GAMBAR_KOSONG = "assets/logo-icon-512.png";
+  const atributGambar = (src) => 'src="' + esc(src || GAMBAR_KOSONG) + '" onerror="this.onerror=null;this.src=\'' + GAMBAR_KOSONG + '\'"';
   function esc(s) {
     return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
@@ -94,18 +96,19 @@
   }
 
   function renderGrid() {
-    const q = $("cari").value.trim().toLowerCase();
+    const q = $("cari").value.trim().toLowerCase(), jenis = $("filter-jenis").value;
     const list = katalog.produk.filter((p) =>
       (!kategoriAktif || slugify(p.kategori) === kategoriAktif) &&
+      (!jenis || jenisSupplier(p) === jenis) &&
       (!q || (p.nama + " " + (p.deskripsi || "") + " " + p.id).toLowerCase().includes(q)));
 
     $("kosong").hidden = list.length > 0;
     $("daftar-produk").innerHTML = list.map((p) =>
       '<article class="card">' +
         '<a class="card-link" href="#/produk/' + encodeURIComponent(p.id) + '">' +
-          '<img loading="lazy" src="' + esc(p.gambar) + '" alt="' + esc(p.nama) + '">' +
+          '<img loading="lazy" ' + atributGambar(p.gambar) + ' alt="' + esc(p.nama) + '">' +
           '<div class="card-body">' +
-            '<span class="kat">' + esc(p.kategori) + "</span>" +
+            '<div class="label-baris"><span class="kat">' + esc(p.kategori) + "</span>" + labelJenis(p) + "</div>" +
             "<h3>" + esc(p.nama) + "</h3>" +
             '<p class="desk">' + esc(p.deskripsi) + "</p>" +
             '<div class="harga">' + rupiah(p.harga_idr) + tren(p) + "</div>" +
@@ -116,6 +119,12 @@
           tombolBeli(p) +
         "</div>" +
       "</article>").join("");
+  }
+
+  function jenisSupplier(p) { return p.jenis_supplier === "lokal" ? "lokal" : "import"; }
+  function labelJenis(p) {
+    const j = jenisSupplier(p);
+    return '<span class="jenis ' + j + '">' + (j === "lokal" ? "Lokal" : "Import") + "</span>";
   }
 
   function tren(p) {
@@ -144,15 +153,16 @@
       '<nav class="remah"><a href="#/">Beranda</a> › <a href="#/kategori/' + esc(slug) + '">' + esc(p.kategori) + "</a> › <span>" + esc(p.nama) + "</span></nav>" +
       '<div class="detail-grid">' +
         '<div class="galeri">' +
-          '<img class="galeri-utama" id="galeri-utama" src="' + esc(gambar[0] || "") + '" alt="' + esc(p.nama) + '">' +
+          '<img class="galeri-utama" id="galeri-utama" ' + atributGambar(gambar[0]) + ' alt="' + esc(p.nama) + '">' +
           (gambar.length > 1 ? '<div class="galeri-thumb">' + gambar.map((g, i) =>
             '<button data-gambar="' + esc(g) + '"' + (i === 0 ? ' class="aktif"' : "") + '><img src="' + esc(g) + '" alt=""></button>').join("") + "</div>" : "") +
         "</div>" +
         '<div class="info">' +
-          '<span class="kat">' + esc(p.kategori) + " · " + esc(p.id) + "</span>" +
+          '<div class="label-baris"><span class="kat">' + esc(p.kategori) + " · " + esc(p.id) + "</span>" + labelJenis(p) + "</div>" +
           "<h1>" + esc(p.nama) + "</h1>" +
           '<div class="harga besar">' + rupiah(p.harga_idr) + tren(p) + "</div>" +
-          '<p class="asal">Barang import · harga ' + esc(p.mata_uang_sumber) + " mengikuti kurs hari ini (1 USD = " + rupiah(katalog.kurs.usd_idr) + ")</p>" +
+          '<p class="asal">' + (jenisSupplier(p) === "lokal" ? "Supplier lokal (Indonesia)"
+            : "Barang import · harga " + esc(p.mata_uang_sumber) + " mengikuti kurs hari ini (1 USD = " + rupiah(katalog.kurs.usd_idr) + ")") + "</p>" +
           '<p class="stok ' + (p.stok === false ? "habis" : "ada") + '">' + (p.stok === false ? "Stok habis" : "Stok tersedia") + "</p>" +
           '<div class="aksi">' + tombolBeli(p) +
             '<a class="btn btn-wa-kecil" target="_blank" rel="noopener" href="https://wa.me/' + esc(katalog.toko.whatsapp) +
@@ -164,7 +174,7 @@
               '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg></a>').join("") + "</div>" : "") +
         "</div>" +
       "</div>" +
-      '<section class="blok"><h2>Deskripsi</h2><p class="deskripsi-lengkap">' + esc(p.deskripsi).replace(/\n/g, "<br>") + "</p></section>" +
+      (p.deskripsi ? '<section class="blok"><h2>Deskripsi</h2><p class="deskripsi-lengkap">' + esc(p.deskripsi).replace(/\n/g, "<br>") + "</p></section>" : "") +
       (spek.length ? '<section class="blok"><h2>Spesifikasi</h2><table class="spek">' + spek.map(([k, v]) =>
         "<tr><th>" + esc(k) + "</th><td>" + esc(v) + "</td></tr>").join("") + "</table></section>" : "");
   }
@@ -214,6 +224,7 @@
   $("tutup-keranjang").onclick = () => bukaKeranjang(false);
   $("overlay").onclick = () => bukaKeranjang(false);
   $("cari").oninput = renderGrid;
+  $("filter-jenis").onchange = renderGrid;
 
   $("form-checkout").onsubmit = (e) => {
     e.preventDefault();

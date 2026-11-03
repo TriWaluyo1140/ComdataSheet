@@ -123,3 +123,9 @@ body {
 .spek th, .spek td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .spek th { width: 35%; color: var(--muted); font-weight: 600; background: #f9fafb; }
 @media (max-width: 760px) { .detail-grid { grid-template-columns: 1fr; padding: 14px; gap: 16px; } }
+
+/* ---------- Jenis supplier ---------- */
+.label-baris { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.jenis { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
+.jenis.import { background: #e0f2fe; color: #075985; }
+.jenis.lokal { background: #fef3c7; color: #92400e; }
