@@ -19,7 +19,7 @@ permissions:
 
 concurrency:
   group: update-harga
-  cancel-in-progress: false
+  cancel-in-progress: false # proses berikutnya menunggu, tidak dibatalkan
 
 jobs:
   update-dan-deploy:
@@ -28,9 +28,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          ref: main # selalu pakai data paling baru, bukan versi saat workflow dipicu
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -40,15 +42,25 @@ jobs:
         run: python scripts/update_prices.py
 
       - name: Simpan katalog terbaru ke repo
+        env:
+          ABAIKAN_BATAS: ${{ inputs.abaikan_batas }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/katalog.json data/internal.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Update harga otomatis $(date -u '+%Y-%m-%d %H:%M') UTC"
-            git pull --rebase origin main
-            git push
-          fi
+          # Jika ada perubahan lain masuk saat proses berjalan, ambil data terbaru,
+          # hitung ulang, lalu coba simpan lagi (maks. 5 kali).
+          for percobaan in 1 2 3 4 5; do
+            git add data/katalog.json data/internal.json
+            if git diff --cached --quiet; then echo "Tidak ada perubahan harga."; exit 0; fi
+            git commit -q -m "Update harga otomatis $(date -u '+%Y-%m-%d %H:%M') UTC"
+            if git push; then exit 0; fi
+            echo "Repo berubah saat proses berjalan, mengulang dengan data terbaru ($percobaan)..."
+            sleep $((percobaan * 3))
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            python scripts/update_prices.py
+          done
+          echo "Gagal menyimpan setelah 5 percobaan."; exit 1
 
       - name: Siapkan file website (tanpa data supplier & modal)
         run: |
