@@ -13,29 +13,29 @@
     {
       "slug": "electronic-equipment",
       "nama": "Electronic Equipment",
-      "margin_persen": null
+      "margin_persen": 15
     },
     {
       "slug": "servos",
       "nama": "Servos",
-      "margin_persen": null
+      "margin_persen": 15
     },
     {
       "slug": "sensors",
       "nama": "Sensors",
-      "margin_persen": null
+      "margin_persen": 15
     },
     {
       "slug": "others",
       "nama": "Others",
-      "margin_persen": null
+      "margin_persen": 15
     }
   ],
   "pengaturan_harga": {
     "margin_persen": 25,
     "buffer_kurs_persen": 2,
     "ongkir_impor_per_kg_idr": 150000,
-    "pajak_impor_persen": 0,
+    "pajak_impor_persen": 30,
     "biaya_tetap_idr": 5000,
     "pembulatan_idr": 1000,
     "batas_perubahan_persen": 30
