@@ -25,8 +25,8 @@ CONFIG_FILE = DATA / "config.json"
 PRODUCTS_FILE = DATA / "products.json"
 KATALOG_FILE = DATA / "katalog.json"  # publik, dibaca website
 INTERNAL_FILE = DATA / "internal.json"  # rincian modal & supplier, TIDAK ikut dipublikasikan
-PUBLIK_FIELD = {"id", "nama", "kategori", "gambar", "galeri", "deskripsi", "spesifikasi", "unduhan",
-                "berat_kg", "stok", "jenis_supplier", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
+PUBLIK_FIELD = {"id", "nama", "nama_en", "kategori", "gambar", "galeri", "deskripsi", "deskripsi_en", "spesifikasi", "spesifikasi_en", "unduhan",
+                "berat_kg", "stok", "ketersediaan", "lama_indent_hari", "jenis_supplier", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
 
 # Situs yang memblokir bot (captcha). Untuk sumber ini harga USD diambil dari
 # "harga_manual", tapi kurs tetap otomatis. URL tetap disimpan sebagai catatan.
@@ -310,6 +310,10 @@ def main():
                 harga_jual = prev["harga_idr"]
 
         item = {k: v for k, v in p.items() if k != "sumber"}
+        # ketersediaan: ready / indent (PO) / habis — produk lama hanya punya "stok" true/false
+        ket = p.get("ketersediaan") or ("habis" if p.get("stok") is False else "ready")
+        item["ketersediaan"], item["stok"] = ket, ket != "habis"
+        item["lama_indent_hari"] = (p.get("lama_indent_hari") or config.get("indent_default_hari", 14)) if ket == "indent" else None
         item.update(
             {
                 "toko_sumber": src.get("nama_toko", ""),

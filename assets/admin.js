@@ -298,6 +298,18 @@
           ". Harga di toko dihitung ulang otomatis mengikuti kurs.") + "</p>";
   }
 
+  // ------------------------------------------------ Ketersediaan stok
+  const ketersediaan = (p) => p.ketersediaan || (p.stok === false ? "habis" : "ready");
+  const hariIndent = (p) => p.lama_indent_hari || config.indent_default_hari || 14;
+  function teksKetersediaan(p) {
+    const k = ketersediaan(p);
+    return k === "habis" ? "Habis" : k === "indent" ? "Indent " + hariIndent(p) + " hari" : "Ready";
+  }
+  function setKetersediaan(p, k, hari) {
+    p.ketersediaan = k; p.stok = k !== "habis";
+    if (k === "indent" && hari) p.lama_indent_hari = hari; else if (k !== "indent") delete p.lama_indent_hari;
+  }
+
   // ------------------------------------------------------- Tab produk
   const daftarKategori = () => config.kategori.map((k) => k.nama);
   function isiFilterKategori() {
@@ -319,7 +331,7 @@
         '<br><span class="lencana ' + (s.jenis === "lokal" ? "lokal" : "import") + '">' + (s.jenis === "lokal" ? "Lokal" : "Import") + "</span></td>" +
         '<td class="angka">' + (s.jenis === "lokal" ? rupiah(s.harga_manual) : esc(s.mata_uang || "USD") + " " + (s.harga_manual ?? "–")) + "</td>" +
         '<td class="angka">' + rupiah(hargaJual(p.id)) + "</td>" +
-        '<td><span class="lencana ' + (p.stok === false ? "tidak" : "ya") + '">' + (p.stok === false ? "Habis" : "Ada") + "</span></td>" +
+        '<td><span class="lencana ' + { ready: "ya", indent: "indent", habis: "tidak" }[ketersediaan(p)] + '">' + esc(teksKetersediaan(p)) + "</span></td>" +
         '<td class="aksi-baris"><button class="btn kecil" data-edit="' + esc(p.id) + '">Edit</button>' +
         '<button class="btn kecil bahaya" data-hapus="' + esc(p.id) + '">Hapus</button></td></tr>';
     }).join("") : '<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Belum ada produk.</td></tr>';
@@ -353,7 +365,7 @@
     idAsli = p ? p.id : null;
     draf = JSON.parse(JSON.stringify(p || {
       id: idBaru(), nama: "", kategori: daftarKategori()[0] || "", gambar: "", galeri: [], deskripsi: "", spesifikasi: {},
-      unduhan: [], berat_kg: 0.1, stok: true, sumber: { jenis: "import", nama_toko: "", url: "", mata_uang: "USD", harga_manual: null },
+      unduhan: [], berat_kg: 0.1, stok: true, ketersediaan: "ready", sumber: { jenis: "import", nama_toko: "", url: "", mata_uang: "USD", harga_manual: null },
     }));
     draf.sumber = draf.sumber || {}; draf.galeri = draf.galeri || []; draf.unduhan = draf.unduhan || [];
     $("judul-editor").textContent = p ? "Edit produk " + p.id : "Tambah produk";
@@ -377,6 +389,12 @@
       '<label class="penuh-lebar">Nama produk<input name="nama" required value="' + esc(d.nama) + '"></label>' +
       '<label class="penuh-lebar">Deskripsi<textarea name="deskripsi" rows="4">' + esc(d.deskripsi) + "</textarea></label>" +
       '<label class="penuh-lebar">Spesifikasi <small>satu per baris, format <code>Nama: Nilai</code> (contoh: <code>Tegangan: 5 V</code>)</small><textarea name="spesifikasi" rows="5">' + esc(spek) + "</textarea></label>" +
+      '<details class="penuh-lebar versi-en"' + (d.nama_en || d.deskripsi_en || Object.keys(d.spesifikasi_en || {}).length ? " open" : "") + "><summary>Versi bahasa Inggris (opsional — kosong = pakai teks di atas)</summary>" +
+        '<label>Nama produk (English)<input name="nama_en" value="' + esc(d.nama_en) + '"></label>' +
+        '<label>Deskripsi (English)<textarea name="deskripsi_en" rows="4">' + esc(d.deskripsi_en) + "</textarea></label>" +
+        '<label>Spesifikasi (English) <small>contoh: <code>Voltage: 5 V</code></small><textarea name="spesifikasi_en" rows="4">' +
+          esc(Object.entries(d.spesifikasi_en || {}).map(([k, v]) => k + ": " + v).join("\n")) + "</textarea></label>" +
+      "</details>" +
 
       "<h3>Harga &amp; supplier</h3>" +
       '<label>Jenis supplier<select name="jenis"><option value="import"' + (lokal ? "" : " selected") + '>Import (luar negeri)</option><option value="lokal"' + (lokal ? " selected" : "") + ">Lokal (Indonesia)</option></select></label>" +
@@ -392,7 +410,10 @@
       '<label>Margin / profit khusus (%) <small>kosong = margin kategori/default</small><input name="margin_persen" inputmode="decimal" value="' + esc(d.margin_persen ?? "") + '"></label>' +
       '<label>Nama supplier<input name="nama_toko" value="' + esc(s.nama_toko) + '"></label>' +
       '<label>Link produk supplier<input name="url" value="' + esc(s.url) + '"></label>' +
-      '<label class="cek penuh-lebar"><input type="checkbox" name="stok"' + (d.stok === false ? "" : " checked") + "> Stok tersedia</label>" +
+      '<label>Ketersediaan<select name="ketersediaan">' + [["ready", "Ready stock"], ["indent", "Indent / PO"], ["habis", "Stok habis"]].map(([v, l]) =>
+        '<option value="' + v + '"' + (ketersediaan(d) === v ? " selected" : "") + ">" + l + "</option>").join("") + "</select></label>" +
+      '<label' + (ketersediaan(d) === "indent" ? "" : " hidden") + ' id="isian-indent">Lama indent (hari) <small>default ' + esc(config.indent_default_hari || 14) + " hari</small>" +
+        '<input name="lama_indent_hari" inputmode="numeric" value="' + esc(d.lama_indent_hari ?? (config.indent_default_hari || 14)) + '"></label>' +
       '<div class="penuh-lebar"><b style="font-size:.85rem">Perhitungan harga</b><div id="rincian-harga"></div></div>' +
 
       "<h3>Foto produk</h3>" +
@@ -439,7 +460,16 @@
     if (m === null) delete draf.margin_persen; else draf.margin_persen = m;
     const bm = f.elements.bea_masuk_persen ? angka(v("bea_masuk_persen")) : null;
     if (bm === null || draf.sumber.jenis === "lokal") delete draf.bea_masuk_persen; else draf.bea_masuk_persen = bm;
-    draf.stok = f.elements.stok.checked;
+    setKetersediaan(draf, v("ketersediaan"), Math.round(angka(v("lama_indent_hari")) || config.indent_default_hari || 14));
+    draf.nama_en = v("nama_en"); draf.deskripsi_en = f.elements.deskripsi_en.value.trim();
+    draf.spesifikasi_en = {};
+    f.elements.spesifikasi_en.value.split("\n").forEach((baris) => {
+      const i = baris.indexOf(":");
+      if (i > 0) draf.spesifikasi_en[baris.slice(0, i).trim()] = baris.slice(i + 1).trim();
+      else if (baris.trim()) draf.spesifikasi_en[baris.trim()] = "";
+    });
+    for (const k of ["nama_en", "deskripsi_en"]) if (!draf[k]) delete draf[k];
+    if (!Object.keys(draf.spesifikasi_en).length) delete draf.spesifikasi_en;
     const foto = [...f.querySelectorAll("[data-foto]")].map((i) => i.value.trim()).filter(Boolean);
     draf.gambar = foto[0] || ""; draf.galeri = foto.slice(1);
     f.querySelectorAll("[data-unduhan-judul]").forEach((i) => { draf.unduhan[+i.dataset.unduhanJudul].judul = i.value.trim(); });
@@ -479,6 +509,7 @@
   $("form-produk").addEventListener("input", renderRincian);
   $("form-produk").addEventListener("change", async (e) => {
     const t = e.target;
+    if (t.name === "ketersediaan") { $("isian-indent").hidden = t.value !== "indent"; return; }
     if (t.name === "jenis") {
       // ganti jenis supplier: shipping lama tidak berlaku (beda mata uang)
       bacaForm(); delete draf.sumber.shipping;
@@ -523,7 +554,7 @@
   $("tambah-produk").onclick = () => bukaEditor(null);
 
   // ------------------------------------------------ Tab update harga Excel
-  const HEADER = ["ID", "Nama Produk", "Jenis Supplier", "Mata Uang", "Harga Supplier Sekarang", "Harga Supplier Baru", "Shipping per Unit", "Bea Masuk Produk (%)", "Margin Produk (%)", "Stok (Ya/Tidak)", "Harga Jual Sekarang (Rp)"];
+  const HEADER = ["ID", "Nama Produk", "Jenis Supplier", "Mata Uang", "Harga Supplier Sekarang", "Harga Supplier Baru", "Shipping per Unit", "Bea Masuk Produk (%)", "Margin Produk (%)", "Stok (Ya/Indent/Tidak)", "Lama Indent (hari)", "Harga Jual Sekarang (Rp)"];
   const namaSheet = (s) => String(s).replace(/[\[\]:*?\/\\]/g, " ").slice(0, 31);
 
   $("unduh-excel").onclick = () => {
@@ -540,6 +571,7 @@
       ["   'Shipping per Unit' dalam mata uang supplier. Kosong = tidak diubah (produk tanpa shipping sendiri memakai default)."],
       ["   'Bea Masuk Produk (%)' untuk produk import yang bea masuknya berbeda dari default. Kosong = tidak diubah."],
       ["   Untuk menghapus margin khusus, pakai menu Pengaturan Toko / Edit produk."],
+      ["   'Stok': Ya = ready stock, Indent = PO (isi 'Lama Indent (hari)', kosong = " + (config.indent_default_hari || 14) + " hari), Tidak = habis."],
       ["6. Simpan, lalu unggah di halaman Admin → Update Harga (Excel)."],
       [], ["Harga jual dihitung ulang otomatis memakai kurs terbaru setelah file diunggah."],
     ];
@@ -558,10 +590,11 @@
       ].concat(produk.filter((p) => p.kategori === k).map((p) => [
         p.id, p.nama, (p.sumber || {}).jenis === "lokal" ? "Lokal" : "Import",
         (p.sumber || {}).jenis === "lokal" ? "IDR" : (p.sumber || {}).mata_uang || "USD", (p.sumber || {}).harga_manual ?? "", "",
-        (p.sumber || {}).shipping ?? "", (p.sumber || {}).jenis === "lokal" ? "" : p.bea_masuk_persen ?? "", p.margin_persen ?? "", p.stok === false ? "Tidak" : "Ya", hargaJual(p.id) ?? "",
+        (p.sumber || {}).shipping ?? "", (p.sumber || {}).jenis === "lokal" ? "" : p.bea_masuk_persen ?? "", p.margin_persen ?? "",
+        { ready: "Ya", indent: "Indent", habis: "Tidak" }[ketersediaan(p)], ketersediaan(p) === "indent" ? hariIndent(p) : "", hargaJual(p.id) ?? "",
       ]));
       const ws = XLSX.utils.aoa_to_sheet(rows);
-      ws["!cols"] = [{ wch: 28 }, { wch: 50 }, { wch: 14 }, { wch: 11 }, { wch: 22 }, { wch: 20 }, { wch: 17 }, { wch: 19 }, { wch: 17 }, { wch: 15 }, { wch: 22 }];
+      ws["!cols"] = [{ wch: 28 }, { wch: 50 }, { wch: 14 }, { wch: 11 }, { wch: 22 }, { wch: 20 }, { wch: 17 }, { wch: 19 }, { wch: 17 }, { wch: 21 }, { wch: 17 }, { wch: 22 }];
       XLSX.utils.book_append_sheet(wb, ws, namaSheet(k));
     }
     XLSX.writeFile(wb, "Update_Harga_ComdataSheet_" + new Date().toISOString().slice(0, 10) + ".xlsx");
@@ -595,7 +628,7 @@
       // kolom dicari dari judulnya, supaya file Excel versi lama tetap terbaca
       const judul = rows[hdr].map((h) => String(h).toLowerCase());
       const kol = (kata, cadangan) => { const i = judul.findIndex((h) => h.includes(kata)); return i >= 0 ? i : cadangan; };
-      const kHarga = kol("harga supplier baru", 4), kShip = kol("shipping", -1), kBea = kol("bea masuk", -1), kMargin = kol("margin produk", 5), kStok = kol("stok", 6);
+      const kHarga = kol("harga supplier baru", 4), kShip = kol("shipping", -1), kBea = kol("bea masuk", -1), kMargin = kol("margin produk", 5), kStok = kol("stok", 6), kIndent = kol("lama indent", -1);
 
       for (const r of rows.slice(hdr + 1)) {
         const id = String(r[0]).trim();
@@ -611,7 +644,12 @@
         if (kShip >= 0 && angka(r[kShip]) !== null) u.shipping = angka(r[kShip]);
         if (kBea >= 0 && angka(r[kBea]) !== null && (p.sumber || {}).jenis !== "lokal") u.bea_masuk_persen = angka(r[kBea]);
         const st = String(r[kStok] ?? "").trim().toLowerCase();
-        if (st) u.stok = !["tidak", "habis", "no", "0", "false"].includes(st);
+        if (st) u.ketersediaan = /^(indent|po|pre)/.test(st) ? "indent" : ["tidak", "habis", "no", "0", "false"].includes(st) ? "habis" : "ready";
+        const hari = kIndent >= 0 ? angka(r[kIndent]) : null;
+        if (u.ketersediaan === "indent" || (!st && ketersediaan(p) === "indent")) {
+          if (hari !== null) u.lama_indent_hari = Math.round(hari);
+          else if (u.ketersediaan === "indent" && ketersediaan(p) !== "indent") u.lama_indent_hari = config.indent_default_hari || 14;
+        }
         ubahProduk.set(id, u);
       }
     }
@@ -628,7 +666,9 @@
       if ("bea_masuk_persen" in u && u.bea_masuk_persen !== (p.bea_masuk_persen ?? null)) baris.push([id, p.nama, "Bea masuk",
         p.bea_masuk_persen != null ? p.bea_masuk_persen + "%" : "default", u.bea_masuk_persen + "%"]);
       if ("shipping" in u && u.shipping !== (s.shipping ?? null)) baris.push([id, p.nama, "Shipping per unit", s.shipping != null ? mu + " " + s.shipping : "default", mu + " " + u.shipping]);
-      if ("stok" in u && u.stok !== (p.stok !== false)) baris.push([id, p.nama, "Stok", p.stok === false ? "Habis" : "Ada", u.stok ? "Ada" : "Habis"]);
+      const ketBaru = u.ketersediaan || ketersediaan(p), hariBaru = u.lama_indent_hari ?? (ketBaru === "indent" ? hariIndent(p) : null);
+      const ketLama = teksKetersediaan(p), ketTeks = teksKetersediaan({ ketersediaan: ketBaru, lama_indent_hari: hariBaru });
+      if (ketLama !== ketTeks) baris.push([id, p.nama, "Ketersediaan", ketLama, ketTeks]);
     }
     for (const [nama, m] of rencana.ubahKategori) {
       const k = config.kategori.find((x) => x.nama === nama);
@@ -660,7 +700,7 @@
       if ("shipping" in u) p.sumber.shipping = u.shipping;
       if ("bea_masuk_persen" in u) p.bea_masuk_persen = u.bea_masuk_persen;
       if ("margin_persen" in u) p.margin_persen = u.margin_persen;
-      if ("stok" in u) p.stok = u.stok;
+      if ("ketersediaan" in u || "lama_indent_hari" in u) setKetersediaan(p, u.ketersediaan || ketersediaan(p), u.lama_indent_hari ?? p.lama_indent_hari);
     }
     let configBerubah = false;
     for (const [nama, m] of rencana.ubahKategori) {
@@ -713,7 +753,9 @@
       field("Nama toko", "nama_toko", c.nama_toko) +
       field("No. WhatsApp", "whatsapp", c.whatsapp, { ket: "format 62…, tanpa + atau spasi" }) +
       field("Link Tokopedia", "tokopedia_url", c.tokopedia_url, { lebar: true }) +
-      field("Info pembayaran", "info_pembayaran", c.info_pembayaran, { lebar: true, area: true }) +
+      field("Info pembayaran (Indonesia)", "info_pembayaran", c.info_pembayaran, { lebar: true, area: true }) +
+      field("Info pembayaran (English)", "info_pembayaran_en", c.info_pembayaran_en, { lebar: true, area: true, ket: "kosong = sama dengan versi Indonesia" }) +
+      field("Lama indent / PO default (hari)", "indent_default_hari", c.indent_default_hari ?? 14, { angka: true, ket: "dipakai saat produk diset Indent" }) +
       "<h3>Rumus harga</h3>" +
       '<p class="muted penuh-lebar" style="margin:0"><b>Import:</b> (harga supplier + shipping) × kurs × (1 + buffer kurs) + biaya transaksi = Harga Beli → + Bea Masuk = Harga Indo → + Profit = Harga Jual → + PPN &amp; PPh → dibulatkan ke atas.<br>' +
       "<b>Lokal:</b> Harga Beli = harga supplier (Rp) + ongkir → + Profit = Harga Jual → + PPN &amp; PPh → dibulatkan ke atas.</p>" +
@@ -736,7 +778,8 @@
   $("form-toko").onsubmit = async (e) => {
     e.preventDefault();
     const f = e.target.elements, cad = JSON.stringify(config);
-    ["nama_toko", "whatsapp", "tokopedia_url", "info_pembayaran"].forEach((n) => { config[n] = f[n].value.trim(); });
+    ["nama_toko", "whatsapp", "tokopedia_url", "info_pembayaran", "info_pembayaran_en"].forEach((n) => { config[n] = f[n].value.trim(); });
+    config.indent_default_hari = Math.round(angka(f.indent_default_hari.value) || 14);
     config.whatsapp = config.whatsapp.replace(/\D/g, "").replace(/^0/, "62");
     const h = config.pengaturan_harga = config.pengaturan_harga || {};
     for (const n of ["shipping_default_usd", "shipping_default_lokal_idr", "pajak_impor_persen", "biaya_transaksi_persen", "margin_persen", "ppn_pph_persen", "buffer_kurs_persen", "ongkir_impor_per_kg_idr", "biaya_tetap_idr", "pembulatan_idr", "batas_perubahan_persen"]) {
@@ -751,44 +794,57 @@
   };
 
   // ------------------------------------------------- Tab konten halaman
+  // Setiap teks punya versi Indonesia (config.konten) dan Inggris (config.konten_en).
+  const KONTEN_FIELD = [
+    ["Halaman depan"],
+    ["judul_beranda", "Judul besar", 2],
+    ["subjudul_beranda", "Subjudul", 3, "kosongkan bila tidak perlu"],
+    ["Halaman detail produk"],
+    ["keterangan_import", "Keterangan produk import", 0, "<code>{mata_uang}</code> & <code>{kurs}</code> otomatis diganti"],
+    ["keterangan_lokal", "Keterangan produk lokal", 0],
+    ["teks_kosong", "Teks bila kategori kosong", 0],
+    ["Bagian bawah (footer)"],
+    ["info_kontak", "Info kontak / alamat", 4, "boleh beberapa baris; versi Inggris kosong = sama dengan Indonesia"],
+    ["teks_footer", "Teks keterangan", 3],
+    ["teks_tokopedia", "Teks link Tokopedia", 0, "kata <b>Tokopedia</b> jadi link; kosong = disembunyikan"],
+  ];
   function renderFormKonten() {
-    const k = config.konten = config.konten || {};
-    if (k.judul_beranda === undefined && config.slogan) k.judul_beranda = config.slogan;
-    const area = (label, nama, nilai, ket, baris = 2) => '<label class="penuh-lebar">' + label + (ket ? " <small>" + ket + "</small>" : "") +
-      '<textarea name="' + nama + '" rows="' + baris + '">' + esc(nilai ?? "") + "</textarea></label>";
-    const isian = (label, nama, nilai, ket, lebar) => '<label class="' + (lebar ? "penuh-lebar" : "") + '">' + label + (ket ? " <small>" + ket + "</small>" : "") +
-      '<input name="' + nama + '" value="' + esc(nilai ?? "") + '"></label>';
+    const id = config.konten = config.konten || {}, en = config.konten_en = config.konten_en || {};
+    if (id.judul_beranda === undefined && config.slogan) id.judul_beranda = config.slogan;
+    const isian = (nama, nilai, baris) => baris
+      ? '<textarea name="' + nama + '" rows="' + baris + '">' + esc(nilai ?? "") + "</textarea>"
+      : '<input name="' + nama + '" value="' + esc(nilai ?? "") + '">';
+    const pasangan = (label, ket, namaId, nilaiId, namaEn, nilaiEn, baris) =>
+      "<label>" + label + ' <span class="bendera">ID</span>' + (ket ? " <small>" + ket + "</small>" : "") + isian(namaId, nilaiId, baris) + "</label>" +
+      "<label>" + label + ' <span class="bendera en">EN</span>' + isian(namaEn, nilaiEn, baris) + "</label>";
     $("form-konten").innerHTML =
-      "<h3>Halaman depan</h3>" +
-      area("Judul besar", "judul_beranda", k.judul_beranda, "tulisan besar di bagian atas halaman depan") +
-      area("Subjudul", "subjudul_beranda", k.subjudul_beranda, "kalimat kecil di bawah judul; kosongkan bila tidak perlu", 3) +
-      '<label class="cek penuh-lebar"><input type="checkbox" name="tampilkan_kurs"' + (k.tampilkan_kurs === false ? "" : " checked") + "> Tampilkan kotak kurs USD &amp; waktu update harga</label>" +
-
+      '<p class="muted penuh-lebar" style="margin:0">Kiri: bahasa Indonesia · Kanan: bahasa Inggris. Pengunjung memilih bahasa lewat tombol <b>ID | EN</b> di bagian atas toko.</p>' +
+      KONTEN_FIELD.map(([kunci, label, baris, ket]) => label === undefined ? "<h3>" + kunci + "</h3>"
+        : pasangan(label, ket, kunci, id[kunci], "en_" + kunci, en[kunci], baris)).join("") +
+      '<label class="cek penuh-lebar"><input type="checkbox" name="tampilkan_kurs"' + (id.tampilkan_kurs === false ? "" : " checked") + "> Tampilkan kotak kurs USD &amp; waktu update harga</label>" +
       "<h3>Halaman kategori <small>(kosong = pakai nama kategori di menu)</small></h3>" +
       config.kategori.map((kat, i) =>
-        isian("Judul — " + esc(kat.nama), "kj_" + i, kat.judul, "", false) +
-        isian("Deskripsi — " + esc(kat.nama), "kd_" + i, kat.deskripsi, "", false)).join("") +
-      isian("Teks bila kategori kosong", "teks_kosong", k.teks_kosong, "", true) +
-
-      "<h3>Halaman detail produk</h3>" +
-      isian("Keterangan produk import", "keterangan_import", k.keterangan_import,
-        "<code>{mata_uang}</code> dan <code>{kurs}</code> otomatis diganti, contoh: USD dan Rp 18.145", true) +
-      isian("Keterangan produk lokal", "keterangan_lokal", k.keterangan_lokal, "", true) +
-
-      "<h3>Bagian bawah (footer)</h3>" +
-      area("Info kontak / alamat", "info_kontak", k.info_kontak, "contoh: alamat toko, jam buka, email — boleh beberapa baris", 4) +
-      area("Teks keterangan", "teks_footer", k.teks_footer, "", 3) +
-      isian("Teks link Tokopedia", "teks_tokopedia", k.teks_tokopedia, "kata <b>Tokopedia</b> otomatis jadi link; kosongkan untuk menyembunyikan", true) +
+        pasangan("Judul — " + esc(kat.nama), "", "kj_" + i, kat.judul, "kje_" + i, kat.judul_en, 0) +
+        pasangan("Deskripsi — " + esc(kat.nama), "", "kd_" + i, kat.deskripsi, "kde_" + i, kat.deskripsi_en, 0)).join("") +
       '<div class="penuh-lebar"><button class="btn" type="submit">Simpan konten</button> <a class="btn btn-garis" href="./" target="_blank" rel="noopener" style="text-decoration:none">Lihat toko</a></div>';
   }
 
   $("form-konten").onsubmit = async (e) => {
     e.preventDefault();
     const f = e.target.elements, cad = JSON.stringify(config);
-    const k = config.konten = config.konten || {};
-    for (const n of ["judul_beranda", "subjudul_beranda", "teks_kosong", "keterangan_import", "keterangan_lokal", "info_kontak", "teks_footer", "teks_tokopedia"]) k[n] = f[n].value.trim();
-    k.tampilkan_kurs = f.tampilkan_kurs.checked;
-    config.kategori.forEach((kat, i) => { kat.judul = f["kj_" + i].value.trim(); kat.deskripsi = f["kd_" + i].value.trim(); });
+    const id = config.konten = config.konten || {}, en = config.konten_en = config.konten_en || {};
+    for (const [kunci, label] of KONTEN_FIELD) {
+      if (label === undefined) continue;
+      id[kunci] = f[kunci].value.trim();
+      const v = f["en_" + kunci].value.trim();
+      // EN kosong = pakai teks bawaan bahasa Inggris (info kontak: sama dengan Indonesia)
+      if (v) en[kunci] = v; else delete en[kunci];
+    }
+    id.tampilkan_kurs = f.tampilkan_kurs.checked;
+    config.kategori.forEach((kat, i) => {
+      kat.judul = f["kj_" + i].value.trim(); kat.deskripsi = f["kd_" + i].value.trim();
+      kat.judul_en = f["kje_" + i].value.trim(); kat.deskripsi_en = f["kde_" + i].value.trim();
+    });
     delete config.slogan;
     const tombol = e.target.querySelector("button[type=submit]");
     tombol.disabled = true;

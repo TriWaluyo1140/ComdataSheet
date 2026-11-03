@@ -3,6 +3,8 @@
   "whatsapp": "628999905602",
   "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
   "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp.",
+  "info_pembayaran_en": "Bank transfer to BCA 1234567890 (Tri Waluyo). Please send the transfer receipt via WhatsApp.",
+  "indent_default_hari": 14,
   "konten": {
     "judul_beranda": "Barang import original, harga mengikuti kurs hari ini",
     "subjudul_beranda": "",
@@ -14,6 +16,7 @@
     "info_kontak": "",
     "teks_tokopedia": "Kami juga ada di Tokopedia."
   },
+  "konten_en": {},
   "github": {
     "owner": "TriWaluyo1140",
     "repo": "ComdataSheet",
@@ -25,28 +28,36 @@
       "nama": "Electronic Equipment",
       "margin_persen": null,
       "judul": "",
-      "deskripsi": ""
+      "deskripsi": "",
+      "judul_en": "",
+      "deskripsi_en": ""
     },
     {
       "slug": "servos",
       "nama": "Servos",
       "margin_persen": null,
       "judul": "",
-      "deskripsi": ""
+      "deskripsi": "",
+      "judul_en": "",
+      "deskripsi_en": ""
     },
     {
       "slug": "sensors",
       "nama": "Sensors",
       "margin_persen": null,
       "judul": "",
-      "deskripsi": ""
+      "deskripsi": "",
+      "judul_en": "",
+      "deskripsi_en": ""
     },
     {
       "slug": "others",
       "nama": "Others",
       "margin_persen": null,
       "judul": "",
-      "deskripsi": ""
+      "deskripsi": "",
+      "judul_en": "",
+      "deskripsi_en": ""
     }
   ],
   "pengaturan_harga": {

@@ -55,7 +55,9 @@ Buka `https://<username>.github.io/ComdataSheet/admin.html`.
 - **Tab Produk:** tambah/edit/hapus produk, unggah foto, dan unggah brosur/datasheet (PDF).
   File tersimpan di folder `files/<ID produk>/`.
 - **Tab Update Harga (Excel):** unduh Excel harga per kategori, isi, unggah kembali, cek pratinjau, lalu simpan.
-- **Tab Konten Halaman:** ubah judul & subjudul halaman depan, judul/deskripsi tiap kategori, keterangan di halaman produk, serta info kontak & teks di bagian bawah.
+- **Tab Konten Halaman:** ubah judul & subjudul halaman depan, judul/deskripsi tiap kategori, keterangan di halaman produk, serta info kontak & teks di bagian bawah — dalam bahasa Indonesia dan Inggris.
+- **Ketersediaan produk:** Ready stock, Indent / PO (lama indent default 14 hari, bisa diubah per produk), atau Stok habis.
+- **Dua bahasa:** pengunjung memilih ID / EN di bagian atas toko. Nama, deskripsi & spesifikasi produk bisa diberi versi Inggris di Edit produk (kosong = pakai teks utama). Link langsung: tambahkan `?lang=en`.
 - **Tab Pengaturan Toko:** nomor WhatsApp, info pembayaran, margin default, margin per kategori, ongkir, pajak.
 
 Membuat token: GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token →

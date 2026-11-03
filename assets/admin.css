@@ -83,3 +83,9 @@ code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; }
 .rincian td { padding: 6px 10px; }
 .lencana.import { background: #e0f2fe; color: #075985; margin-top: 3px; }
 .lencana.lokal { background: #fef3c7; color: #92400e; margin-top: 3px; }
+.bendera { font-size: .66rem; font-weight: 800; background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 4px; vertical-align: 1px; }
+.bendera.en { background: #dbeafe; color: #1e40af; }
+.lencana.indent { background: #ffedd5; color: #9a3412; }
+.versi-en { border: 1px dashed var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; }
+.versi-en[open] { gap: 10px; }
+.versi-en summary { cursor: pointer; font-weight: 600; color: var(--brand); font-size: .85rem; }
