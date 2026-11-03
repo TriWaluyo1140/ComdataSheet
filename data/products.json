@@ -12,7 +12,8 @@
       "url": "https://www.alibaba.com/product-detail/Pure-Original-Microhard-P2400-Enclosed-Wireless_1601219021759.html",
       "mata_uang": "USD",
       "harga_manual": 350,
-      "catatan": "MOQ / jumlah order: 100 pcs"
+      "catatan": "MOQ / jumlah order: 100 pcs",
+      "jenis": "import"
     },
     "spesifikasi": {
       "Merek": "Microhard",
@@ -22,7 +23,9 @@
       "Kecepatan data": "345 kbps"
     },
     "galeri": [],
-    "unduhan": []
+    "unduhan": [],
+    "ketersediaan": "indent",
+    "lama_indent_hari": 14
   },
   {
     "id": "CDS-102",
