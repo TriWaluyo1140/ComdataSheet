@@ -7,15 +7,15 @@
     "info_pembayaran_en": "Bank transfer to BCA 1234567890 (Tri Waluyo). Please send the transfer receipt via WhatsApp.",
     "indent_default_hari": 14,
     "konten": {
-      "judul_beranda": "Barang import original, harga mengikuti kurs hari ini",
-      "subjudul_beranda": "",
+      "judul_beranda": "......",
+      "subjudul_beranda": "XXXX",
       "tampilkan_kurs": true,
       "keterangan_import": "Barang import · harga {mata_uang} mengikuti kurs hari ini (1 USD = {kurs})",
       "keterangan_lokal": "Supplier lokal (Indonesia)",
       "teks_kosong": "Belum ada produk di kategori ini.",
       "teks_footer": "Harga dihitung otomatis dari harga supplier luar negeri dan kurs terbaru, sehingga dapat berubah sewaktu-waktu. Harga final mengikuti konfirmasi pesanan.",
       "info_kontak": "",
-      "teks_tokopedia": "Kami juga ada di Tokopedia."
+      "teks_tokopedia": "XXXX"
     },
     "konten_en": {},
     "github": {
@@ -62,10 +62,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T07:29:40+00:00",
+  "diperbarui": "2026-11-03T07:31:14+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T07:29:40+00:00"
+    "diperbarui": "2026-11-03T07:31:14+00:00"
   },
   "produk": [
     {
