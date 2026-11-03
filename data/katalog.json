@@ -62,10 +62,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T07:27:12+00:00",
+  "diperbarui": "2026-11-03T07:29:40+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T07:27:12+00:00"
+    "diperbarui": "2026-11-03T07:29:40+00:00"
   },
   "produk": [
     {
@@ -85,8 +85,8 @@
       },
       "galeri": [],
       "unduhan": [],
-      "ketersediaan": "ready",
-      "lama_indent_hari": null,
+      "ketersediaan": "indent",
+      "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
       "harga_idr": 12951000,
