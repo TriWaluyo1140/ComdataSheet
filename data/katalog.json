@@ -65,10 +65,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T10:07:50+00:00",
+  "diperbarui": "2026-11-03T10:08:09+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T10:07:50+00:00"
+    "diperbarui": "2026-11-03T10:08:09+00:00"
   },
   "produk": [
     {
@@ -121,7 +121,7 @@
     {
       "id": "CDS-103",
       "nama": "8.4V Digital Servo Metal Gear High Torque Servo Motor for RC Robotics and Uav/drone",
-      "kategori": "Electronic Equipment",
+      "kategori": "Servos",
       "gambar": "files/CDS-103/servo-1.png",
       "galeri": [
         "files/CDS-103/servo-2.png",
