@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T06:21:29+00:00",
+  "diperbarui": "2026-11-03T06:34:05+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T06:21:29+00:00",
+    "diperbarui": "2026-11-03T06:34:05+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
@@ -78,19 +78,22 @@
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 12207000,
-      "harga_sebelumnya": 10581000,
+      "harga_idr": 12951000,
+      "harga_sebelumnya": 12207000,
       "rincian": {
-        "harga_beli_idr": 7257960,
+        "harga_barang_idr": 7475699,
         "shipping_idr": 907245,
+        "biaya_transaksi_idr": 224271,
+        "harga_beli_idr": 7699970,
+        "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 2177388,
-        "harga_indo_idr": 9435348,
+        "bea_masuk_idr": 2309991,
+        "harga_indo_idr": 10009960,
         "margin_persen": 15,
-        "profit_idr": 1415302,
-        "harga_jual_idr": 10850650,
-        "ppn_pph_idr": 1356331,
-        "harga_jual_pajak_idr": 12206981
+        "profit_idr": 1501494,
+        "harga_jual_idr": 11511454,
+        "ppn_pph_idr": 1438932,
+        "harga_jual_pajak_idr": 12950386
       }
     },
     {
@@ -113,19 +116,22 @@
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 13733000,
-      "harga_sebelumnya": 12097000,
+      "harga_idr": 14570000,
+      "harga_sebelumnya": 13733000,
       "rincian": {
-        "harga_beli_idr": 8165205,
+        "harga_barang_idr": 8410161,
         "shipping_idr": 907245,
+        "biaya_transaksi_idr": 252305,
+        "harga_beli_idr": 8662466,
+        "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 2449561,
-        "harga_indo_idr": 10614766,
+        "bea_masuk_idr": 2598740,
+        "harga_indo_idr": 11261205,
         "margin_persen": 15,
-        "profit_idr": 1592215,
-        "harga_jual_idr": 12206981,
-        "ppn_pph_idr": 1525873,
-        "harga_jual_pajak_idr": 13732854
+        "profit_idr": 1689181,
+        "harga_jual_idr": 12950386,
+        "ppn_pph_idr": 1618798,
+        "harga_jual_pajak_idr": 14569185
       }
     }
   ]

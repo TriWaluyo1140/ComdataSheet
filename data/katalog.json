@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T06:21:29+00:00",
+  "diperbarui": "2026-11-03T06:34:05+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T06:21:29+00:00"
+    "diperbarui": "2026-11-03T06:34:05+00:00"
   },
   "produk": [
     {
@@ -58,8 +58,8 @@
       "unduhan": [],
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 12207000,
-      "harga_sebelumnya": 10581000
+      "harga_idr": 12951000,
+      "harga_sebelumnya": 12207000
     },
     {
       "id": "CDS-102",
@@ -77,8 +77,8 @@
       "stok": true,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 13733000,
-      "harga_sebelumnya": 12097000
+      "harga_idr": 14570000,
+      "harga_sebelumnya": 13733000
     }
   ]
 }
