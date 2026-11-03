@@ -2,14 +2,14 @@
   "toko": {
     "nama_toko": "ComdataSheet",
     "slogan": "Barang import original, harga mengikuti kurs hari ini",
-    "whatsapp": "6281234567890",
+    "whatsapp": "628999905602",
     "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
-    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. ComdataSheet. Kirim bukti transfer via WhatsApp."
+    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp."
   },
-  "diperbarui": "2026-11-03T03:44:56+00:00",
+  "diperbarui": "2026-11-03T04:11:53+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T03:44:56+00:00",
+    "diperbarui": "2026-11-03T04:11:53+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
