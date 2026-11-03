@@ -1,5 +1,5 @@
 :root {
-  --bg: #f6f7f9;
+  --bg: #36363c;
   --card: #ffffff;
   --text: #16202a;
   --muted: #5f6b78;
@@ -21,7 +21,8 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
+  background: var(--bg) url("pcb-terang.svg?v=3") repeat;
+  background-attachment: fixed;
   color: var(--text);
   line-height: 1.5;
 }
@@ -47,20 +48,23 @@ body {
 .cart-btn:hover { border-color: var(--brand); color: var(--brand-terang); }
 .badge { position: absolute; top: -7px; right: -7px; background: var(--accent); color: #fff; font-size: .72rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: grid; place-items: center; padding: 0 5px; }
 
-.hero { color: #fff; padding: 44px 0; border-bottom: 3px solid var(--brand);
+.hero { color: #fff; padding: 30px 0 26px; border-bottom: 3px solid var(--brand);
   background: linear-gradient(90deg, rgba(10,10,11,.95) 0%, rgba(10,10,11,.85) 45%, rgba(10,10,11,.3) 100%), var(--gambar-hero, url("hero-pcb.svg")) right center / cover no-repeat, var(--hitam); }
 .hero h1 { position: relative; padding-left: 16px; }
 .hero h1::before { content: ""; position: absolute; left: 0; top: .15em; bottom: .15em; width: 5px; border-radius: 3px; background: var(--brand); }
-.hero h1 { margin: 0 0 14px; font-size: clamp(1.3rem, 3.5vw, 2rem); }
-.kurs-box { display: inline-flex; flex-wrap: wrap; gap: 6px 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(249,115,22,.5); backdrop-filter: blur(2px); padding: 10px 14px; border-radius: 10px; font-size: .9rem; }
-.kurs-box strong { font-size: 1rem; color: var(--brand-terang); }
+.hero h1 { margin: 0 0 10px; font-size: clamp(1.25rem, 3.2vw, 1.85rem); line-height: 1.25; }
+.kurs-box { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(249,115,22,.45);
+  padding: 4px 12px; border-radius: 999px; font-size: .74rem; color: #d4d4d8; }
+.kurs-box strong { font-size: .8rem; color: var(--brand-terang); }
 
 .toolbar { display: flex; gap: 10px; margin: 22px 0 16px; flex-wrap: wrap; }
 .toolbar input, .toolbar select { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: var(--card); }
 .toolbar input { flex: 1 1 240px; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; padding-bottom: 32px; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.05); transition: box-shadow .2s, transform .2s; }
+.card:hover { box-shadow: 0 2px 4px rgba(0,0,0,.06), 0 12px 28px rgba(234,88,12,.12); transform: translateY(-2px); }
 .card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; background: #eef1f4; }
 .card-link { color: inherit; text-decoration: none; display: flex; flex-direction: column; flex: 1; }
 .card-link:hover h3 { color: var(--brand); }
@@ -160,7 +164,7 @@ body {
   background: rgba(255,255,255,.75); box-shadow: 0 0 0 1px rgba(0,0,0,.2); }
 .slide-titik button.aktif { background: var(--brand); width: 18px; border-radius: 4px; }
 @media (hover: none) { .slide-nav { opacity: 1; } }
-.subjudul { margin: -6px 0 16px; max-width: 760px; color: #d4d4d8; padding-left: 16px; white-space: pre-line; }
+.subjudul { margin: -2px 0 12px; font-size: .95rem; max-width: 760px; color: #d4d4d8; padding-left: 16px; white-space: pre-line; }
 .footer-kontak { color: #f4f4f5; white-space: pre-line; }
 .card .label-baris { flex-wrap: nowrap; min-width: 0; }
 .card .label-baris .kat { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
@@ -177,5 +181,19 @@ body {
 @media (max-width: 760px) { .pilih-bahasa { margin-left: auto; } .pilih-bahasa + .cart-btn { margin-left: 0; } }
 .hero .kurs-box { margin-left: 16px; }
 @media (max-width: 760px) {
-  .hero { padding: 30px 0; background: linear-gradient(rgba(10,10,11,.86), rgba(10,10,11,.86)), var(--gambar-hero, url("hero-pcb.svg")) 75% center / cover no-repeat, var(--hitam); }
+  .hero { padding: 22px 0 20px; background: linear-gradient(rgba(10,10,11,.86), rgba(10,10,11,.86)), var(--gambar-hero, url("hero-pcb.svg")) 75% center / cover no-repeat, var(--hitam); }
 }
+.toolbar input, .toolbar select, .detail-grid, .blok { box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.04); }
+body.admin { background: #f4f4f5; }
+@media (max-width: 760px) { body { background-attachment: scroll; } }
+@media (max-width: 760px) { .kurs-box { border-radius: 10px; padding: 5px 10px; } .subjudul { font-size: .88rem; } }
+/* teks yang langsung berada di atas latar gelap */
+main .kosong { color: #d4d4d8; }
+.remah { color: #a1a1aa; }
+.remah a { color: var(--brand-terang); }
+.remah span { color: #e4e4e7; }
+.toolbar input, .toolbar select { border-color: #52525b; }
+/* footer selalu di dasar layar walau isi halaman sedikit */
+body:not(.admin) { min-height: 100vh; display: flex; flex-direction: column; }
+body:not(.admin) > .footer { margin-top: auto; }
+body:not(.admin) > #hal-daftar, body:not(.admin) > #hal-detail { width: 100%; }
