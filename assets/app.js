@@ -17,7 +17,7 @@
       ready: "Ready stock", ready_detail: "Ready stock — siap dikirim",
       indent: "Indent ±{hari} hari", indent_detail: "Indent / PO — estimasi {hari} hari setelah pembayaran",
       label_import: "Import", label_lokal: "Lokal",
-      beranda: "Beranda", tanya_wa: "Tanya via WhatsApp", unduh: "Unduh dokumen", dokumen: "Dokumen",
+      beranda: "Beranda", kembali: "Kembali", tanya_wa: "Tanya via WhatsApp", unduh: "Unduh dokumen", dokumen: "Dokumen",
       deskripsi: "Deskripsi", spesifikasi: "Spesifikasi",
       keranjang: "Keranjang", keranjang_kosong: "Keranjang masih kosong.", total: "Total",
       f_nama: "Nama lengkap", f_hp: "No. HP / WhatsApp", f_alamat: "Alamat lengkap pengiriman", f_catatan: "Catatan (opsional)",
@@ -35,7 +35,7 @@
       ready: "In stock", ready_detail: "In stock — ready to ship",
       indent: "Pre-order ±{hari} days", indent_detail: "Pre-order — approx. {hari} days after payment",
       label_import: "Import", label_lokal: "Local",
-      beranda: "Home", tanya_wa: "Ask via WhatsApp", unduh: "Downloads", dokumen: "Document",
+      beranda: "Home", kembali: "Back", tanya_wa: "Ask via WhatsApp", unduh: "Downloads", dokumen: "Document",
       deskripsi: "Description", spesifikasi: "Specifications",
       keranjang: "Cart", keranjang_kosong: "Your cart is empty.", total: "Total",
       f_nama: "Full name", f_hp: "Phone / WhatsApp", f_alamat: "Full shipping address", f_catatan: "Notes (optional)",
@@ -200,7 +200,22 @@
     const menuAktif = document.querySelector("#menu a.aktif");
     if (menuAktif) menuAktif.scrollIntoView({ block: "nearest", inline: "nearest" });
   }
-  window.addEventListener("hashchange", () => { rute(); window.scrollTo(0, 0); });
+  // Ingat posisi gulir daftar agar saat kembali dari detail, pengunjung berada di produk yang sama
+  const posisiDaftar = {};
+  let dariDaftar = false;
+  const halProduk = (u) => /#\/?produk\//.test(u || "");
+  window.addEventListener("hashchange", (e) => {
+    const lama = (e.oldURL || "").split("#")[1] || "/", baru = location.hash.slice(1) || "/";
+    if (!halProduk("#" + lama)) posisiDaftar[lama] = window.scrollY;
+    dariDaftar = halProduk(location.hash) && !halProduk("#" + lama);
+    rute();
+    window.scrollTo(0, halProduk("#" + lama) && !halProduk(location.hash) ? posisiDaftar[baru] || 0 : 0);
+  });
+  function kembaliKeDaftar() {
+    if (dariDaftar) return history.back();
+    const p = cariProduk(decodeURIComponent(location.hash.split("/")[2] || ""));
+    location.hash = p ? "#/kategori/" + slugify(p.kategori) : "#/";
+  }
 
   // ------------------------------------------------------ Daftar produk
   let kategoriAktif = "";
@@ -208,6 +223,7 @@
     kategoriAktif = slug || "";
     $("hal-daftar").hidden = false;
     $("hal-detail").hidden = true;
+    document.body.classList.remove("di-detail");
     const kat = kategoriDari(kategoriAktif);
     $("judul-daftar").textContent = kat ? terjemah(kat, "judul") || terjemah(kat, "nama") : konten("judul_beranda");
     const sub = kat ? terjemah(kat, "deskripsi") : konten("subjudul_beranda");
@@ -321,6 +337,7 @@
     $("hal-daftar").hidden = true;
     const el = $("hal-detail");
     el.hidden = false;
+    document.body.classList.add("di-detail");
     const nama = namaProduk(p), desk = terjemah(p, "deskripsi");
     document.title = nama + " — " + (katalog.toko.nama_toko || "ComdataSheet");
 
@@ -331,7 +348,7 @@
     const slug = slugify(p.kategori);
 
     el.innerHTML =
-      '<nav class="remah"><a href="#/">' + esc(t("beranda")) + '</a> › <a href="#/kategori/' + esc(slug) + '">' + esc(namaKategoriProduk(p)) + "</a> › <span>" + esc(nama) + "</span></nav>" +
+      '<nav class="remah"><button type="button" class="btn-kembali" data-kembali>‹ ' + esc(t("kembali")) + '</button><a href="#/">' + esc(t("beranda")) + '</a> › <a href="#/kategori/' + esc(slug) + '">' + esc(namaKategoriProduk(p)) + "</a> › <span>" + esc(nama) + "</span></nav>" +
       '<div class="detail-grid">' +
         '<div class="galeri">' + slideshow(gambar, nama, { besar: true, thumb: true }) + "</div>" +
         '<div class="info">' +
@@ -380,6 +397,11 @@
   document.addEventListener("click", (e) => {
     const pilihBahasa = e.target.closest("[data-bahasa]");
     if (pilihBahasa) return gantiBahasa(pilihBahasa.dataset.bahasa);
+    // Halaman detail: klik tombol Kembali atau di latar belakang (di luar kotak produk) = kembali ke daftar
+    if (!$("hal-detail").hidden && document.contains(e.target) &&
+        (e.target.closest("[data-kembali]") || !e.target.closest(".detail-grid, .blok, .remah, .topbar, .footer, .drawer, #overlay"))) {
+      return kembaliKeDaftar();
+    }
     const geser = e.target.closest("[data-geser]"), keFoto = e.target.closest("[data-ke]");
     if (geser || keFoto) {
       e.preventDefault(); // tombol slideshow di dalam link kartu: jangan buka detail

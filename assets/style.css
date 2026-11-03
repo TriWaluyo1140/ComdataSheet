@@ -112,6 +112,11 @@ body {
 .detail { padding-top: 18px; padding-bottom: 40px; }
 .remah { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
 .remah a { color: var(--brand); text-decoration: none; }
+.btn-kembali { font: inherit; font-weight: 600; color: #fff; background: var(--brand); border: 0; border-radius: 999px; padding: 4px 12px; margin-right: 10px; cursor: pointer; }
+.btn-kembali:hover { background: var(--brand-dark); }
+/* latar halaman detail bisa diklik untuk kembali */
+body.di-detail { cursor: pointer; }
+body.di-detail :is(.detail-grid, .blok, .remah, .topbar, .footer, .drawer) { cursor: auto; }
 .detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
 .galeri-utama { width: 100%; aspect-ratio: 4/3; object-fit: contain; background: #eef1f4; border-radius: 10px; display: block; }
 .galeri-thumb { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
