@@ -47,5 +47,31 @@
       "mata_uang": "USD",
       "harga_manual": 400
     }
+  },
+  {
+    "id": "CDS-103",
+    "nama": "8.4V Digital Servo Metal Gear High Torque Servo Motor for RC Robotics and Uav/drone",
+    "kategori": "Electronic Equipment",
+    "gambar": "files/CDS-103/servo-1.png",
+    "galeri": [
+      "files/CDS-103/servo-2.png",
+      "files/CDS-103/servo-3.png"
+    ],
+    "deskripsi": "",
+    "spesifikasi": {},
+    "unduhan": [],
+    "berat_kg": 0.1,
+    "stok": true,
+    "ketersediaan": "indent",
+    "sumber": {
+      "jenis": "import",
+      "nama_toko": "",
+      "url": "",
+      "mata_uang": "USD",
+      "harga_manual": 20,
+      "shipping": 30
+    },
+    "merek": "Torque Servo Motor",
+    "lama_indent_hari": 14
   }
 ]
