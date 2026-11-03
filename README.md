@@ -1,0 +1,100 @@
+# ComdataSheet — Toko Online Barang Import
+
+Toko online statis yang di-hosting gratis di **GitHub Pages**. Harga jual dalam Rupiah
+**dihitung ulang otomatis setiap 4 jam** mengikuti kurs USD/CNY terbaru dan harga dari
+toko sumber import. Pelanggan memesan lewat keranjang → pesanan terkirim ke WhatsApp Anda.
+
+## Cara kerja
+
+```
+data/products.json  ─┐
+data/config.json    ─┼─► scripts/update_prices.py ─► data/katalog.json ─► website
+kurs terbaru (API)  ─┤        (GitHub Actions,          (publik)
+harga toko sumber   ─┘         tiap 4 jam)        ─► data/internal.json (modal & supplier)
+```
+
+### Rumus harga
+
+```
+modal   = harga_sumber × kurs_ke_IDR × (1 + buffer_kurs_persen%)
+ongkir  = berat_kg × ongkir_impor_per_kg_idr
+dasar   = (modal + ongkir) × (1 + pajak_impor_persen%)
+jual    = dasar × (1 + margin_persen%) + biaya_tetap_idr   → dibulatkan ke atas per pembulatan_idr
+```
+
+Semua angka diatur di `data/config.json`:
+
+| Pengaturan | Arti |
+|---|---|
+| `margin_persen` | Keuntungan default (bisa di-override per produk dengan `margin_persen`) |
+| `buffer_kurs_persen` | Cadangan bila kurs naik sebelum Anda sempat belanja |
+| `ongkir_impor_per_kg_idr` | Biaya jasa kirim / forwarder dari luar negeri per kg |
+| `pajak_impor_persen` | Bea masuk + PPN + PPh impor (isi sesuai kenyataan, default 0) |
+| `biaya_tetap_idr` | Biaya packing dll per produk |
+| `batas_perubahan_persen` | Pengaman: jika harga berubah lebih dari ini, harga lama ditahan dan muncul peringatan |
+
+## Sumber harga supplier
+
+| Toko sumber | Harga sumber | Kurs |
+|---|---|---|
+| Toko yang membuka harga di halaman (Shopify, Adafruit, Pimoroni, Mouser, toko lain dengan data schema.org) | **Otomatis** dibaca dari `url` | Otomatis |
+| **Alibaba, 1688, Taobao, AliExpress** | Isi `harga_manual` (USD/CNY) — situs ini memblokir bot dengan captcha | Otomatis |
+| Toko lain yang tidak terbaca | Isi `harga_manual`, atau tambahkan `regex_harga` | Otomatis |
+
+Jadi walau harga Alibaba diisi manual, **harga Rupiah tetap ikut naik-turun mengikuti kurs**.
+Ubah `harga_manual` hanya bila supplier mengubah harga USD-nya.
+
+## Menambah / mengubah produk
+
+Edit `data/products.json` langsung di GitHub (klik file → ikon pensil → *Commit changes*).
+Setelah disimpan, harga dihitung dan website diperbarui otomatis dalam ±1 menit.
+
+```json
+{
+  "id": "CDS-004",
+  "nama": "Nama produk",
+  "kategori": "Kategori",
+  "gambar": "https://link-gambar.jpg",
+  "deskripsi": "Keterangan singkat",
+  "berat_kg": 0.25,
+  "margin_persen": 30,
+  "stok": true,
+  "sumber": {
+    "nama_toko": "Alibaba - blackcatmark",
+    "url": "https://www.alibaba.com/product-detail/....html",
+    "mata_uang": "USD",
+    "harga_manual": 6.5
+  }
+}
+```
+
+`margin_persen` per produk boleh dihapus (pakai default). `stok: false` = tombol beli dimatikan.
+Gambar bisa diunggah ke folder `assets/img/` lalu ditulis `"gambar": "assets/img/nama.jpg"`.
+
+## Pemasangan di GitHub (sekali saja)
+
+1. Buat akun di github.com, lalu **New repository** (misal `comdatasheet`), pilih *Public*.
+2. Unggah semua file folder ini (*Add file → Upload files*, termasuk folder `.github`).
+3. **Settings → Pages → Source: GitHub Actions.**
+4. Buka tab **Actions** → *Update harga & publikasikan toko* → **Run workflow**.
+5. Website tampil di `https://<username>.github.io/comdatasheet/`.
+   Domain sendiri (misal `comdatasheet.com`) bisa dipasang di *Settings → Pages → Custom domain*.
+
+Ganti dulu di `data/config.json`: nomor `whatsapp` (format 62…), `info_pembayaran`, dan `tokopedia_url`.
+
+### Update harga manual / menyetujui lonjakan harga
+
+Tab **Actions → Update harga & publikasikan toko → Run workflow**. Centang
+*abaikan_batas* bila ada peringatan "melebihi batas" dan Anda sudah memastikan harga barunya benar.
+Peringatan tampil di ringkasan setiap run.
+
+## Catatan penting
+
+- **Repo publik = file bisa dilihat orang.** Website hanya menampilkan harga jual, tapi
+  `products.json` dan `internal.json` (modal & supplier) terlihat di repo publik.
+  Agar rahasia, jadikan repo *Private* — GitHub Pages dari repo private butuh paket GitHub Pro (±US$4/bulan).
+- Jadwal otomatis GitHub bisa terlambat beberapa menit; itu normal.
+- Pembayaran saat ini lewat transfer + konfirmasi WhatsApp. Pembayaran otomatis (Midtrans/Xendit)
+  bisa ditambahkan nanti memakai *payment link*.
+- Uji di komputer sendiri: `python3 scripts/update_prices.py` lalu `python3 -m http.server`
+  dan buka http://localhost:8000.

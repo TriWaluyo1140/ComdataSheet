@@ -1,0 +1,96 @@
+{
+  "toko": {
+    "nama_toko": "ComdataSheet",
+    "slogan": "Barang import original, harga mengikuti kurs hari ini",
+    "whatsapp": "6281234567890",
+    "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
+    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. ComdataSheet. Kirim bukti transfer via WhatsApp."
+  },
+  "diperbarui": "2026-11-03T03:44:56+00:00",
+  "kurs": {
+    "sumber": "open.er-api.com",
+    "diperbarui": "2026-11-03T03:44:56+00:00",
+    "usd_idr": 18144.9,
+    "rates": {
+      "AUD": 1.427896,
+      "CNY": 6.665393,
+      "EUR": 0.893269,
+      "GBP": 0.745737,
+      "HKD": 7.846694,
+      "IDR": 18144.899424,
+      "JPY": 157.896122,
+      "KRW": 1344.12576,
+      "MYR": 4.070116,
+      "SGD": 1.279119,
+      "TWD": 32.589181,
+      "USD": 1
+    }
+  },
+  "peringatan": [],
+  "produk": [
+    {
+      "id": "CDS-001",
+      "nama": "Arduino Nano Every (Original)",
+      "kategori": "Mikrokontroler",
+      "gambar": "https://placehold.co/600x450/0f766e/ffffff?text=Arduino+Nano+Every",
+      "deskripsi": "Board ATmega4809, original dari Arduino.cc. Garansi barang asli.",
+      "berat_kg": 0.05,
+      "stok": true,
+      "toko_sumber": "Arduino Store",
+      "harga_sumber": 14.5,
+      "mata_uang_sumber": "USD",
+      "kurs_ke_idr": 18144.8994,
+      "metode_harga": "manual",
+      "harga_idr": 350000,
+      "harga_sebelumnya": null,
+      "rincian": {
+        "modal_idr": 268363,
+        "ongkir_idr": 7500,
+        "margin_persen": 25
+      }
+    },
+    {
+      "id": "CDS-002",
+      "nama": "Raspberry Pi 5 - 8GB",
+      "kategori": "Single Board Computer",
+      "gambar": "https://placehold.co/600x450/be123c/ffffff?text=Raspberry+Pi+5",
+      "deskripsi": "Raspberry Pi 5 RAM 8GB, quad-core Cortex-A76 2.4GHz.",
+      "berat_kg": 0.2,
+      "margin_persen": 15,
+      "stok": true,
+      "toko_sumber": "Supplier US",
+      "harga_sumber": 80.0,
+      "mata_uang_sumber": "USD",
+      "kurs_ke_idr": 18144.8994,
+      "metode_harga": "manual",
+      "harga_idr": 1743000,
+      "harga_sebelumnya": null,
+      "rincian": {
+        "modal_idr": 1480624,
+        "ongkir_idr": 30000,
+        "margin_persen": 15
+      }
+    },
+    {
+      "id": "CDS-003",
+      "nama": "Logic Analyzer 24MHz 8 Channel",
+      "kategori": "Alat Ukur",
+      "gambar": "https://placehold.co/600x450/1d4ed8/ffffff?text=Logic+Analyzer",
+      "deskripsi": "Contoh produk dari supplier Alibaba. Ganti dengan produk asli Anda.",
+      "berat_kg": 0.1,
+      "stok": true,
+      "toko_sumber": "Alibaba - blackcatmark",
+      "harga_sumber": 6.5,
+      "mata_uang_sumber": "USD",
+      "kurs_ke_idr": 18144.8994,
+      "metode_harga": "manual",
+      "harga_idr": 175000,
+      "harga_sebelumnya": 180000,
+      "rincian": {
+        "modal_idr": 120301,
+        "ongkir_idr": 15000,
+        "margin_persen": 25
+      }
+    }
+  ]
+}

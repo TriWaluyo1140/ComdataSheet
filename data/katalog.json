@@ -1,0 +1,52 @@
+{
+  "toko": {
+    "nama_toko": "ComdataSheet",
+    "slogan": "Barang import original, harga mengikuti kurs hari ini",
+    "whatsapp": "6281234567890",
+    "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
+    "info_pembayaran": "Transfer ke BCA 1234567890 a.n. ComdataSheet. Kirim bukti transfer via WhatsApp."
+  },
+  "diperbarui": "2026-11-03T03:44:56+00:00",
+  "kurs": {
+    "usd_idr": 18144.9,
+    "diperbarui": "2026-11-03T03:44:56+00:00"
+  },
+  "produk": [
+    {
+      "id": "CDS-001",
+      "nama": "Arduino Nano Every (Original)",
+      "kategori": "Mikrokontroler",
+      "gambar": "https://placehold.co/600x450/0f766e/ffffff?text=Arduino+Nano+Every",
+      "deskripsi": "Board ATmega4809, original dari Arduino.cc. Garansi barang asli.",
+      "berat_kg": 0.05,
+      "stok": true,
+      "mata_uang_sumber": "USD",
+      "harga_idr": 350000,
+      "harga_sebelumnya": null
+    },
+    {
+      "id": "CDS-002",
+      "nama": "Raspberry Pi 5 - 8GB",
+      "kategori": "Single Board Computer",
+      "gambar": "https://placehold.co/600x450/be123c/ffffff?text=Raspberry+Pi+5",
+      "deskripsi": "Raspberry Pi 5 RAM 8GB, quad-core Cortex-A76 2.4GHz.",
+      "berat_kg": 0.2,
+      "stok": true,
+      "mata_uang_sumber": "USD",
+      "harga_idr": 1743000,
+      "harga_sebelumnya": null
+    },
+    {
+      "id": "CDS-003",
+      "nama": "Logic Analyzer 24MHz 8 Channel",
+      "kategori": "Alat Ukur",
+      "gambar": "https://placehold.co/600x450/1d4ed8/ffffff?text=Logic+Analyzer",
+      "deskripsi": "Contoh produk dari supplier Alibaba. Ganti dengan produk asli Anda.",
+      "berat_kg": 0.1,
+      "stok": true,
+      "mata_uang_sumber": "USD",
+      "harga_idr": 175000,
+      "harga_sebelumnya": 180000
+    }
+  ]
+}

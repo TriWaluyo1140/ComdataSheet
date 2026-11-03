@@ -1,0 +1,17 @@
+{
+  "nama_toko": "ComdataSheet",
+  "slogan": "Barang import original, harga mengikuti kurs hari ini",
+  "whatsapp": "628999905602",
+  "tokopedia_url": "https://www.tokopedia.com/comdatasheet",
+  "info_pembayaran": "Transfer ke BCA 1234567890 a.n. Tri Waluyo. Kirim bukti transfer via WhatsApp.",
+
+  "pengaturan_harga": {
+    "margin_persen": 25,
+    "buffer_kurs_persen": 2,
+    "ongkir_impor_per_kg_idr": 150000,
+    "pajak_impor_persen": 0,
+    "biaya_tetap_idr": 5000,
+    "pembulatan_idr": 1000,
+    "batas_perubahan_persen": 30
+  }
+}
