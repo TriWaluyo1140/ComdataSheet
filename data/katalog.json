@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T05:45:34+00:00",
+  "diperbarui": "2026-11-03T05:45:54+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T05:45:34+00:00"
+    "diperbarui": "2026-11-03T05:45:54+00:00"
   },
   "produk": [
     {
@@ -59,6 +59,24 @@
       "mata_uang_sumber": "USD",
       "harga_idr": 8626000,
       "harga_sebelumnya": 7936000
+    },
+    {
+      "id": "CDS-102",
+      "nama": "Microhard P900-ENC Miniature Mesh 1W 900MHz Wireless Modem Enclosed MHS185060 Digital Data Link Highly Efficient",
+      "kategori": "Electronic Equipment",
+      "gambar": "files/CDS-102/screenshot-2026-11-03-at-12-44-57.png",
+      "galeri": [
+        "files/CDS-102/screenshot-2026-11-03-at-12-44-42.png",
+        "files/CDS-102/screenshot-2026-11-03-at-12-45-04.png"
+      ],
+      "deskripsi": "For the ultimate solution for cost and size sensitive applications, consider the P900 with its extremely small footprint and design flexibility. The P900 features robust, high speed, low latency, secure data communications. The P900 offers excellent noise figure, superior interference rejection, agile frequency synthesis, digital modulation, and matched filter detection. The P900 offers a low cost solution with the\nreliability, features, and performance of our larger modems!",
+      "spesifikasi": {},
+      "unduhan": [],
+      "berat_kg": 0.25,
+      "stok": true,
+      "mata_uang_sumber": "USD",
+      "harga_idr": 9089000,
+      "harga_sebelumnya": null
     }
   ]
 }
