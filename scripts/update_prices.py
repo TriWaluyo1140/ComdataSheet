@@ -190,8 +190,10 @@ def jenis_supplier(produk):
 
 def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=None, kurs_usd=None):
     """Rumus costing ComdataSheet (sama dengan Excel costing):
-    Harga Beli   = (harga supplier + shipping per unit) x kurs  (+ buffer kurs, + ongkir per kg)
-    Harga Indo   = Harga Beli + Bea Masuk   (supplier lokal: tanpa kurs, buffer, ongkir per kg & bea masuk)
+    Harga Barang = (harga supplier + shipping per unit) x kurs x (1 + buffer kurs)
+    Harga Beli   = Harga Barang + biaya transaksi luar negeri (+ ongkir per kg)
+    Harga Indo   = Harga Beli + Bea Masuk (persen per produk, atau default)
+    (supplier lokal: tanpa kurs, buffer, biaya transaksi, ongkir per kg & bea masuk)
     Harga Jual   = Harga Indo + Profit
     Harga Akhir  = (Harga Jual + biaya tetap) + PPN & PPh, dibulatkan ke atas
     """
@@ -200,7 +202,11 @@ def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=N
     if margin is None:
         margin = margin_kategori if margin_kategori is not None else atur["margin_persen"]
     lokal = jenis_supplier(produk) == "lokal"
-    persen = lambda k: 0 if lokal and k in ("buffer_kurs_persen", "pajak_impor_persen") else atur.get(k, 0) / 100
+    hanya_import = ("buffer_kurs_persen", "biaya_transaksi_persen", "pajak_impor_persen")
+    persen = lambda k: 0 if lokal and k in hanya_import else atur.get(k, 0) / 100
+    bea_persen = 0 if lokal else produk.get("bea_masuk_persen", atur.get("pajak_impor_persen", 0))
+    if bea_persen is None:
+        bea_persen = atur.get("pajak_impor_persen", 0)
 
     # shipping per unit: dari produk (mata uang supplier) atau default
     shipping = (produk.get("sumber") or {}).get("shipping")
@@ -211,10 +217,11 @@ def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=N
     else:
         shipping_idr = atur.get("shipping_default_usd", 0) * (kurs_usd or kurs_ke_idr)
 
-    harga_beli = (harga_sumber * kurs_ke_idr + shipping_idr) * (1 + persen("buffer_kurs_persen"))
+    harga_barang = (harga_sumber * kurs_ke_idr + shipping_idr) * (1 + persen("buffer_kurs_persen"))
+    biaya_transaksi = harga_barang * persen("biaya_transaksi_persen")
     ongkir_kg = 0 if lokal else produk.get("berat_kg", 0) * atur.get("ongkir_impor_per_kg_idr", 0)
-    harga_beli += ongkir_kg
-    bea_masuk = harga_beli * persen("pajak_impor_persen")
+    harga_beli = harga_barang + biaya_transaksi + ongkir_kg
+    bea_masuk = harga_beli * bea_persen / 100
     harga_indo = harga_beli + bea_masuk
     profit = harga_indo * margin / 100
     harga_jual = harga_indo + profit + atur.get("biaya_tetap_idr", 0)
@@ -222,8 +229,11 @@ def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=N
     akhir = harga_jual + ppn_pph
     bulat = atur.get("pembulatan_idr") or 1
     return int(math.ceil(round(akhir, 2) / bulat) * bulat), {
-        "harga_beli_idr": round(harga_beli),
+        "harga_barang_idr": round(harga_barang),
         "shipping_idr": round(shipping_idr),
+        "biaya_transaksi_idr": round(biaya_transaksi),
+        "harga_beli_idr": round(harga_beli),
+        "bea_masuk_persen": bea_persen,
         "ongkir_kg_idr": round(ongkir_kg),
         "bea_masuk_idr": round(bea_masuk),
         "harga_indo_idr": round(harga_indo),

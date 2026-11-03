@@ -17,8 +17,9 @@ harga toko sumber   ─┘         tiap 4 jam)        ─► data/internal.json 
 
 **Supplier import**
 ```
-Harga Beli   = (harga supplier + shipping per unit) × kurs
-Harga Indo   = Harga Beli + Bea Masuk (30%)
+Harga Barang = (harga supplier + shipping per unit) × kurs × (1 + buffer kurs 3%)
+Harga Beli   = Harga Barang + biaya transaksi luar negeri (3%)
+Harga Indo   = Harga Beli + Bea Masuk (default 30%, bisa diubah per produk)
 Harga Jual   = Harga Indo + Profit (15%)
 Harga Toko   = Harga Jual + PPN & PPh (12,5%)  → dibulatkan ke atas per Rp 1.000
 ```
