@@ -1,0 +1,66 @@
+name: Update harga & publikasikan toko
+
+on:
+  schedule:
+    - cron: "0 */4 * * *" # setiap 4 jam (waktu UTC)
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      abaikan_batas:
+        description: "Terapkan harga baru walau berubah melebihi batas_perubahan_persen"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-harga
+  cancel-in-progress: false
+
+jobs:
+  update-dan-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Hitung ulang harga (kurs + harga supplier)
+        env:
+          ABAIKAN_BATAS: ${{ inputs.abaikan_batas }}
+        run: python scripts/update_prices.py
+
+      - name: Simpan katalog terbaru ke repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/katalog.json data/internal.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update harga otomatis $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git push
+          fi
+
+      - name: Siapkan file website (tanpa data supplier & modal)
+        run: |
+          mkdir -p _site/data
+          cp -r index.html assets _site/
+          cp data/katalog.json _site/data/
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
