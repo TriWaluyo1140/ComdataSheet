@@ -13,22 +13,22 @@
     {
       "slug": "electronic-equipment",
       "nama": "Electronic Equipment",
-      "margin_persen": 15
+      "margin_persen": null
     },
     {
       "slug": "servos",
       "nama": "Servos",
-      "margin_persen": 15
+      "margin_persen": null
     },
     {
       "slug": "sensors",
       "nama": "Sensors",
-      "margin_persen": 15
+      "margin_persen": null
     },
     {
       "slug": "others",
       "nama": "Others",
-      "margin_persen": 15
+      "margin_persen": null
     }
   ],
   "pengaturan_harga": {
