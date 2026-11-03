@@ -12,9 +12,9 @@
     "keterangan_import": "Barang import · harga {mata_uang} mengikuti kurs hari ini (1 USD = {kurs})",
     "keterangan_lokal": "Supplier lokal (Indonesia)",
     "teks_kosong": "Belum ada produk di kategori ini.",
-    "teks_footer": "Harga dihitung otomatis dari harga supplier luar negeri dan kurs terbaru, sehingga dapat berubah sewaktu-waktu. Harga final mengikuti konfirmasi pesanan.",
-    "info_kontak": "",
-    "teks_tokopedia": "XXXX"
+    "teks_footer": "Harga merupakan estimasi otomatis berdasarkan harga dari pemasok luar negeri dan nilai tukar yang berlaku, sehingga bersifat fluktuatif. Harga final yang berlaku adalah harga pada saat konfirmasi pesanan.",
+    "info_kontak": "The Mansion At Dukuh Golf Kemayoran Blok Bougenville, Jl. Trembesi Blok D Bandar Baru Jakarta Utara 14410",
+    "teks_tokopedia": ""
   },
   "konten_en": {},
   "github": {
