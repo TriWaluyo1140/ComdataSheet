@@ -46,14 +46,16 @@ jobs:
           git add data/katalog.json data/internal.json
           if ! git diff --cached --quiet; then
             git commit -m "Update harga otomatis $(date -u '+%Y-%m-%d %H:%M') UTC"
+            git pull --rebase origin main
             git push
           fi
 
       - name: Siapkan file website (tanpa data supplier & modal)
         run: |
           mkdir -p _site/data
-          cp -r index.html assets _site/
+          cp -r index.html admin.html assets _site/
           cp data/katalog.json _site/data/
+          if [ -d files ]; then cp -r files _site/; fi
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5
