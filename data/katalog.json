@@ -14,29 +14,29 @@
       {
         "slug": "electronic-equipment",
         "nama": "Electronic Equipment",
-        "margin_persen": 15
+        "margin_persen": null
       },
       {
         "slug": "servos",
         "nama": "Servos",
-        "margin_persen": 15
+        "margin_persen": null
       },
       {
         "slug": "sensors",
         "nama": "Sensors",
-        "margin_persen": 15
+        "margin_persen": null
       },
       {
         "slug": "others",
         "nama": "Others",
-        "margin_persen": 15
+        "margin_persen": null
       }
     ]
   },
-  "diperbarui": "2026-11-03T05:12:18+00:00",
+  "diperbarui": "2026-11-03T05:16:59+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T05:12:18+00:00"
+    "diperbarui": "2026-11-03T05:16:59+00:00"
   },
   "produk": [
     {
@@ -57,8 +57,8 @@
       "galeri": [],
       "unduhan": [],
       "mata_uang_sumber": "USD",
-      "harga_idr": 7936000,
-      "harga_sebelumnya": 6636000
+      "harga_idr": 8626000,
+      "harga_sebelumnya": 7936000
     }
   ]
 }
