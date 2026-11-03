@@ -65,10 +65,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T10:00:00+00:00",
+  "diperbarui": "2026-11-03T10:07:50+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T10:00:00+00:00",
+    "diperbarui": "2026-11-03T10:07:50+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
@@ -168,6 +168,47 @@
         "harga_jual_idr": 12950386,
         "ppn_pph_idr": 1618798,
         "harga_jual_pajak_idr": 14569185
+      }
+    },
+    {
+      "id": "CDS-103",
+      "nama": "8.4V Digital Servo Metal Gear High Torque Servo Motor for RC Robotics and Uav/drone",
+      "kategori": "Electronic Equipment",
+      "gambar": "files/CDS-103/servo-1.png",
+      "galeri": [
+        "files/CDS-103/servo-2.png",
+        "files/CDS-103/servo-3.png"
+      ],
+      "deskripsi": "",
+      "spesifikasi": {},
+      "unduhan": [],
+      "berat_kg": 0.1,
+      "stok": true,
+      "ketersediaan": "indent",
+      "merek": "Torque Servo Motor",
+      "lama_indent_hari": 14,
+      "toko_sumber": "",
+      "jenis_supplier": "import",
+      "harga_sumber": 20.0,
+      "mata_uang_sumber": "USD",
+      "kurs_ke_idr": 18144.8994,
+      "metode_harga": "manual",
+      "harga_idr": 1619000,
+      "harga_sebelumnya": null,
+      "rincian": {
+        "harga_barang_idr": 934462,
+        "shipping_idr": 544347,
+        "biaya_transaksi_idr": 28034,
+        "harga_beli_idr": 962496,
+        "bea_masuk_persen": 30,
+        "ongkir_kg_idr": 0,
+        "bea_masuk_idr": 288749,
+        "harga_indo_idr": 1251245,
+        "margin_persen": 15,
+        "profit_idr": 187687,
+        "harga_jual_idr": 1438932,
+        "ppn_pph_idr": 179866,
+        "harga_jual_pajak_idr": 1618798
       }
     }
   ]

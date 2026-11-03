@@ -65,10 +65,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T10:00:00+00:00",
+  "diperbarui": "2026-11-03T10:07:50+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T10:00:00+00:00"
+    "diperbarui": "2026-11-03T10:07:50+00:00"
   },
   "produk": [
     {
@@ -117,6 +117,29 @@
       "harga_idr": 14570000,
       "harga_sebelumnya": 13733000,
       "halaman": "produk/cds-102-microhard-p900-enc-miniature-mesh-1w-900mhz-wireless.html"
+    },
+    {
+      "id": "CDS-103",
+      "nama": "8.4V Digital Servo Metal Gear High Torque Servo Motor for RC Robotics and Uav/drone",
+      "kategori": "Electronic Equipment",
+      "gambar": "files/CDS-103/servo-1.png",
+      "galeri": [
+        "files/CDS-103/servo-2.png",
+        "files/CDS-103/servo-3.png"
+      ],
+      "deskripsi": "",
+      "spesifikasi": {},
+      "unduhan": [],
+      "berat_kg": 0.1,
+      "stok": true,
+      "ketersediaan": "indent",
+      "merek": "Torque Servo Motor",
+      "lama_indent_hari": 14,
+      "jenis_supplier": "import",
+      "mata_uang_sumber": "USD",
+      "harga_idr": 1619000,
+      "harga_sebelumnya": null,
+      "halaman": "produk/cds-103-8-4v-digital-servo-metal-gear-high-torque-servo.html"
     }
   ]
 }
