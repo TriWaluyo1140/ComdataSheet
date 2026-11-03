@@ -30,7 +30,7 @@
       return;
     }
     const t = katalog.toko || {};
-    if (t.nama_toko) { $("nama-toko").textContent = t.nama_toko; document.title = t.nama_toko + " — Toko Barang Import"; }
+    if (t.nama_toko) { $("nama-toko").alt = t.nama_toko; document.title = t.nama_toko + " — Toko Barang Import"; }
     if (t.slogan) $("slogan").textContent = t.slogan;
     if (t.info_pembayaran) $("info-bayar").textContent = t.info_pembayaran;
     if (t.tokopedia_url) $("link-tokopedia").innerHTML = 'Kami juga ada di <a href="' + esc(t.tokopedia_url) + '" target="_blank" rel="noopener">Tokopedia</a>.';
