@@ -17,7 +17,7 @@
       ready: "Ready stock", ready_detail: "Ready stock — siap dikirim",
       indent: "Indent ±{hari} hari", indent_detail: "Indent / PO — estimasi {hari} hari setelah pembayaran",
       label_import: "Import", label_lokal: "Lokal",
-      beranda: "Beranda", kembali: "Kembali", tanya_wa: "Tanya via WhatsApp", unduh: "Unduh dokumen", dokumen: "Dokumen",
+      beranda: "Beranda", kembali: "Kembali", tanya_wa: "Tanya via WhatsApp", bagikan: "Bagikan link", link_disalin: "Link disalin", unduh: "Unduh dokumen", dokumen: "Dokumen",
       deskripsi: "Deskripsi", spesifikasi: "Spesifikasi",
       keranjang: "Keranjang", keranjang_kosong: "Keranjang masih kosong.", total: "Total",
       f_nama: "Nama lengkap", f_hp: "No. HP / WhatsApp", f_alamat: "Alamat lengkap pengiriman", f_catatan: "Catatan (opsional)",
@@ -35,7 +35,7 @@
       ready: "In stock", ready_detail: "In stock — ready to ship",
       indent: "Pre-order ±{hari} days", indent_detail: "Pre-order — approx. {hari} days after payment",
       label_import: "Import", label_lokal: "Local",
-      beranda: "Home", kembali: "Back", tanya_wa: "Ask via WhatsApp", unduh: "Downloads", dokumen: "Document",
+      beranda: "Home", kembali: "Back", tanya_wa: "Ask via WhatsApp", bagikan: "Share link", link_disalin: "Link copied", unduh: "Downloads", dokumen: "Document",
       deskripsi: "Description", spesifikasi: "Specifications",
       keranjang: "Cart", keranjang_kosong: "Your cart is empty.", total: "Total",
       f_nama: "Full name", f_hp: "Phone / WhatsApp", f_alamat: "Full shipping address", f_catatan: "Notes (optional)",
@@ -118,8 +118,17 @@
       return;
     }
     for (const id of Object.keys(keranjang)) if (!cariProduk(id)) delete keranjang[id];
+    // datang dari tombol "+ Keranjang" di halaman produk Google (?tambah=ID): masukkan ke keranjang
+    const url = new URL(location.href), tambahId = url.searchParams.get("tambah");
+    if (tambahId) {
+      url.searchParams.delete("tambah");
+      history.replaceState(null, "", url);
+      const p = cariProduk(tambahId);
+      if (p && ketersediaan(p) !== "habis") keranjang[tambahId] = (keranjang[tambahId] || 0) + 1;
+    }
     simpanKeranjang();
     tampilkanSemua();
+    if (tambahId && keranjang[tambahId]) bukaKeranjang(true);
   }
 
   // teks di index.html yang ditandai data-i18n / data-i18n-ph
@@ -360,6 +369,7 @@
           '<div class="aksi">' + tombolBeli(p) +
             '<a class="btn btn-wa-kecil" target="_blank" rel="noopener" href="https://wa.me/' + esc(katalog.toko.whatsapp) +
               "?text=" + encodeURIComponent(t("wa_tanya", { nama: nama, id: p.id })) + '">' + esc(t("tanya_wa")) + "</a>" +
+            (p.halaman ? '<button type="button" class="btn btn-bagikan" data-bagikan="' + esc(p.halaman) + '">🔗 ' + esc(t("bagikan")) + "</button>" : "") +
           "</div>" +
           (unduhan.length ? '<div class="unduhan"><h2>' + esc(t("unduh")) + "</h2>" + unduhan.map((u) =>
             '<a class="file" href="' + esc(u.url) + '" target="_blank" rel="noopener" download>' +
@@ -408,6 +418,17 @@
       const root = (geser || keFoto).closest("[data-slide]");
       geserSlide(root, geser ? +root.dataset.i + +geser.dataset.geser : +keFoto.dataset.ke);
       if (root.hasAttribute("data-otomatis")) clearInterval(timerSlide); // berhenti otomatis setelah dipilih sendiri
+      return;
+    }
+    const bagikan = e.target.closest("[data-bagikan]");
+    if (bagikan) {
+      // link halaman produk versi Google (judul, foto & harga tampil saat dibagikan di WhatsApp)
+      const link = new URL(bagikan.dataset.bagikan, location.href.split("#")[0].split("?")[0]).href;
+      if (navigator.share) return navigator.share({ title: document.title, url: link }).catch(() => {});
+      navigator.clipboard.writeText(link).then(() => {
+        bagikan.textContent = "✓ " + t("link_disalin");
+        setTimeout(() => { bagikan.textContent = "🔗 " + t("bagikan"); }, 2000);
+      }, () => prompt(t("bagikan"), link));
       return;
     }
     const tambah = e.target.closest("[data-tambah]");

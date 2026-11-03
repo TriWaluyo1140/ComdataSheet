@@ -114,6 +114,13 @@ body {
 .remah a { color: var(--brand); text-decoration: none; }
 .btn-kembali { font: inherit; font-weight: 600; color: #fff; background: var(--brand); border: 0; border-radius: 999px; padding: 4px 12px; margin-right: 10px; cursor: pointer; }
 .btn-kembali:hover { background: var(--brand-dark); }
+.remah a.btn-kembali { color: #fff; }
+.btn-bagikan { background: transparent; color: var(--brand); border: 1px solid var(--brand); }
+.btn-bagikan:hover { background: var(--brand-pucat); }
+/* halaman produk untuk Google (produk/*.html) */
+.seo-thumb { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
+.seo-thumb img { width: 72px; height: 54px; object-fit: contain; background: #eef1f4; border-radius: 6px; display: block; }
+.seo-lama { color: var(--muted); text-decoration: line-through; font-weight: 400; font-size: .9rem; }
 /* latar halaman detail bisa diklik untuk kembali */
 body.di-detail { cursor: pointer; }
 body.di-detail :is(.detail-grid, .blok, .remah, .topbar, .footer, .drawer) { cursor: auto; }

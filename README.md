@@ -98,6 +98,23 @@ Setelah disimpan, harga dihitung dan website diperbarui otomatis dalam ±1 menit
 `margin_persen` per produk boleh dihapus (pakai default). `stok: false` = tombol beli dimatikan.
 Gambar bisa diunggah ke folder `assets/img/` lalu ditulis `"gambar": "assets/img/nama.jpg"`.
 
+## Agar produk ditemukan di Google
+
+Setiap kali website dipublikasikan, `scripts/build_seo.py` otomatis membuat:
+
+- **`produk/<nama-produk>.html`** — satu halaman per produk yang langsung terbaca Google
+  (judul "Jual …", deskripsi, foto, harga, stok, data schema.org Product). Tombol *+ Keranjang*
+  di halaman ini membuka toko dan memasukkan produk ke keranjang.
+- **`sitemap.xml`** — daftar semua halaman. Kirim sekali di Google Search Console.
+- **`google-merchant.xml`** — feed produk untuk Google Merchant Center (tab Shopping, gratis).
+
+Isi **Merek** dan **Kode / part number** (misal `MHS185060`) di Admin → Edit produk agar data
+Google lebih lengkap. Tombol **Bagikan link** di halaman produk menyalin alamat halaman versi Google —
+pakai link ini di Tokopedia, Instagram, WhatsApp, agar foto & harga tampil saat dibagikan.
+
+Bila memakai domain sendiri, isi `"url_situs": "https://domainanda.com/"` di `data/config.json`
+(GitHub Actions biasanya sudah mendeteksinya otomatis).
+
 ## Pemasangan di GitHub (sekali saja)
 
 1. Buat akun di github.com, lalu **New repository** (misal `comdatasheet`), pilih *Public*.

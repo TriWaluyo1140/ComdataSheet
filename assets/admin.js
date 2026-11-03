@@ -387,6 +387,8 @@
       '<label>ID produk<input name="id" required value="' + esc(d.id) + '"></label>' +
       '<label>Kategori<select name="kategori">' + kat.map((k) => "<option" + (k === d.kategori ? " selected" : "") + ">" + esc(k) + "</option>").join("") + "</select></label>" +
       '<label class="penuh-lebar">Nama produk<input name="nama" required value="' + esc(d.nama) + '"></label>' +
+      '<label>Merek <small>untuk Google, contoh: Microhard</small><input name="merek" value="' + esc(d.merek) + '" placeholder="' + esc((d.nama || "").split(" ")[0]) + '"></label>' +
+      '<label>Kode / part number <small>contoh: MHS185060</small><input name="mpn" value="' + esc(d.mpn) + '"></label>' +
       '<label class="penuh-lebar">Deskripsi<textarea name="deskripsi" rows="4">' + esc(d.deskripsi) + "</textarea></label>" +
       '<label class="penuh-lebar">Spesifikasi <small>satu per baris, format <code>Nama: Nilai</code> (contoh: <code>Tegangan: 5 V</code>)</small><textarea name="spesifikasi" rows="5">' + esc(spek) + "</textarea></label>" +
       '<details class="penuh-lebar versi-en"' + (d.nama_en || d.deskripsi_en || Object.keys(d.spesifikasi_en || {}).length ? " open" : "") + "><summary>Versi bahasa Inggris (opsional — kosong = pakai teks di atas)</summary>" +
@@ -442,6 +444,8 @@
     const f = $("form-produk");
     const v = (n) => f.elements[n].value.trim();
     draf.id = v("id"); draf.nama = v("nama"); draf.kategori = v("kategori"); draf.deskripsi = f.elements.deskripsi.value.trim();
+    draf.merek = v("merek"); draf.mpn = v("mpn");
+    for (const k of ["merek", "mpn"]) if (!draf[k]) delete draf[k];
     draf.spesifikasi = {};
     f.elements.spesifikasi.value.split("\n").forEach((baris) => {
       const i = baris.indexOf(":");

@@ -14,6 +14,7 @@ import math
 import os
 import re
 import sys
+import unicodedata
 import urllib.request
 from datetime import datetime, timezone
 from html import unescape
@@ -26,7 +27,7 @@ PRODUCTS_FILE = DATA / "products.json"
 KATALOG_FILE = DATA / "katalog.json"  # publik, dibaca website
 INTERNAL_FILE = DATA / "internal.json"  # rincian modal & supplier, TIDAK ikut dipublikasikan
 PUBLIK_FIELD = {"id", "nama", "nama_en", "kategori", "gambar", "galeri", "deskripsi", "deskripsi_en", "spesifikasi", "spesifikasi_en", "unduhan",
-                "berat_kg", "stok", "ketersediaan", "lama_indent_hari", "jenis_supplier", "mata_uang_sumber", "harga_idr", "harga_sebelumnya"}
+                "berat_kg", "stok", "ketersediaan", "lama_indent_hari", "jenis_supplier", "mata_uang_sumber", "harga_idr", "harga_sebelumnya", "merek", "mpn"}
 
 # Situs yang memblokir bot (captcha). Untuk sumber ini harga USD diambil dari
 # "harga_manual", tapi kurs tetap otomatis. URL tetap disimpan sebagai catatan.
@@ -247,6 +248,18 @@ def hitung_harga_jual(harga_sumber, kurs_ke_idr, produk, atur, margin_kategori=N
 
 # -------------------------------------------------------------- Main
 
+def halaman_produk(p):
+    """Alamat halaman produk untuk Google, contoh: produk/cds-102-microhard-p900-enc-miniature-mesh.html"""
+    teks = unicodedata.normalize("NFKD", (p.get("id", "") + " " + p.get("nama", "")).lower())
+    kata = re.sub(r"[^a-z0-9]+", " ", teks.encode("ascii", "ignore").decode()).split()
+    slug = ""
+    for k in kata:
+        if slug and len(slug) + len(k) + 1 > 60:
+            break
+        slug = slug + "-" + k if slug else k
+    return "produk/" + (slug or "item") + ".html"
+
+
 def main():
     config = load_json(CONFIG_FILE, {})
     atur = config["pengaturan_harga"]
@@ -350,7 +363,7 @@ def main():
         "toko": toko,
         "diperbarui": katalog["diperbarui"],
         "kurs": {"usd_idr": katalog["kurs"]["usd_idr"], "diperbarui": kurs_waktu},
-        "produk": [{k: v for k, v in p.items() if k in PUBLIK_FIELD} for p in hasil],
+        "produk": [dict({k: v for k, v in p.items() if k in PUBLIK_FIELD}, halaman=halaman_produk(p)) for p in hasil],
     }
     KATALOG_FILE.write_text(json.dumps(publik, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
