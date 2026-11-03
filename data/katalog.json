@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T05:46:26+00:00",
+  "diperbarui": "2026-11-03T05:53:02+00:00",
   "kurs": {
     "usd_idr": 18144.9,
-    "diperbarui": "2026-11-03T05:46:26+00:00"
+    "diperbarui": "2026-11-03T05:53:02+00:00"
   },
   "produk": [
     {
@@ -57,8 +57,8 @@
       "galeri": [],
       "unduhan": [],
       "mata_uang_sumber": "USD",
-      "harga_idr": 8626000,
-      "harga_sebelumnya": 7936000
+      "harga_idr": 10581000,
+      "harga_sebelumnya": 8626000
     },
     {
       "id": "CDS-102",
@@ -75,8 +75,8 @@
       "berat_kg": 0.25,
       "stok": true,
       "mata_uang_sumber": "USD",
-      "harga_idr": 9089000,
-      "harga_sebelumnya": null
+      "harga_idr": 12097000,
+      "harga_sebelumnya": 9089000
     }
   ]
 }

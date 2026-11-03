@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T05:46:26+00:00",
+  "diperbarui": "2026-11-03T05:53:02+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T05:46:26+00:00",
+    "diperbarui": "2026-11-03T05:53:02+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
@@ -73,14 +73,14 @@
       "galeri": [],
       "unduhan": [],
       "toko_sumber": "Beijing Qidian Chuanghang Science And Trade Co., Ltd",
-      "harga_sumber": 285.0,
+      "harga_sumber": 350.0,
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 8626000,
-      "harga_sebelumnya": 7936000,
+      "harga_idr": 10581000,
+      "harga_sebelumnya": 8626000,
       "rincian": {
-        "modal_idr": 5274722,
+        "modal_idr": 6477729,
         "ongkir_idr": 30000,
         "margin_persen": 25
       }
@@ -100,14 +100,14 @@
       "berat_kg": 0.25,
       "stok": true,
       "toko_sumber": "",
-      "harga_sumber": 300.0,
+      "harga_sumber": 400.0,
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 9089000,
-      "harga_sebelumnya": null,
+      "harga_idr": 12097000,
+      "harga_sebelumnya": 9089000,
       "rincian": {
-        "modal_idr": 5552339,
+        "modal_idr": 7403119,
         "ongkir_idr": 37500,
         "margin_persen": 25
       }
