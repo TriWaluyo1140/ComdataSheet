@@ -49,7 +49,7 @@ body {
 .badge { position: absolute; top: -7px; right: -7px; background: var(--accent); color: #fff; font-size: .72rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px; display: grid; place-items: center; padding: 0 5px; }
 
 .hero { color: #fff; padding: 30px 0 26px; border-bottom: 3px solid var(--brand);
-  background: linear-gradient(90deg, rgba(10,10,11,.95) 0%, rgba(10,10,11,.85) 45%, rgba(10,10,11,.3) 100%), var(--gambar-hero, url("hero-pcb.svg")) right center / cover no-repeat, var(--hitam); }
+  background: linear-gradient(90deg, rgba(10,10,11,.95) 0%, rgba(10,10,11,.85) 45%, rgba(10,10,11,.3) 100%), var(--gambar-hero, url("hero-pcb.svg?v=3")) right center / cover no-repeat, var(--hitam); }
 .hero h1 { position: relative; padding-left: 16px; }
 .hero h1::before { content: ""; position: absolute; left: 0; top: .15em; bottom: .15em; width: 5px; border-radius: 3px; background: var(--brand); }
 .hero h1 { margin: 0 0 10px; font-size: clamp(1.25rem, 3.2vw, 1.85rem); line-height: 1.25; }
@@ -181,7 +181,7 @@ body {
 @media (max-width: 760px) { .pilih-bahasa { margin-left: auto; } .pilih-bahasa + .cart-btn { margin-left: 0; } }
 .hero .kurs-box { margin-left: 16px; }
 @media (max-width: 760px) {
-  .hero { padding: 22px 0 20px; background: linear-gradient(rgba(10,10,11,.86), rgba(10,10,11,.86)), var(--gambar-hero, url("hero-pcb.svg")) 75% center / cover no-repeat, var(--hitam); }
+  .hero { padding: 22px 0 20px; background: linear-gradient(rgba(10,10,11,.7), rgba(10,10,11,.78)), var(--gambar-hero, url("hero-pcb.svg?v=3")) 75% center / cover no-repeat, var(--hitam); }
 }
 .toolbar input, .toolbar select, .detail-grid, .blok { box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 18px rgba(0,0,0,.04); }
 body.admin { background: #f4f4f5; }
@@ -197,3 +197,4 @@ main .kosong { color: #d4d4d8; }
 body:not(.admin) { min-height: 100vh; display: flex; flex-direction: column; }
 body:not(.admin) > .footer { margin-top: auto; }
 body:not(.admin) > #hal-daftar, body:not(.admin) > #hal-detail { width: 100%; }
+@media (max-width: 760px) { .hero h1, .subjudul { text-shadow: 0 1px 6px rgba(0,0,0,.85); } }
