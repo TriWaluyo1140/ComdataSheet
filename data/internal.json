@@ -7,8 +7,8 @@
     "info_pembayaran_en": "Bank transfer to BCA 1234567890 (Tri Waluyo). Please send the transfer receipt via WhatsApp.",
     "indent_default_hari": 14,
     "konten": {
-      "judul_beranda": "......",
-      "subjudul_beranda": "XXXX",
+      "judul_beranda": "Komponen Elektronik Original untuk Kebutuhan Industri dan Proyek Anda",
+      "subjudul_beranda": "Electronic equipment, servo, sensor, dan lainnya, langsung dari supplier luar negeri maupun stok lokal. Harga transparan mengikuti kurs hari ini, lengkap dengan brosur dan datasheet untuk setiap produk",
       "tampilkan_kurs": true,
       "keterangan_import": "Barang import · harga {mata_uang} mengikuti kurs hari ini (1 USD = {kurs})",
       "keterangan_lokal": "Supplier lokal (Indonesia)",
@@ -17,7 +17,10 @@
       "info_kontak": "The Mansion At Dukuh Golf Kemayoran Blok Bougenville, Jl. Trembesi Blok D Bandar Baru Jakarta Utara 14410",
       "teks_tokopedia": ""
     },
-    "konten_en": {},
+    "konten_en": {
+      "judul_beranda": "Original Electronic Components for Your Industrial and Project Needs",
+      "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product"
+    },
     "github": {
       "owner": "TriWaluyo1140",
       "repo": "ComdataSheet",
@@ -62,10 +65,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T07:43:49+00:00",
+  "diperbarui": "2026-11-03T07:51:09+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T07:43:49+00:00",
+    "diperbarui": "2026-11-03T07:51:09+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
