@@ -55,6 +55,7 @@ Buka `https://<username>.github.io/ComdataSheet/admin.html`.
 - **Tab Produk:** tambah/edit/hapus produk, unggah foto, dan unggah brosur/datasheet (PDF).
   File tersimpan di folder `files/<ID produk>/`.
 - **Tab Update Harga (Excel):** unduh Excel harga per kategori, isi, unggah kembali, cek pratinjau, lalu simpan.
+- **Tab Konten Halaman:** ubah judul & subjudul halaman depan, judul/deskripsi tiap kategori, keterangan di halaman produk, serta info kontak & teks di bagian bawah.
 - **Tab Pengaturan Toko:** nomor WhatsApp, info pembayaran, margin default, margin per kategori, ongkir, pajak.
 
 Membuat token: GitHub → Settings → Developer settings → **Fine-grained tokens** → Generate new token →

@@ -215,6 +215,7 @@
     isiFilterKategori();
     renderTabel();
     renderFormToko();
+    renderFormKonten();
   }
 
   async function masukPanel() {
@@ -711,7 +712,6 @@
       "<h3>Informasi toko</h3>" +
       field("Nama toko", "nama_toko", c.nama_toko) +
       field("No. WhatsApp", "whatsapp", c.whatsapp, { ket: "format 62…, tanpa + atau spasi" }) +
-      field("Slogan (judul halaman depan)", "slogan", c.slogan, { lebar: true }) +
       field("Link Tokopedia", "tokopedia_url", c.tokopedia_url, { lebar: true }) +
       field("Info pembayaran", "info_pembayaran", c.info_pembayaran, { lebar: true, area: true }) +
       "<h3>Rumus harga</h3>" +
@@ -736,7 +736,7 @@
   $("form-toko").onsubmit = async (e) => {
     e.preventDefault();
     const f = e.target.elements, cad = JSON.stringify(config);
-    ["nama_toko", "whatsapp", "slogan", "tokopedia_url", "info_pembayaran"].forEach((n) => { config[n] = f[n].value.trim(); });
+    ["nama_toko", "whatsapp", "tokopedia_url", "info_pembayaran"].forEach((n) => { config[n] = f[n].value.trim(); });
     config.whatsapp = config.whatsapp.replace(/\D/g, "").replace(/^0/, "62");
     const h = config.pengaturan_harga = config.pengaturan_harga || {};
     for (const n of ["shipping_default_usd", "shipping_default_lokal_idr", "pajak_impor_persen", "biaya_transaksi_persen", "margin_persen", "ppn_pph_persen", "buffer_kurs_persen", "ongkir_impor_per_kg_idr", "biaya_tetap_idr", "pembulatan_idr", "batas_perubahan_persen"]) {
@@ -748,6 +748,54 @@
     status("Menyimpan pengaturan…", "proses");
     try { await simpanConfigKeGitHub("Ubah pengaturan toko"); renderFormToko(); status(pesanTerbit("Pengaturan")); }
     catch (err) { config = JSON.parse(cad); status("Gagal menyimpan: " + esc(err.message), "error"); }
+  };
+
+  // ------------------------------------------------- Tab konten halaman
+  function renderFormKonten() {
+    const k = config.konten = config.konten || {};
+    if (k.judul_beranda === undefined && config.slogan) k.judul_beranda = config.slogan;
+    const area = (label, nama, nilai, ket, baris = 2) => '<label class="penuh-lebar">' + label + (ket ? " <small>" + ket + "</small>" : "") +
+      '<textarea name="' + nama + '" rows="' + baris + '">' + esc(nilai ?? "") + "</textarea></label>";
+    const isian = (label, nama, nilai, ket, lebar) => '<label class="' + (lebar ? "penuh-lebar" : "") + '">' + label + (ket ? " <small>" + ket + "</small>" : "") +
+      '<input name="' + nama + '" value="' + esc(nilai ?? "") + '"></label>';
+    $("form-konten").innerHTML =
+      "<h3>Halaman depan</h3>" +
+      area("Judul besar", "judul_beranda", k.judul_beranda, "tulisan besar di bagian atas halaman depan") +
+      area("Subjudul", "subjudul_beranda", k.subjudul_beranda, "kalimat kecil di bawah judul; kosongkan bila tidak perlu", 3) +
+      '<label class="cek penuh-lebar"><input type="checkbox" name="tampilkan_kurs"' + (k.tampilkan_kurs === false ? "" : " checked") + "> Tampilkan kotak kurs USD &amp; waktu update harga</label>" +
+
+      "<h3>Halaman kategori <small>(kosong = pakai nama kategori di menu)</small></h3>" +
+      config.kategori.map((kat, i) =>
+        isian("Judul — " + esc(kat.nama), "kj_" + i, kat.judul, "", false) +
+        isian("Deskripsi — " + esc(kat.nama), "kd_" + i, kat.deskripsi, "", false)).join("") +
+      isian("Teks bila kategori kosong", "teks_kosong", k.teks_kosong, "", true) +
+
+      "<h3>Halaman detail produk</h3>" +
+      isian("Keterangan produk import", "keterangan_import", k.keterangan_import,
+        "<code>{mata_uang}</code> dan <code>{kurs}</code> otomatis diganti, contoh: USD dan Rp 18.145", true) +
+      isian("Keterangan produk lokal", "keterangan_lokal", k.keterangan_lokal, "", true) +
+
+      "<h3>Bagian bawah (footer)</h3>" +
+      area("Info kontak / alamat", "info_kontak", k.info_kontak, "contoh: alamat toko, jam buka, email — boleh beberapa baris", 4) +
+      area("Teks keterangan", "teks_footer", k.teks_footer, "", 3) +
+      isian("Teks link Tokopedia", "teks_tokopedia", k.teks_tokopedia, "kata <b>Tokopedia</b> otomatis jadi link; kosongkan untuk menyembunyikan", true) +
+      '<div class="penuh-lebar"><button class="btn" type="submit">Simpan konten</button> <a class="btn btn-garis" href="./" target="_blank" rel="noopener" style="text-decoration:none">Lihat toko</a></div>';
+  }
+
+  $("form-konten").onsubmit = async (e) => {
+    e.preventDefault();
+    const f = e.target.elements, cad = JSON.stringify(config);
+    const k = config.konten = config.konten || {};
+    for (const n of ["judul_beranda", "subjudul_beranda", "teks_kosong", "keterangan_import", "keterangan_lokal", "info_kontak", "teks_footer", "teks_tokopedia"]) k[n] = f[n].value.trim();
+    k.tampilkan_kurs = f.tampilkan_kurs.checked;
+    config.kategori.forEach((kat, i) => { kat.judul = f["kj_" + i].value.trim(); kat.deskripsi = f["kd_" + i].value.trim(); });
+    delete config.slogan;
+    const tombol = e.target.querySelector("button[type=submit]");
+    tombol.disabled = true;
+    status("Menyimpan konten…", "proses");
+    try { await simpanConfigKeGitHub("Ubah konten halaman"); status(pesanTerbit("Konten halaman")); }
+    catch (err) { config = JSON.parse(cad); status("Gagal menyimpan: " + esc(err.message), "error"); }
+    finally { tombol.disabled = false; }
   };
 
   // ------------------------------------------------------------ Mulai

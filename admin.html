@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Admin — ComdataSheet</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
-  <link rel="stylesheet" href="assets/style.css?v=6">
+  <link rel="stylesheet" href="assets/style.css?v=7">
   <link rel="stylesheet" href="assets/admin.css?v=4">
 </head>
 <body class="admin">
@@ -69,6 +69,7 @@
     <nav class="tab" role="tablist">
       <button data-tab="produk" class="aktif">Produk</button>
       <button data-tab="harga">Update Harga (Excel)</button>
+      <button data-tab="konten">Konten Halaman</button>
       <button data-tab="toko">Pengaturan Toko</button>
     </nav>
     <div class="status" id="status" hidden></div>
@@ -109,6 +110,11 @@
       </div>
     </section>
 
+    <!-- Tab Konten Halaman -->
+    <section data-isi="konten" hidden>
+      <form id="form-konten" class="kartu form-grid"></form>
+    </section>
+
     <!-- Tab Pengaturan -->
     <section data-isi="toko" hidden>
       <form id="form-toko" class="kartu form-grid"></form>
@@ -126,6 +132,6 @@
   </aside>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="assets/admin.js?v=6"></script>
+  <script src="assets/admin.js?v=7"></script>
 </body>
 </html>

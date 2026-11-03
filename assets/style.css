@@ -24,16 +24,17 @@ body {
 
 .topbar { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
 .topbar-inner { display: flex; align-items: center; gap: 20px; min-height: 70px; }
-.menu { display: flex; gap: 4px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+.menu { display: flex; gap: 4px; flex: 0 1 auto; min-width: 0; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
 .menu::-webkit-scrollbar { display: none; }
 .menu a { white-space: nowrap; padding: 8px 12px; border-radius: 999px; color: var(--text); text-decoration: none; font-weight: 600; font-size: .92rem; }
 .menu a:hover { background: #eef6f5; color: var(--brand); }
 .menu a.aktif { background: var(--brand); color: #fff; }
-.cart-btn { margin-left: auto; }
+.cart-btn { flex-shrink: 0; margin-left: -8px; }
 @media (max-width: 760px) {
   .topbar-inner { flex-wrap: wrap; gap: 6px 12px; padding-top: 8px; }
   .brand img { height: 44px !important; }
-  .menu { order: 3; flex-basis: 100%; padding-bottom: 8px; }
+  .cart-btn { margin-left: auto; }
+  .menu { order: 3; flex-basis: 100%; margin-left: 0; padding-bottom: 8px; }
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--text); text-decoration: none; }
 .brand img { height: 54px; width: auto; display: block; }
@@ -98,7 +99,7 @@ body {
 .remah { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
 .remah a { color: var(--brand); text-decoration: none; }
 .detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
-.galeri-utama { width: 100%; aspect-ratio: 4/3; object-fit: contain; background: #eef1f4; border-radius: 10px; }
+.galeri-utama { width: 100%; aspect-ratio: 4/3; object-fit: contain; background: #eef1f4; border-radius: 10px; display: block; }
 .galeri-thumb { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .galeri-thumb button { padding: 0; border: 2px solid var(--line); border-radius: 8px; background: none; cursor: pointer; width: 64px; height: 64px; overflow: hidden; }
 .galeri-thumb button.aktif { border-color: var(--brand); }
@@ -129,3 +130,24 @@ body {
 .jenis { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
 .jenis.import { background: #e0f2fe; color: #075985; }
 .jenis.lokal { background: #fef3c7; color: #92400e; }
+
+/* ---------- Slideshow foto ---------- */
+.slide-bingkai { position: relative; overflow: hidden; }
+.slide.besar .slide-bingkai { border-radius: 10px; }
+.slide-track { display: flex; transition: transform .4s ease; }
+.slide-track > img { flex: 0 0 100%; min-width: 0; }
+.slide.besar .slide-track > img { border-radius: 0; }
+.slide-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: 0;
+  background: rgba(255,255,255,.92); color: var(--text); font-size: 1.4rem; line-height: 1; cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25); display: grid; place-items: center; padding: 0 0 3px; opacity: 0; transition: opacity .2s; }
+.slide-nav.kiri { left: 8px; } .slide-nav.kanan { right: 8px; }
+.slide:hover .slide-nav, .slide.besar .slide-nav { opacity: 1; }
+.slide.besar .slide-nav { width: 42px; height: 42px; font-size: 1.7rem; }
+.slide-nav:hover { background: #fff; color: var(--brand); }
+.slide-titik { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; justify-content: center; gap: 6px; }
+.slide-titik button { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(255,255,255,.75); box-shadow: 0 0 0 1px rgba(0,0,0,.2); }
+.slide-titik button.aktif { background: var(--brand); width: 18px; border-radius: 4px; }
+@media (hover: none) { .slide-nav { opacity: 1; } }
+.subjudul { margin: -6px 0 14px; max-width: 760px; opacity: .92; white-space: pre-line; }
+.footer-kontak { color: var(--text); white-space: pre-line; }

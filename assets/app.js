@@ -39,7 +39,18 @@
     const t = katalog.toko || {};
     if (t.nama_toko) $("nama-toko").alt = t.nama_toko;
     if (t.info_pembayaran) $("info-bayar").textContent = t.info_pembayaran;
-    if (t.tokopedia_url) $("link-tokopedia").innerHTML = 'Kami juga ada di <a href="' + esc(t.tokopedia_url) + '" target="_blank" rel="noopener">Tokopedia</a>.';
+    // teks yang bisa diubah dari Admin → Konten Halaman
+    const kt = konten();
+    if (kt.teks_footer) $("footer-teks").textContent = kt.teks_footer;
+    $("footer-kontak").hidden = !kt.info_kontak;
+    $("footer-kontak").textContent = kt.info_kontak || "";
+    if (kt.teks_kosong) $("kosong").textContent = kt.teks_kosong;
+    if (t.tokopedia_url && kt.teks_tokopedia !== "") {
+      const teks = esc(kt.teks_tokopedia || "Kami juga ada di Tokopedia.");
+      const link = (isi) => '<a href="' + esc(t.tokopedia_url) + '" target="_blank" rel="noopener">' + isi + "</a>";
+      $("link-tokopedia").innerHTML = /Tokopedia/i.test(teks) ? teks.replace(/Tokopedia/i, (m) => link(m)) : link(teks);
+    }
+    $("kurs-box").hidden = kt.tampilkan_kurs === false;
 
     // menu kategori dari config (fallback: menu bawaan di index.html)
     if (Array.isArray(t.kategori) && t.kategori.length) {
@@ -58,6 +69,7 @@
     rute();
   }
 
+  function konten() { return (katalog.toko && katalog.toko.konten) || {}; }
   function cariProduk(id) { return katalog.produk.find((p) => p.id === id); }
   function namaKategori(slug) {
     const k = (katalog.toko.kategori || []).find((x) => x.slug === slug);
@@ -69,10 +81,12 @@
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     const [jenis, nilai] = h.split("/");
     let aktif = "";
+    clearInterval(timerSlide);
     if (jenis === "produk" && cariProduk(nilai)) {
       const p = cariProduk(nilai);
       aktif = slugify(p.kategori);
       tampilkanDetail(p);
+      mulaiOtomatis();
     } else {
       aktif = jenis === "kategori" ? nilai : "";
       tampilkanDaftar(aktif);
@@ -90,7 +104,12 @@
     $("hal-daftar").hidden = false;
     $("hal-detail").hidden = true;
     const nama = namaKategori(kategoriAktif);
-    $("judul-daftar").textContent = nama || katalog.toko.slogan || "Barang import original";
+    const kat = (katalog.toko.kategori || []).find((x) => x.slug === kategoriAktif) || {};
+    const kt = konten();
+    $("judul-daftar").textContent = nama ? kat.judul || nama : kt.judul_beranda || katalog.toko.slogan || "Barang import original";
+    const sub = nama ? kat.deskripsi : kt.subjudul_beranda;
+    $("subjudul").hidden = !sub;
+    $("subjudul").textContent = sub || "";
     document.title = (nama ? nama + " — " : "") + (katalog.toko.nama_toko || "ComdataSheet");
     renderGrid();
   }
@@ -106,7 +125,7 @@
     $("daftar-produk").innerHTML = list.map((p) =>
       '<article class="card">' +
         '<a class="card-link" href="#/produk/' + encodeURIComponent(p.id) + '">' +
-          '<img loading="lazy" ' + atributGambar(p.gambar) + ' alt="' + esc(p.nama) + '">' +
+          slideshow([p.gambar].concat(p.galeri || []).filter(Boolean), p.nama, { lazy: true }) +
           '<div class="card-body">' +
             '<div class="label-baris"><span class="kat">' + esc(p.kategori) + "</span>" + labelJenis(p) + "</div>" +
             "<h3>" + esc(p.nama) + "</h3>" +
@@ -119,6 +138,53 @@
           tombolBeli(p) +
         "</div>" +
       "</article>").join("");
+  }
+
+  // ------------------------------------------------------ Slideshow foto
+  // {besar}: halaman detail (otomatis berganti), {thumb}: deretan foto kecil, {lazy}: kartu
+  function slideshow(gambar, alt, o = {}) {
+    if (gambar.length <= 1) {
+      return "<img " + (o.lazy ? 'loading="lazy" ' : "") + (o.besar ? 'class="galeri-utama" ' : "") + atributGambar(gambar[0]) + ' alt="' + esc(alt) + '">';
+    }
+    const ke = (i) => ' data-ke="' + i + '"' + (i === 0 ? ' class="aktif"' : "") + ' aria-label="Foto ' + (i + 1) + '"';
+    return '<div class="slide' + (o.besar ? " besar" : "") + '" data-slide data-i="0"' + (o.besar ? " data-otomatis" : "") + ">" +
+      '<div class="slide-bingkai"><div class="slide-track">' + gambar.map((g, i) =>
+        "<img " + (o.lazy || i > 0 ? 'loading="lazy" ' : "") + (o.besar ? 'class="galeri-utama" ' : "") + atributGambar(g) + ' alt="' + esc(alt) + " – foto " + (i + 1) + '">').join("") + "</div>" +
+      '<button type="button" class="slide-nav kiri" data-geser="-1" aria-label="Foto sebelumnya">‹</button>' +
+      '<button type="button" class="slide-nav kanan" data-geser="1" aria-label="Foto berikutnya">›</button>' +
+      '<div class="slide-titik">' + gambar.map((g, i) => "<button type=\"button\"" + ke(i) + "></button>").join("") + "</div></div>" +
+      (o.thumb ? '<div class="galeri-thumb">' + gambar.map((g, i) => '<button type="button"' + ke(i) + "><img " + atributGambar(g) + ' alt=""></button>').join("") + "</div>" : "") +
+      "</div>";
+  }
+  function geserSlide(root, ke) {
+    const n = root.querySelectorAll(".slide-track > img").length;
+    const i = ((ke % n) + n) % n;
+    root.dataset.i = i;
+    root.querySelector(".slide-track").style.transform = "translateX(-" + i * 100 + "%)";
+    root.querySelectorAll("[data-ke]").forEach((b) => b.classList.toggle("aktif", +b.dataset.ke === i));
+  }
+  let timerSlide = null;
+  function mulaiOtomatis() {
+    clearInterval(timerSlide);
+    const root = document.querySelector("[data-slide][data-otomatis]");
+    if (root) timerSlide = setInterval(() => { if (!root.matches(":hover") && !document.hidden) geserSlide(root, +root.dataset.i + 1); }, 4000);
+  }
+  // usap (swipe) di HP
+  let sentuhX = null;
+  document.addEventListener("touchstart", (e) => { sentuhX = e.target.closest("[data-slide]") ? e.touches[0].clientX : null; }, { passive: true });
+  document.addEventListener("touchend", (e) => {
+    const root = e.target.closest("[data-slide]");
+    if (sentuhX === null || !root) return;
+    const dx = e.changedTouches[0].clientX - sentuhX;
+    if (Math.abs(dx) > 40) { geserSlide(root, +root.dataset.i + (dx < 0 ? 1 : -1)); clearInterval(timerSlide); }
+    sentuhX = null;
+  });
+
+  function keteranganAsal(p) {
+    const kt = konten();
+    const t = jenisSupplier(p) === "lokal" ? kt.keterangan_lokal ?? "Supplier lokal (Indonesia)"
+      : kt.keterangan_import ?? "Barang import · harga {mata_uang} mengikuti kurs hari ini (1 USD = {kurs})";
+    return t.replace(/\{mata_uang\}/g, p.mata_uang_sumber || "USD").replace(/\{kurs\}/g, rupiah((katalog.kurs || {}).usd_idr || 0));
   }
 
   function jenisSupplier(p) { return p.jenis_supplier === "lokal" ? "lokal" : "import"; }
@@ -152,17 +218,12 @@
     el.innerHTML =
       '<nav class="remah"><a href="#/">Beranda</a> › <a href="#/kategori/' + esc(slug) + '">' + esc(p.kategori) + "</a> › <span>" + esc(p.nama) + "</span></nav>" +
       '<div class="detail-grid">' +
-        '<div class="galeri">' +
-          '<img class="galeri-utama" id="galeri-utama" ' + atributGambar(gambar[0]) + ' alt="' + esc(p.nama) + '">' +
-          (gambar.length > 1 ? '<div class="galeri-thumb">' + gambar.map((g, i) =>
-            '<button data-gambar="' + esc(g) + '"' + (i === 0 ? ' class="aktif"' : "") + '><img src="' + esc(g) + '" alt=""></button>').join("") + "</div>" : "") +
-        "</div>" +
+        '<div class="galeri">' + slideshow(gambar, p.nama, { besar: true, thumb: true }) + "</div>" +
         '<div class="info">' +
           '<div class="label-baris"><span class="kat">' + esc(p.kategori) + " · " + esc(p.id) + "</span>" + labelJenis(p) + "</div>" +
           "<h1>" + esc(p.nama) + "</h1>" +
           '<div class="harga besar">' + rupiah(p.harga_idr) + tren(p) + "</div>" +
-          '<p class="asal">' + (jenisSupplier(p) === "lokal" ? "Supplier lokal (Indonesia)"
-            : "Barang import · harga " + esc(p.mata_uang_sumber) + " mengikuti kurs hari ini (1 USD = " + rupiah(katalog.kurs.usd_idr) + ")") + "</p>" +
+          '<p class="asal">' + esc(keteranganAsal(p)) + "</p>" +
           '<p class="stok ' + (p.stok === false ? "habis" : "ada") + '">' + (p.stok === false ? "Stok habis" : "Stok tersedia") + "</p>" +
           '<div class="aksi">' + tombolBeli(p) +
             '<a class="btn btn-wa-kecil" target="_blank" rel="noopener" href="https://wa.me/' + esc(katalog.toko.whatsapp) +
@@ -201,10 +262,12 @@
   }
 
   document.addEventListener("click", (e) => {
-    const thumb = e.target.closest("[data-gambar]");
-    if (thumb) {
-      $("galeri-utama").src = thumb.dataset.gambar;
-      document.querySelectorAll(".galeri-thumb button").forEach((b) => b.classList.toggle("aktif", b === thumb));
+    const geser = e.target.closest("[data-geser]"), keFoto = e.target.closest("[data-ke]");
+    if (geser || keFoto) {
+      e.preventDefault(); // tombol slideshow di dalam link kartu: jangan buka detail
+      const root = (geser || keFoto).closest("[data-slide]");
+      geserSlide(root, geser ? +root.dataset.i + +geser.dataset.geser : +keFoto.dataset.ke);
+      if (root.hasAttribute("data-otomatis")) clearInterval(timerSlide); // berhenti otomatis setelah dipilih sendiri
       return;
     }
     const tambah = e.target.closest("[data-tambah]");
