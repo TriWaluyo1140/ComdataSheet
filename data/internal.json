@@ -33,10 +33,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-03T06:02:08+00:00",
+  "diperbarui": "2026-11-03T06:21:29+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-03T06:02:08+00:00",
+    "diperbarui": "2026-11-03T06:21:29+00:00",
     "usd_idr": 18144.9,
     "rates": {
       "AUD": 1.427896,
@@ -73,16 +73,24 @@
       "galeri": [],
       "unduhan": [],
       "toko_sumber": "Beijing Qidian Chuanghang Science And Trade Co., Ltd",
+      "jenis_supplier": "import",
       "harga_sumber": 350.0,
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 10581000,
-      "harga_sebelumnya": 8626000,
+      "harga_idr": 12207000,
+      "harga_sebelumnya": 10581000,
       "rincian": {
-        "modal_idr": 6477729,
-        "ongkir_idr": 30000,
-        "margin_persen": 25
+        "harga_beli_idr": 7257960,
+        "shipping_idr": 907245,
+        "ongkir_kg_idr": 0,
+        "bea_masuk_idr": 2177388,
+        "harga_indo_idr": 9435348,
+        "margin_persen": 15,
+        "profit_idr": 1415302,
+        "harga_jual_idr": 10850650,
+        "ppn_pph_idr": 1356331,
+        "harga_jual_pajak_idr": 12206981
       }
     },
     {
@@ -100,16 +108,24 @@
       "berat_kg": 0.25,
       "stok": true,
       "toko_sumber": "",
+      "jenis_supplier": "import",
       "harga_sumber": 400.0,
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18144.8994,
       "metode_harga": "manual",
-      "harga_idr": 12097000,
-      "harga_sebelumnya": 9089000,
+      "harga_idr": 13733000,
+      "harga_sebelumnya": 12097000,
       "rincian": {
-        "modal_idr": 7403119,
-        "ongkir_idr": 37500,
-        "margin_persen": 25
+        "harga_beli_idr": 8165205,
+        "shipping_idr": 907245,
+        "ongkir_kg_idr": 0,
+        "bea_masuk_idr": 2449561,
+        "harga_indo_idr": 10614766,
+        "margin_persen": 15,
+        "profit_idr": 1592215,
+        "harga_jual_idr": 12206981,
+        "ppn_pph_idr": 1525873,
+        "harga_jual_pajak_idr": 13732854
       }
     }
   ]
