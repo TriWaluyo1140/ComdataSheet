@@ -214,10 +214,17 @@
     "id": "CDS-107",
     "nama": "bladeRF 2.0 micro case",
     "kategori": "Electronic Equipment",
-    "gambar": "",
-    "galeri": [],
-    "deskripsi": "A clear PolyCarbonate case for the bladeRF 2.0 micro.\r\n\r\nThe case fits the bladeRF 2.0 micro. A set of screws are included for assembly. The enclosure is made of a high density yet clear PolyCarbonate material that can withstand a great amount of stress.",
-    "spesifikasi": {},
+    "gambar": "files/CDS-107/micro-case-1024x1024.png",
+    "galeri": [
+      "files/CDS-107/bladerf-micro-in-case-front-450x450.png",
+      "files/CDS-107/bladerf-in-micro-case-450x450.png"
+    ],
+    "deskripsi": "A clear PolyCarbonate case for the bladeRF 2.0 micro.\n\nThe case fits the bladeRF 2.0 micro. A set of screws are included for assembly. The enclosure is made of a high density yet clear PolyCarbonate material that can withstand a great amount of stress.",
+    "spesifikasi": {
+      "Micro case": "bladeRF 2.0",
+      "Screws": "5x #2",
+      "Dimensions": "4.35″ L x 2.90″ W x 0.95″ D"
+    },
     "unduhan": [],
     "berat_kg": 0.25,
     "stok": true,
@@ -227,11 +234,11 @@
       "nama_toko": "Nuand",
       "url": "https://www.nuand.com/product/micro-case/",
       "mata_uang": "USD",
-      "harga_manual": 20
+      "harga_manual": 20,
+      "shipping": 20
     },
     "merek": "bladeRF",
     "mpn": "BRFM-CASE",
-    "deskripsi_en": "Product includes:\r\n1x bladeRF 2.0 micro case\r\n5x #2 screws\r\nDimensions:\r\n4.35″ L x 2.90″ W x 0.95″ D",
     "lama_indent_hari": 14
   }
 ]
