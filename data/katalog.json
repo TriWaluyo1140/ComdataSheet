@@ -15,11 +15,13 @@
       "teks_kosong": "Belum ada produk di kategori ini.",
       "teks_footer": "Harga merupakan estimasi otomatis berdasarkan harga dari pemasok luar negeri dan nilai tukar yang berlaku, sehingga bersifat fluktuatif. Harga final yang berlaku adalah harga pada saat konfirmasi pesanan.",
       "info_kontak": "The Mansion At Dukuh Golf Kemayoran Blok Bougenville, Jl. Trembesi Blok D Bandar Baru Jakarta Utara 14410",
-      "teks_tokopedia": ""
+      "teks_tokopedia": "",
+      "gambar_hero": ""
     },
     "konten_en": {
       "judul_beranda": "Original Electronic Components for Your Industrial and Project Needs",
-      "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product"
+      "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product",
+      "teks_tokopedia": "-"
     },
     "github": {
       "owner": "TriWaluyo1140",
@@ -65,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T00:47:31+00:00",
+  "diperbarui": "2026-11-05T02:40:46+00:00",
   "kurs": {
-    "usd_idr": 18140.25,
-    "diperbarui": "2026-11-05T00:47:31+00:00"
+    "usd_idr": 18132.17,
+    "diperbarui": "2026-11-05T02:40:46+00:00"
   },
   "produk": [
     {
@@ -92,8 +94,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 12948000,
-      "harga_sebelumnya": 12951000,
+      "harga_idr": 12942000,
+      "harga_sebelumnya": 12948000,
       "halaman": "produk/cds-101-microhard-p2400-enclosed-wireless-modem-1w-345kbps.html"
     },
     {
@@ -114,8 +116,8 @@
       "lama_indent_hari": null,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 14566000,
-      "harga_sebelumnya": 14570000,
+      "harga_idr": 14559000,
+      "harga_sebelumnya": 14566000,
       "halaman": "produk/cds-102-microhard-p900-enc-miniature-mesh-1w-900mhz-wireless.html"
     },
     {
@@ -137,8 +139,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 1619000,
-      "harga_sebelumnya": null,
+      "harga_idr": 1618000,
+      "harga_sebelumnya": 1619000,
       "halaman": "produk/cds-103-8-4v-digital-servo-metal-gear-high-torque-servo.html"
     }
   ]

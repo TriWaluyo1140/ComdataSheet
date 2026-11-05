@@ -15,11 +15,13 @@
       "teks_kosong": "Belum ada produk di kategori ini.",
       "teks_footer": "Harga merupakan estimasi otomatis berdasarkan harga dari pemasok luar negeri dan nilai tukar yang berlaku, sehingga bersifat fluktuatif. Harga final yang berlaku adalah harga pada saat konfirmasi pesanan.",
       "info_kontak": "The Mansion At Dukuh Golf Kemayoran Blok Bougenville, Jl. Trembesi Blok D Bandar Baru Jakarta Utara 14410",
-      "teks_tokopedia": ""
+      "teks_tokopedia": "",
+      "gambar_hero": ""
     },
     "konten_en": {
       "judul_beranda": "Original Electronic Components for Your Industrial and Project Needs",
-      "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product"
+      "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product",
+      "teks_tokopedia": "-"
     },
     "github": {
       "owner": "TriWaluyo1140",
@@ -65,23 +67,23 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T00:47:31+00:00",
+  "diperbarui": "2026-11-05T02:40:46+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-05T00:47:31+00:00",
-    "usd_idr": 18140.25,
+    "diperbarui": "2026-11-05T02:40:46+00:00",
+    "usd_idr": 18132.17,
     "rates": {
-      "AUD": 1.434205,
-      "CNY": 6.684036,
-      "EUR": 0.893426,
-      "GBP": 0.745418,
-      "HKD": 7.845778,
-      "IDR": 18140.247665,
-      "JPY": 158.39919,
-      "KRW": 1343.930997,
-      "MYR": 4.076971,
-      "SGD": 1.281123,
-      "TWD": 32.770816,
+      "AUD": 1.427647,
+      "CNY": 6.685421,
+      "EUR": 0.889912,
+      "GBP": 0.742316,
+      "HKD": 7.845344,
+      "IDR": 18132.167129,
+      "JPY": 158.377906,
+      "KRW": 1340.311295,
+      "MYR": 4.064713,
+      "SGD": 1.27882,
+      "TWD": 32.824108,
       "USD": 1
     }
   },
@@ -110,24 +112,24 @@
       "jenis_supplier": "import",
       "harga_sumber": 350.0,
       "mata_uang_sumber": "USD",
-      "kurs_ke_idr": 18140.2477,
+      "kurs_ke_idr": 18132.1671,
       "metode_harga": "manual",
-      "harga_idr": 12948000,
-      "harga_sebelumnya": 12951000,
+      "harga_idr": 12942000,
+      "harga_sebelumnya": 12948000,
       "rincian": {
-        "harga_barang_idr": 7473782,
-        "shipping_idr": 907012,
-        "biaya_transaksi_idr": 224213,
-        "harga_beli_idr": 7697995,
+        "harga_barang_idr": 7470453,
+        "shipping_idr": 906608,
+        "biaya_transaksi_idr": 224114,
+        "harga_beli_idr": 7694566,
         "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 2309399,
-        "harga_indo_idr": 10007394,
+        "bea_masuk_idr": 2308370,
+        "harga_indo_idr": 10002936,
         "margin_persen": 15,
-        "profit_idr": 1501109,
-        "harga_jual_idr": 11508503,
-        "ppn_pph_idr": 1438563,
-        "harga_jual_pajak_idr": 12947066
+        "profit_idr": 1500440,
+        "harga_jual_idr": 11503377,
+        "ppn_pph_idr": 1437922,
+        "harga_jual_pajak_idr": 12941299
       }
     },
     {
@@ -150,24 +152,24 @@
       "jenis_supplier": "import",
       "harga_sumber": 400.0,
       "mata_uang_sumber": "USD",
-      "kurs_ke_idr": 18140.2477,
+      "kurs_ke_idr": 18132.1671,
       "metode_harga": "manual",
-      "harga_idr": 14566000,
-      "harga_sebelumnya": 14570000,
+      "harga_idr": 14559000,
+      "harga_sebelumnya": 14566000,
       "rincian": {
-        "harga_barang_idr": 8408005,
-        "shipping_idr": 907012,
-        "biaya_transaksi_idr": 252240,
-        "harga_beli_idr": 8660245,
+        "harga_barang_idr": 8404259,
+        "shipping_idr": 906608,
+        "biaya_transaksi_idr": 252128,
+        "harga_beli_idr": 8656387,
         "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 2598073,
-        "harga_indo_idr": 11258318,
+        "bea_masuk_idr": 2596916,
+        "harga_indo_idr": 11253303,
         "margin_persen": 15,
-        "profit_idr": 1688748,
-        "harga_jual_idr": 12947066,
-        "ppn_pph_idr": 1618383,
-        "harga_jual_pajak_idr": 14565449
+        "profit_idr": 1687996,
+        "harga_jual_idr": 12941299,
+        "ppn_pph_idr": 1617662,
+        "harga_jual_pajak_idr": 14558961
       }
     },
     {
@@ -191,24 +193,24 @@
       "jenis_supplier": "import",
       "harga_sumber": 20.0,
       "mata_uang_sumber": "USD",
-      "kurs_ke_idr": 18140.2477,
+      "kurs_ke_idr": 18132.1671,
       "metode_harga": "manual",
-      "harga_idr": 1619000,
-      "harga_sebelumnya": null,
+      "harga_idr": 1618000,
+      "harga_sebelumnya": 1619000,
       "rincian": {
-        "harga_barang_idr": 934223,
-        "shipping_idr": 544207,
-        "biaya_transaksi_idr": 28027,
-        "harga_beli_idr": 962249,
+        "harga_barang_idr": 933807,
+        "shipping_idr": 543965,
+        "biaya_transaksi_idr": 28014,
+        "harga_beli_idr": 961821,
         "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 288675,
-        "harga_indo_idr": 1250924,
+        "bea_masuk_idr": 288546,
+        "harga_indo_idr": 1250367,
         "margin_persen": 15,
-        "profit_idr": 187639,
-        "harga_jual_idr": 1438563,
-        "ppn_pph_idr": 179820,
-        "harga_jual_pajak_idr": 1618383
+        "profit_idr": 187555,
+        "harga_jual_idr": 1437922,
+        "ppn_pph_idr": 179740,
+        "harga_jual_pajak_idr": 1617662
       }
     }
   ]
