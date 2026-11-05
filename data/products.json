@@ -256,5 +256,85 @@
     "merek": "bladeRF",
     "mpn": "BRFM-CASE",
     "lama_indent_hari": 14
+  },
+  {
+    "id": "CDS-108",
+    "nama": "BT-100 Bias-tee Power Amplifier",
+    "kategori": "Electronic Equipment",
+    "gambar": "",
+    "galeri": [],
+    "deskripsi": "Bias-tee powered Power Amplifier (TX) for the bladeRF 2.0 micro\r\n\r\nThe BT-100 is a wideband bias tee TX Power Amplifier (PA) that draws its current from the bladeRF 2.0 micro’s SMA connectors. The BT-100 is versatile PA that is an ideal intermediary or final stage amplifier in a TX chain. bladeRF-cli and the libbladeRF API can be used to enable and disable the bias-tee when it is needed. Care should be taken to avoid overdrawing current when powering the bladeRF 2.0 micro from USB bus power and enabling multiple bias-tee amplifiers simultaneously. In case the power budget (print hardware in bladeRF-cli) is a concern, the bladeRF 2.0 micro can be powered by an external DC power supply.",
+    "spesifikasi": {},
+    "unduhan": [],
+    "berat_kg": 0.25,
+    "stok": true,
+    "ketersediaan": "indent",
+    "sumber": {
+      "jenis": "import",
+      "nama_toko": "Nuand",
+      "url": "https://www.nuand.com/product/bt-100/",
+      "mata_uang": "USD",
+      "harga_manual": 30,
+      "shipping": 20
+    },
+    "merek": "bladeRF",
+    "mpn": "BT-100",
+    "lama_indent_hari": 14
+  },
+  {
+    "id": "CDS-109",
+    "nama": "BT-200 Bias-tee Low Noise Amplifier",
+    "kategori": "Electronic Equipment",
+    "gambar": "",
+    "galeri": [],
+    "deskripsi": "Bias-tee powered Low Noise Amplifier (RX) for the bladeRF 2.0 micro\r\n\r\nThe BT-200 is a wideband bias-tee RX Low Noise Amplifier that draws its current from the bladeRF 2.0 micro’s SMA connectors. The BT-200 is a compact LNA solution useful for substantially lowering the noise figure and substantially increasing dynamic range of most applications. bladeRF-cli and the libbladeRF API can be used to enable and disable the bias-tee when it is needed. Care should be taken to avoid overdrawing current when powering the bladeRF 2.0 micro from USB bus power and enabling multiple bias-tee amplifiers simultaneously. In case the power budget (print hardware in bladeRF-cli) is a concern, the bladeRF 2.0 micro can be powered by an external DC power supply.",
+    "spesifikasi": {},
+    "unduhan": [],
+    "berat_kg": 0.25,
+    "stok": true,
+    "ketersediaan": "indent",
+    "sumber": {
+      "jenis": "import",
+      "nama_toko": "Nuand",
+      "url": "https://www.nuand.com/product/bt-200/",
+      "mata_uang": "USD",
+      "harga_manual": 30,
+      "shipping": 20
+    },
+    "merek": "bladeRF",
+    "mpn": "BT-200",
+    "lama_indent_hari": 14
+  },
+  {
+    "id": "CDS-110",
+    "nama": "Tri-Band Antenna",
+    "kategori": "Electronic Equipment",
+    "gambar": "",
+    "galeri": [],
+    "deskripsi": "Wideband and general purpose Tri-band Antenna.\r\n\r\nThis is a general purpose tri-band antenna that covers 700MHz to 2600MHz. It is a good fit as a starter antenna for research and experimentation in the ISM bands.",
+    "spesifikasi": {
+      "Type": "Durable Rubber Antenna",
+      "Antenna Interface": "SMA male connector",
+      "Frequency Range": "700-2600MHz",
+      "Gain": "5 dBi",
+      "VSWR": "no more than 1.5",
+      "11 inches long": "",
+      "Flexible mount (range of motion is 100 degrees)": ""
+    },
+    "unduhan": [],
+    "berat_kg": 0.25,
+    "stok": true,
+    "ketersediaan": "indent",
+    "sumber": {
+      "jenis": "import",
+      "nama_toko": "Nuand",
+      "url": "https://www.nuand.com/product/tri-band-antenna/",
+      "mata_uang": "USD",
+      "harga_manual": 25,
+      "shipping": 20
+    },
+    "merek": "bladeRF",
+    "mpn": "ANT-TRI",
+    "lama_indent_hari": 14
   }
 ]
