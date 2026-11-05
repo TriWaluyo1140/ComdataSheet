@@ -14,11 +14,13 @@
     "teks_kosong": "Belum ada produk di kategori ini.",
     "teks_footer": "Harga merupakan estimasi otomatis berdasarkan harga dari pemasok luar negeri dan nilai tukar yang berlaku, sehingga bersifat fluktuatif. Harga final yang berlaku adalah harga pada saat konfirmasi pesanan.",
     "info_kontak": "The Mansion At Dukuh Golf Kemayoran Blok Bougenville, Jl. Trembesi Blok D Bandar Baru Jakarta Utara 14410",
-    "teks_tokopedia": ""
+    "teks_tokopedia": "",
+    "gambar_hero": ""
   },
   "konten_en": {
     "judul_beranda": "Original Electronic Components for Your Industrial and Project Needs",
-    "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product"
+    "subjudul_beranda": "Electronic equipment, servos, sensors and more, sourced directly from overseas suppliers and local stock. Transparent pricing based on today’s exchange rate, with brochures and datasheets for every product",
+    "teks_tokopedia": "-"
   },
   "github": {
     "owner": "TriWaluyo1140",
