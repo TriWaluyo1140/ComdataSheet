@@ -165,16 +165,24 @@
     "id": "CDS-105",
     "nama": "bladeRF 2.0 micro xA5",
     "kategori": "Electronic Equipment",
-    "gambar": "",
-    "galeri": [],
-    "deskripsi": "bladeRF 2.0 micro xA5, 47MHz to 6GHz frequency range, 61.44MHz sampling rate, 2×2 MIMO channels USB 3.0 SuperSpeed Software Defined Radio.\r\nThe bladeRF 2.0 micro xA5 is the next generation Software Defined Radio (SDR) offering a frequency range of 47MHz to 6GHz, 61.44MHz sampling rate, and 2×2 MIMO streaming. Packed into a small form factor, the bladeRF 2.0 micro was designed for high performance as well as mobile applications. Through libbladeRF the bladeRF 2.0 micro is compatible with GNURadio, GQRX, SDR-Radio, SDR#, gr-fosphor, SoapySDR, and more on Windows, Linux and macOS.\r\n\r\nThe RF shield cap protects sensitive RF components from Electromagnetic Interference (EMI) and provides additional thermal dissipation, allowing the bladeRF 2.0 micro to operate in challenging environments.\r\n\r\nAll of the RF SMA ports are capable of providing power over bias-tee circuitry to wideband amplifiers and pre-amps. Power to bias-tee peripherals is fully software controllable, providing maximal operational flexibility. Currently, the official bias-tee peripherals include the BT-100, a wideband power amplifier for TX, and the BT-200, a wideband low noise amplifier for RX.\r\n\r\nAt the core of the bladeRF 2.0 micro is the latest generation Cyclone V FPGA from Intel (formerly Altera). The xA5 features a 77KLE FPGA of which about 60KLE are available and user programmable. Optionally, to accelerate modems in HDL and for additional FPGA space, consider the bladeRF xA9, which features the largest-in-class FPGA of any single SDR with 301KLE of which about 292KLE are available and user programmable.\r\n\r\nAn advanced clocking architecture allows the bladeRF 2.0 micro to receive and provide its 38.4MHz fundamental clock from and to other devices. Additionally, an on-board PLL allows the bladeRF 2.0 micro to tame its VCTCXO to a 10MHz reference signal. The xA5 features a highly accurate and stable oscillator. The on-board DAC sets the frequency trim of the oscillator to a factory calibrated value.\r\n\r\nThe Power Distribution Network (PDN) of the bladeRF 2.0 micro features an intricate combination of low noise and high efficiency switch mode and linear power regulators. While the bladeRF 2.0 micro can be run solely from USB bus power, an external power source can be supplied to ensure maximal linear performance of bias-tee peripherals. The PDN features an auto selection and hold-over circuitry to optimize power draw between USB bus and external DC power.\r\n\r\nThe bladeRF 2.0 micro can run in headless without needing to be connected to a PC or SBC. The on-board flash is large enough to hold any size FPGA image for the xA5.",
+    "gambar": "files/CDS-105/bladerf-micro-sq-1024x1024.png",
+    "galeri": [
+      "files/CDS-105/bladerf-micro-front-sma-450x450.png",
+      "files/CDS-105/bladerf-micro-back-450x450.png"
+    ],
+    "deskripsi": "bladeRF 2.0 micro xA5, 47MHz to 6GHz frequency range, 61.44MHz sampling rate, 2×2 MIMO channels USB 3.0 SuperSpeed Software Defined Radio.\nThe bladeRF 2.0 micro xA5 is the next generation Software Defined Radio (SDR) offering a frequency range of 47MHz to 6GHz, 61.44MHz sampling rate, and 2×2 MIMO streaming. Packed into a small form factor, the bladeRF 2.0 micro was designed for high performance as well as mobile applications. Through libbladeRF the bladeRF 2.0 micro is compatible with GNURadio, GQRX, SDR-Radio, SDR#, gr-fosphor, SoapySDR, and more on Windows, Linux and macOS.\n\nThe RF shield cap protects sensitive RF components from Electromagnetic Interference (EMI) and provides additional thermal dissipation, allowing the bladeRF 2.0 micro to operate in challenging environments.\n\nAll of the RF SMA ports are capable of providing power over bias-tee circuitry to wideband amplifiers and pre-amps. Power to bias-tee peripherals is fully software controllable, providing maximal operational flexibility. Currently, the official bias-tee peripherals include the BT-100, a wideband power amplifier for TX, and the BT-200, a wideband low noise amplifier for RX.\n\nAt the core of the bladeRF 2.0 micro is the latest generation Cyclone V FPGA from Intel (formerly Altera). The xA5 features a 77KLE FPGA of which about 60KLE are available and user programmable. Optionally, to accelerate modems in HDL and for additional FPGA space, consider the bladeRF xA9, which features the largest-in-class FPGA of any single SDR with 301KLE of which about 292KLE are available and user programmable.\n\nAn advanced clocking architecture allows the bladeRF 2.0 micro to receive and provide its 38.4MHz fundamental clock from and to other devices. Additionally, an on-board PLL allows the bladeRF 2.0 micro to tame its VCTCXO to a 10MHz reference signal. The xA5 features a highly accurate and stable oscillator. The on-board DAC sets the frequency trim of the oscillator to a factory calibrated value.\n\nThe Power Distribution Network (PDN) of the bladeRF 2.0 micro features an intricate combination of low noise and high efficiency switch mode and linear power regulators. While the bladeRF 2.0 micro can be run solely from USB bus power, an external power source can be supplied to ensure maximal linear performance of bias-tee peripherals. The PDN features an auto selection and hold-over circuitry to optimize power draw between USB bus and external DC power.\n\nThe bladeRF 2.0 micro can run in headless without needing to be connected to a PC or SBC. The on-board flash is large enough to hold any size FPGA image for the xA5.",
     "spesifikasi": {
-      "bladeRF 2.0 micro xA5, 47MHz to 6GHz frequency range, 61.44MHz sampling rate, 2×2 MIMO channels USB 3.0 SuperSpeed Software Defined Radio.": ""
+      "bladeRF": "2.0 micro xA5",
+      "Frequency range": "47MHz to 6GHz",
+      "Sampling rate": "61.44MHz",
+      "Channels": "2×2 MIMO",
+      "USB": "3.0",
+      "SuperSpeed": "Software Defined Radio"
     },
     "unduhan": [],
     "berat_kg": 0.25,
-    "stok": true,
-    "ketersediaan": "indent",
+    "stok": false,
+    "ketersediaan": "habis",
     "sumber": {
       "jenis": "import",
       "nama_toko": "Nuand",
@@ -183,8 +191,7 @@
       "harga_manual": 670
     },
     "merek": "bladeRF",
-    "mpn": "BRFM-XA5",
-    "lama_indent_hari": 14
+    "mpn": "BRFM-XA5"
   },
   {
     "id": "CDS-106",
