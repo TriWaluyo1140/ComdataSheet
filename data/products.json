@@ -50,12 +50,8 @@
     },
     "unduhan": [
       {
-        "judul": "H43485ddf79b3490fb6d1754e9b55a755S.jpg",
-        "url": "files/CDS-102/h43485ddf79b3490fb6d1754e9b55a755s-jpg.pdf"
-      },
-      {
-        "judul": "Hf63cf159966640ddbb1e50c12dac265f2.png",
-        "url": "files/CDS-102/hf63cf159966640ddbb1e50c12dac265f2-png.pdf"
+        "judul": "Datasheet",
+        "url": "files/CDS-102/datasheet.pdf"
       }
     ],
     "berat_kg": 0.25,
