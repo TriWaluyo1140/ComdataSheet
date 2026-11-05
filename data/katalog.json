@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T04:26:09+00:00",
+  "diperbarui": "2026-11-05T04:39:24+00:00",
   "kurs": {
     "usd_idr": 18132.17,
-    "diperbarui": "2026-11-05T04:26:09+00:00"
+    "diperbarui": "2026-11-05T04:39:24+00:00"
   },
   "produk": [
     {
@@ -178,7 +178,12 @@
         "Compatible": "with Microhard 920F",
         "Part number": "MHS185125"
       },
-      "unduhan": [],
+      "unduhan": [
+        {
+          "judul": "Datasheet P400",
+          "url": "files/CDS-103/datasheet-p400.pdf"
+        }
+      ],
       "berat_kg": 0.25,
       "stok": true,
       "ketersediaan": "indent",
