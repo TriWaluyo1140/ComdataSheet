@@ -108,7 +108,12 @@
       "Compatible": "with Microhard 920F",
       "Part number": "MHS185125"
     },
-    "unduhan": [],
+    "unduhan": [
+      {
+        "judul": "Datasheet P400",
+        "url": "files/CDS-103/datasheet-p400.pdf"
+      }
+    ],
     "berat_kg": 0.25,
     "stok": true,
     "ketersediaan": "indent",
