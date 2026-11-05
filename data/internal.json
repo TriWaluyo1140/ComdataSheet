@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T03:53:13+00:00",
+  "diperbarui": "2026-11-05T04:26:09+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-05T03:53:13+00:00",
+    "diperbarui": "2026-11-05T04:26:09+00:00",
     "usd_idr": 18132.17,
     "rates": {
       "AUD": 1.427647,
@@ -204,6 +204,61 @@
         "harga_jual_idr": 10928208,
         "ppn_pph_idr": 1366026,
         "harga_jual_pajak_idr": 12294234
+      }
+    },
+    {
+      "id": "CDS-103",
+      "nama": "Microhard P400 345kbps 400 900MHz",
+      "kategori": "Others",
+      "gambar": "files/CDS-103/p400.jpg",
+      "galeri": [
+        "files/CDS-103/p400-1.jpg",
+        "files/CDS-103/p400-2.jpg",
+        "files/CDS-103/p400-3.jpg",
+        "files/CDS-103/p400-4.jpg"
+      ],
+      "deskripsi": "High Performance Microhard P400 345kbps 400 900MHz Software Selectable Wireless Modem for UAV Industrial Telemetry\n\nMulti-Frequency 900 & 400 MHz Wireless Modem \nFor the ultimate solution in design flexibility and cost/size sensitive applications, consider the Pico Series P400 radio platform. Offering software selectable ISM 900 MHz & Licensed 400MHz modes, in a single module, the P400 provides an economical solution with the design flexibility, features, and performance never seen before!",
+      "spesifikasi": {
+        "Supports up to": "345 kbps (@ 900MHz)",
+        "Software Selectable": "400 MHz & 900 MHz Bands",
+        "Operating mode": "Point-to-Point, Point-to-Multipoint, Store & Forward Repeater",
+        "Industrial Temperature": "-55°C to +85°C",
+        "Maximum allowable transit power": "Adjustable",
+        "Power": "Low Power consumption in Sleep and Sniff modes",
+        "Error detection": "32 bits of CRC, selectable Forward Error Correction with retransmission",
+        "Dimensions": "26.5 x 33 x 3.5mm | 1.3 x 1.05 x 0.15",
+        "Compatible": "with Microhard 920F",
+        "Part number": "MHS185125"
+      },
+      "unduhan": [],
+      "berat_kg": 0.25,
+      "stok": true,
+      "ketersediaan": "indent",
+      "merek": "Microhard",
+      "mpn": "MHS185125",
+      "lama_indent_hari": 14,
+      "toko_sumber": "",
+      "jenis_supplier": "import",
+      "harga_sumber": 690.0,
+      "mata_uang_sumber": "USD",
+      "kurs_ke_idr": 18132.1671,
+      "metode_harga": "manual",
+      "harga_idr": 23942000,
+      "harga_sebelumnya": null,
+      "rincian": {
+        "harga_barang_idr": 13820338,
+        "shipping_idr": 906608,
+        "biaya_transaksi_idr": 414610,
+        "harga_beli_idr": 14234948,
+        "bea_masuk_persen": 30,
+        "ongkir_kg_idr": 0,
+        "bea_masuk_idr": 4270484,
+        "harga_indo_idr": 18505432,
+        "margin_persen": 15,
+        "profit_idr": 2775815,
+        "harga_jual_idr": 21281247,
+        "ppn_pph_idr": 2660156,
+        "harga_jual_pajak_idr": 23941403
       }
     }
   ]
