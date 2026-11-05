@@ -7,7 +7,7 @@
   <title>Admin — ComdataSheet</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
   <link rel="stylesheet" href="assets/style.css?v=20">
-  <link rel="stylesheet" href="assets/admin.css?v=7">
+  <link rel="stylesheet" href="assets/admin.css?v=8">
 </head>
 <body class="admin">
   <header class="topbar">
@@ -68,6 +68,7 @@
   <main class="wrap panel" id="panel" hidden>
     <nav class="tab" role="tablist">
       <button data-tab="produk" class="aktif">Produk</button>
+      <button data-tab="upload">Upload Produk (Excel)</button>
       <button data-tab="harga">Update Harga (Excel)</button>
       <button data-tab="invoice">Invoice</button>
       <button data-tab="konten">Konten Halaman</button>
@@ -89,6 +90,26 @@
           <thead><tr><th></th><th>ID</th><th>Nama</th><th>Kategori</th><th>Harga supplier</th><th>Harga jual</th><th>Stok</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- Tab Upload Produk -->
+    <section data-isi="upload" hidden>
+      <div class="kartu">
+        <h2>1. Siapkan file Excel</h2>
+        <p class="muted">Untuk <b>menambah produk baru</b>: unduh template, isi satu baris per produk (ID dikosongkan, dibuat otomatis).<br>
+          Untuk <b>mengubah banyak produk sekaligus</b>: unduh data produk sekarang, ubah isinya, lalu unggah lagi. Kolom yang kosong tidak diubah.</p>
+        <div class="baris-aksi">
+          <button class="btn" id="unduh-template-produk">⬇ Unduh template produk baru</button>
+          <button class="btn btn-garis" id="unduh-semua-produk">⬇ Unduh data semua produk</button>
+        </div>
+      </div>
+      <div class="kartu">
+        <h2>2. Unggah Excel produk</h2>
+        <p class="muted">Anda akan melihat pratinjau dulu — tidak ada yang tersimpan sebelum klik <b>Simpan produk ke toko</b>.
+          Foto/PDF dari komputer diunggah lewat tombol <b>Edit</b> produk; di Excel cukup isi link foto.</p>
+        <input type="file" id="file-produk" accept=".xlsx,.xls,.csv">
+        <div id="pratinjau-produk"></div>
       </div>
     </section>
 
@@ -218,6 +239,6 @@
   </aside>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="assets/admin.js?v=13"></script>
+  <script src="assets/admin.js?v=14"></script>
 </body>
 </html>

@@ -163,3 +163,10 @@ code { background: #eef1f4; padding: 1px 5px; border-radius: 4px; }
   body.cetak-invoice .inv-produk tr { break-inside: avoid; }
   #invoice-cetak * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* Upload produk Excel */
+.impor-ringkas { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 8px; }
+.impor-ringkas .lencana:not(.ya):not(.indent) { background: #e5e7eb; color: #374151; }
+.impor-tabel td { vertical-align: top; font-size: .85rem; }
+.impor-tabel td:last-child { min-width: 320px; }
+.impor-tabel td:last-child div { margin: 1px 0; word-break: break-word; }
