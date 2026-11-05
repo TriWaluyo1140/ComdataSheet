@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T03:35:22+00:00",
+  "diperbarui": "2026-11-05T03:42:37+00:00",
   "kurs": {
     "usd_idr": 18132.17,
-    "diperbarui": "2026-11-05T03:35:22+00:00"
+    "diperbarui": "2026-11-05T03:42:37+00:00"
   },
   "produk": [
     {
@@ -111,6 +111,50 @@
       "harga_idr": 10677000,
       "harga_sebelumnya": null,
       "halaman": "produk/cds-101-microhard-p900-enc-miniature-mesh-1w-900mhz.html"
+    },
+    {
+      "id": "CDS-102",
+      "nama": "Microhard P2400 Enclosed Wireless Modem 1W",
+      "kategori": "Others",
+      "gambar": "files/CDS-102/p2400.jpg",
+      "galeri": [
+        "files/CDS-102/p2400-1.jpg",
+        "files/CDS-102/p2400-2.jpg",
+        "files/CDS-102/p2400-3.jpg"
+      ],
+      "deskripsi": "Pure Original Microhard P2400 Enclosed Wireless Modem 1W 345kbps MHS185350 Data Transmission Station\n\nMiniature 2.4 GHz Wireless Modem \nFor the ultimate solution in design flexibility and cost/size sensitive applications, consider the Pico Series P2400 radio platform. Operating in the 2.4 GHz ISM band, the P2400 provides an interna-\ntional, economical solution with the design flexibility, features, and performance never seen before!",
+      "spesifikasi": {
+        "P2400 Features": "",
+        "• Supports 19.2 kbps to 345 kbps": "",
+        "• Superheterodyne Architecture": "",
+        "• Quad Filter Stage provides Extreme Noise & Interference Rejection": "",
+        "• Rejection > 65 dBc": "",
+        "• Point-to-Point, Point-to-Multipoint, Store & Forward Repeater": "",
+        "• Industrial Temperature (-55°C to +85°C)": "",
+        "• Maximum allowable transit power (Adjustable)": "",
+        "• Low Power consumption in Sleep and Sniff modes (Future)": "",
+        "• 32 bits of CRC, selectable Forward Error Correction with retransmission": "",
+        "• Separate diagnostics port-transparent remote diagnosis and online net-work control": "",
+        "• Extremely Small Footprint (26.5 × 33 x 3.5mm | 1.3 x 1.05 x 0.15)": "",
+        "• Microhard compatibility with n2420BF": ""
+      },
+      "unduhan": [
+        {
+          "judul": "Datasheet P2400",
+          "url": "files/CDS-102/datasheet-p2400.pdf"
+        }
+      ],
+      "berat_kg": 0.1,
+      "stok": true,
+      "ketersediaan": "ready",
+      "merek": "Microhard",
+      "mpn": "MHS185350",
+      "lama_indent_hari": null,
+      "jenis_supplier": "import",
+      "mata_uang_sumber": "USD",
+      "harga_idr": 12295000,
+      "harga_sebelumnya": null,
+      "halaman": "produk/cds-102-microhard-p2400-enclosed-wireless-modem-1w.html"
     }
   ]
 }
