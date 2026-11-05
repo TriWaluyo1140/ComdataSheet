@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T05:54:39+00:00",
+  "diperbarui": "2026-11-05T06:06:46+00:00",
   "kurs": {
     "usd_idr": 18132.17,
-    "diperbarui": "2026-11-05T05:54:36+00:00"
+    "diperbarui": "2026-11-05T06:06:43+00:00"
   },
   "produk": [
     {
@@ -297,8 +297,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 2265000,
-      "harga_sebelumnya": null,
+      "harga_idr": 1618000,
+      "harga_sebelumnya": 2265000,
       "halaman": "produk/cds-107-bladerf-2-0-micro-case.html"
     }
   ]

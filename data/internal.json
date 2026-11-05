@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T05:54:39+00:00",
+  "diperbarui": "2026-11-05T06:06:46+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-05T05:54:36+00:00",
+    "diperbarui": "2026-11-05T06:06:43+00:00",
     "usd_idr": 18132.17,
     "rates": {
       "AUD": 1.427647,
@@ -87,9 +87,7 @@
       "USD": 1
     }
   },
-  "peringatan": [
-    "CDS-107: harga berubah 43% (Rp 2,265,000 -> Rp 1,295,000), melebihi batas 30%. Harga lama dipertahankan, mohon cek manual."
-  ],
+  "peringatan": [],
   "produk": [
     {
       "id": "CDS-101",
@@ -427,22 +425,22 @@
       "mata_uang_sumber": "USD",
       "kurs_ke_idr": 18132.1671,
       "metode_harga": "json-ld",
-      "harga_idr": 2265000,
-      "harga_sebelumnya": null,
+      "harga_idr": 1618000,
+      "harga_sebelumnya": 2265000,
       "rincian": {
-        "harga_barang_idr": 747045,
-        "shipping_idr": 362643,
-        "biaya_transaksi_idr": 22411,
-        "harga_beli_idr": 769457,
+        "harga_barang_idr": 933807,
+        "shipping_idr": 543965,
+        "biaya_transaksi_idr": 28014,
+        "harga_beli_idr": 961821,
         "bea_masuk_persen": 30,
         "ongkir_kg_idr": 0,
-        "bea_masuk_idr": 230837,
-        "harga_indo_idr": 1000294,
+        "bea_masuk_idr": 288546,
+        "harga_indo_idr": 1250367,
         "margin_persen": 15,
-        "profit_idr": 150044,
-        "harga_jual_idr": 1150338,
-        "ppn_pph_idr": 143792,
-        "harga_jual_pajak_idr": 1294130
+        "profit_idr": 187555,
+        "harga_jual_idr": 1437922,
+        "ppn_pph_idr": 179740,
+        "harga_jual_pajak_idr": 1617662
       }
     }
   ]
