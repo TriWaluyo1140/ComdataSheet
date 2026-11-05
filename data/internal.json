@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T03:42:37+00:00",
+  "diperbarui": "2026-11-05T03:43:05+00:00",
   "kurs": {
     "sumber": "open.er-api.com",
-    "diperbarui": "2026-11-05T03:42:37+00:00",
+    "diperbarui": "2026-11-05T03:43:05+00:00",
     "usd_idr": 18132.17,
     "rates": {
       "AUD": 1.427647,
@@ -180,10 +180,10 @@
       ],
       "berat_kg": 0.1,
       "stok": true,
-      "ketersediaan": "ready",
+      "ketersediaan": "indent",
       "merek": "Microhard",
       "mpn": "MHS185350",
-      "lama_indent_hari": null,
+      "lama_indent_hari": 14,
       "toko_sumber": "",
       "jenis_supplier": "import",
       "harga_sumber": 330.0,

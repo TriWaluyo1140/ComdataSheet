@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-05T03:42:37+00:00",
+  "diperbarui": "2026-11-05T03:43:05+00:00",
   "kurs": {
     "usd_idr": 18132.17,
-    "diperbarui": "2026-11-05T03:42:37+00:00"
+    "diperbarui": "2026-11-05T03:43:05+00:00"
   },
   "produk": [
     {
@@ -146,10 +146,10 @@
       ],
       "berat_kg": 0.1,
       "stok": true,
-      "ketersediaan": "ready",
+      "ketersediaan": "indent",
       "merek": "Microhard",
       "mpn": "MHS185350",
-      "lama_indent_hari": null,
+      "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
       "harga_idr": 12295000,
