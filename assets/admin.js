@@ -319,10 +319,15 @@
   }
   const hargaJual = (id) => (katalog.produk.find((x) => x.id === id) || {}).harga_idr;
 
-  function renderTabel() {
+  // produk sesuai filter kategori / supplier / pencarian di tab Produk
+  function produkTersaring() {
     const kat = $("filter-kategori").value, q = $("cari-admin").value.trim().toLowerCase(), jenis = $("filter-jenis").value;
-    const list = produk.filter((p) => (!kat || p.kategori === kat) && (!jenis || ((p.sumber || {}).jenis === "lokal" ? "lokal" : "import") === jenis) &&
+    return produk.filter((p) => (!kat || p.kategori === kat) && (!jenis || ((p.sumber || {}).jenis === "lokal" ? "lokal" : "import") === jenis) &&
       (!q || (p.id + " " + p.nama).toLowerCase().includes(q)));
+  }
+
+  function renderTabel() {
+    const list = produkTersaring();
     $("tabel-produk").querySelector("tbody").innerHTML = list.length ? list.map((p) => {
       const s = p.sumber || {};
       return "<tr>" +
@@ -556,6 +561,90 @@
     finally { tombol.disabled = false; }
   };
   $("tambah-produk").onclick = () => bukaEditor(null);
+
+  // ------------------------------------------- Ekspor semua data produk
+  $("ekspor-produk").onclick = () => {
+    const list = produkTersaring();
+    if (!list.length) return status("Tidak ada produk untuk diekspor.", "error");
+    const a = config.pengaturan_harga || {};
+    const situs = new URL(".", location.href).href;
+    const absolut = (u) => !u ? "" : /^https?:\/\//i.test(u) ? u : new URL(u, situs).href;
+    const spekTeks = (o) => Object.entries(o || {}).map(([k, v]) => v ? k + ": " + v : k).join("\n");
+    const angkaRp = (n) => (typeof n === "number" && isFinite(n) ? Math.round(n) : "");
+    const kat = (p) => katalog.produk.find((x) => x.id === p.id) || {};
+
+    const kolom = [
+      ["ID", 12], ["Nama Produk", 50], ["Nama Produk (EN)", 40], ["Kategori", 20], ["Merek", 14], ["Kode / Part Number", 18],
+      ["Jenis Supplier", 13], ["Nama Toko Supplier", 24], ["URL Supplier", 40], ["Mata Uang", 10], ["Harga Supplier", 15],
+      ["Shipping per Unit", 15], ["Berat (gram)", 12], ["Bea Masuk (%)", 13], ["Margin (%)", 11], ["Ketersediaan", 14], ["Lama Indent (hari)", 15],
+      ["Harga Barang (Rp)", 17], ["Biaya Transaksi (Rp)", 17], ["Harga Beli (Rp)", 16], ["Bea Masuk (Rp)", 15], ["Harga Indo (Rp)", 16],
+      ["Profit (Rp)", 15], ["Harga Jual (Rp)", 16], ["PPN & PPh (Rp)", 15], ["Harga Akhir (Rp)", 16], ["Harga di Website (Rp)", 18], ["Harga Sebelumnya (Rp)", 18],
+      ["Deskripsi", 60], ["Deskripsi (EN)", 50], ["Spesifikasi", 45], ["Spesifikasi (EN)", 40],
+      ["Foto Utama", 45], ["Foto Lainnya", 45], ["Dokumen / Brosur", 50], ["Link Halaman Toko", 45], ["Link Halaman Google", 55],
+    ];
+    const rows = list.map((p) => {
+      const s = p.sumber || {}, r = hitungHarga(p) || {}, k = kat(p), lokal = s.jenis === "lokal";
+      return [
+        p.id, p.nama, p.nama_en || "", p.kategori, p.merek || "", p.mpn || "",
+        lokal ? "Lokal" : "Import", s.nama_toko || "", s.url || "", lokal ? "IDR" : s.mata_uang || "USD", s.harga_manual ?? "",
+        s.shipping ?? "", Math.round((p.berat_kg || 0) * 1000), lokal ? "" : p.bea_masuk_persen ?? r.beaPersen ?? "", r.margin ?? p.margin_persen ?? "",
+        { ready: "Ready stock", indent: "Indent / PO", habis: "Stok habis" }[ketersediaan(p)], ketersediaan(p) === "indent" ? hariIndent(p) : "",
+        angkaRp(r.barang), angkaRp(r.transaksi), angkaRp(r.beli), angkaRp(r.bea), angkaRp(r.indo),
+        angkaRp(r.profit), angkaRp(r.jual), angkaRp(r.pajak), r.final ?? "", k.harga_idr ?? "", k.harga_sebelumnya ?? "",
+        p.deskripsi || "", p.deskripsi_en || "", spekTeks(p.spesifikasi), spekTeks(p.spesifikasi_en),
+        absolut(p.gambar), (p.galeri || []).map(absolut).join("\n"),
+        (p.unduhan || []).filter((u) => u && u.url).map((u) => (u.judul ? u.judul + ": " : "") + absolut(u.url)).join("\n"),
+        situs + "#/produk/" + encodeURIComponent(p.id), k.halaman ? absolut(k.halaman) : "",
+      ];
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([kolom.map((c) => c[0])].concat(rows));
+    ws["!cols"] = kolom.map((c) => ({ wch: c[1] }));
+    ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: kolom.length - 1 } }) };
+    ws["!freeze"] = { xSplit: 2, ySplit: 1 };
+    XLSX.utils.book_append_sheet(wb, ws, "Produk");
+
+    // satu baris per spesifikasi — mudah difilter / dibandingkan antar produk
+    const spek = [["ID", "Nama Produk", "Parameter", "Nilai", "Parameter (EN)", "Nilai (EN)"]];
+    for (const p of list) {
+      const id = Object.entries(p.spesifikasi || {}), en = Object.entries(p.spesifikasi_en || {});
+      for (let i = 0; i < Math.max(id.length, en.length); i++)
+        spek.push([p.id, p.nama, (id[i] || [])[0] || "", (id[i] || [])[1] || "", (en[i] || [])[0] || "", (en[i] || [])[1] || ""]);
+    }
+    const wsS = XLSX.utils.aoa_to_sheet(spek); wsS["!cols"] = [{ wch: 12 }, { wch: 45 }, { wch: 28 }, { wch: 30 }, { wch: 28 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(wb, wsS, "Spesifikasi");
+
+    const file = [["ID", "Nama Produk", "Jenis", "Judul", "Link"]];
+    for (const p of list) {
+      [p.gambar].concat(p.galeri || []).filter(Boolean).forEach((g, i) => file.push([p.id, p.nama, "Foto", i ? "Foto " + (i + 1) : "Foto utama", absolut(g)]));
+      (p.unduhan || []).filter((u) => u && u.url).forEach((u) => file.push([p.id, p.nama, "Dokumen", u.judul || "", absolut(u.url)]));
+    }
+    const wsF = XLSX.utils.aoa_to_sheet(file); wsF["!cols"] = [{ wch: 12 }, { wch: 45 }, { wch: 10 }, { wch: 28 }, { wch: 70 }];
+    XLSX.utils.book_append_sheet(wb, wsF, "Foto & Dokumen");
+
+    const info = [
+      ["Ekspor Produk " + (config.nama_toko || "ComdataSheet")], [],
+      ["Tanggal ekspor", new Date().toLocaleString("id-ID")],
+      ["Jumlah produk", list.length],
+      ["Filter", [$("filter-kategori").value || "Semua kategori", $("filter-jenis").value || "semua supplier", $("cari-admin").value.trim()].filter(Boolean).join(" · ")],
+      ["Kurs 1 USD", kurs.IDR && kurs.USD ? Math.round(kurs.IDR / kurs.USD) : ""],
+      ["Harga diperbarui", katalog.diperbarui || ""], [],
+      ["Pengaturan harga yang dipakai"],
+      ["Shipping default import (USD)", a.shipping_default_usd ?? ""], ["Shipping default lokal (Rp)", a.shipping_default_lokal_idr ?? ""],
+      ["Buffer kurs (%)", a.buffer_kurs_persen ?? ""], ["Biaya transaksi luar negeri (%)", a.biaya_transaksi_persen ?? ""],
+      ["Bea masuk default (%)", a.pajak_impor_persen ?? ""], ["Margin default (%)", a.margin_persen ?? ""],
+      ["PPN & PPh (%)", a.ppn_pph_persen ?? ""], ["Ongkir impor per kg (Rp)", a.ongkir_impor_per_kg_idr ?? ""],
+      ["Biaya tetap (Rp)", a.biaya_tetap_idr ?? ""], ["Pembulatan (Rp)", a.pembulatan_idr ?? ""], [],
+      ["Harga Akhir = hitungan rumus dengan kurs di atas. Harga di Website = harga yang tampil saat ini (diperbarui otomatis tiap 4 jam)."],
+      ["Catatan: file ini hanya untuk arsip / laporan. Untuk mengubah harga, pakai menu Update Harga (Excel)."],
+    ];
+    const wsI = XLSX.utils.aoa_to_sheet(info); wsI["!cols"] = [{ wch: 34 }, { wch: 40 }];
+    XLSX.utils.book_append_sheet(wb, wsI, "Info");
+
+    XLSX.writeFile(wb, "Produk_ComdataSheet_" + new Date().toISOString().slice(0, 10) + ".xlsx");
+    status("Excel berisi " + list.length + " produk berhasil diunduh.");
+  };
 
   // ------------------------------------------------ Tab update harga Excel
   const HEADER = ["ID", "Nama Produk", "Jenis Supplier", "Mata Uang", "Harga Supplier Sekarang", "Harga Supplier Baru", "Shipping per Unit", "Bea Masuk Produk (%)", "Margin Produk (%)", "Stok (Ya/Indent/Tidak)", "Lama Indent (hari)", "Harga Jual Sekarang (Rp)"];
