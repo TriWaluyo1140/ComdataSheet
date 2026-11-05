@@ -74,7 +74,7 @@
     ],
     "berat_kg": 0.1,
     "stok": true,
-    "ketersediaan": "ready",
+    "ketersediaan": "indent",
     "sumber": {
       "jenis": "import",
       "nama_toko": "",
@@ -83,6 +83,7 @@
       "harga_manual": 330
     },
     "merek": "Microhard",
-    "mpn": "MHS185350"
+    "mpn": "MHS185350",
+    "lama_indent_hari": 14
   }
 ]
