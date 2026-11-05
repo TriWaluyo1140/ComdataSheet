@@ -216,6 +216,7 @@
     renderTabel();
     renderFormToko();
     renderFormKonten();
+    isiInvoice();
   }
 
   async function masukPanel() {
@@ -970,6 +971,271 @@
   };
 
   // ------------------------------------------------------------ Mulai
+  // ------------------------------------------------------------ Invoice
+  // Disimpan di localStorage perangkat ini saja: data pembeli tidak ikut ke repo publik.
+  const INV_KEY = "cds-invoice";
+  let invoice = null; // invoice yang sedang dibuka
+
+  const hariIni = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+  const tanggalId = (s) => s ? new Date(s + "T00:00:00").toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "";
+  const angkaInv = (v) => Math.max(0, Math.round(Number(String(v ?? "").replace(/[^\d]/g, "")) || 0));
+  function riwayatInvoice() { try { return JSON.parse(localStorage.getItem(INV_KEY)) || []; } catch (e) { return []; } }
+  function simpanRiwayat(list) { localStorage.setItem(INV_KEY, JSON.stringify(list)); }
+  const penjual = () => {
+    const tk = config.invoice || {};
+    return {
+      nama: tk.nama || config.nama_toko || "ComdataSheet",
+      alamat: tk.alamat ?? ((config.konten || {}).info_kontak || ""),
+      telepon: tk.telepon ?? (config.whatsapp ? "+" + config.whatsapp : ""),
+      email: tk.email || "", npwp: tk.npwp || "",
+      awalan: tk.awalan || "INV/CDS",
+      kaki: tk.kaki || "Invoice ini sah dan diproses oleh komputer.",
+    };
+  };
+
+  function nomorBaru() {
+    const d = new Date(), awal = penjual().awalan + "/" + d.getFullYear() + "/" + String(d.getMonth() + 1).padStart(2, "0") + "/";
+    const urut = riwayatInvoice().map((x) => x.nomor).filter((n) => n && n.startsWith(awal)).map((n) => parseInt(n.slice(awal.length), 10) || 0);
+    return awal + String(Math.max(0, ...urut) + 1).padStart(3, "0");
+  }
+
+  function invoiceKosong() {
+    return { id: "inv-" + Date.now(), nomor: nomorBaru(), status: "belum", tanggal: hariIni(), jatuh_tempo: "",
+      pembeli: "", pic: "", hp: "", email: "", npwp: "", alamat: "", item: [],
+      diskon: 0, ongkir: 0, asuransi: 0, dibayar: 0, lain_ket: "", lain: 0, termasuk_pajak: true,
+      metode: "Transfer Bank", catatan: config.info_pembayaran || "" };
+  }
+
+  function hitungInvoice(inv) {
+    const subtotal = inv.item.reduce((t, i) => t + i.jumlah * i.harga, 0);
+    const total = Math.max(0, subtotal - inv.diskon + inv.ongkir + inv.asuransi + inv.lain);
+    return { subtotal, total, sisa: Math.max(0, total - inv.dibayar), berat: inv.item.reduce((t, i) => t + i.jumlah * (i.berat_g || 0), 0) };
+  }
+
+  // angka → kata (untuk baris "Terbilang")
+  function terbilang(n) {
+    const s = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+    n = Math.floor(n);
+    if (n < 12) return s[n];
+    if (n < 20) return terbilang(n - 10) + " belas";
+    if (n < 100) return terbilang(Math.floor(n / 10)) + " puluh" + (n % 10 ? " " + terbilang(n % 10) : "");
+    if (n < 200) return "seratus" + (n > 100 ? " " + terbilang(n - 100) : "");
+    if (n < 1000) return terbilang(Math.floor(n / 100)) + " ratus" + (n % 100 ? " " + terbilang(n % 100) : "");
+    if (n < 2000) return "seribu" + (n > 1000 ? " " + terbilang(n - 1000) : "");
+    for (const [b, kata] of [[1e12, "triliun"], [1e9, "miliar"], [1e6, "juta"], [1e3, "ribu"]])
+      if (n >= b) return terbilang(Math.floor(n / b)) + " " + kata + (n % b ? " " + terbilang(n % b) : "");
+    return "";
+  }
+  const terbilangRp = (n) => { const t = n ? terbilang(n) + " rupiah" : "nol rupiah"; return t.charAt(0).toUpperCase() + t.slice(1); };
+
+  function isiInvoice() {
+    $("inv-produk").innerHTML = produk.length
+      ? produk.map((p) => '<option value="' + esc(p.id) + '">' + esc(p.id + " — " + p.nama + " — " + rupiah(hargaJual(p.id) ?? (hitungHarga(p) || {}).final)) + "</option>").join("")
+      : '<option value="">Belum ada produk</option>';
+    const fp = $("form-penjual"), pj = penjual();
+    for (const k of ["nama", "alamat", "telepon", "email", "npwp", "awalan", "kaki"]) fp.elements[k].value = pj[k];
+    isiRiwayat();
+    if (!invoice) bukaInvoice(invoiceKosong());
+  }
+
+  function isiRiwayat() {
+    const list = riwayatInvoice().sort((a, b) => (b.tanggal + b.nomor).localeCompare(a.tanggal + a.nomor));
+    $("inv-riwayat").innerHTML = '<option value="">— Invoice baru —</option>' + list.map((x) =>
+      '<option value="' + esc(x.id) + '"' + (invoice && invoice.id === x.id ? " selected" : "") + ">" +
+      esc(x.nomor + " · " + (x.pembeli || "tanpa nama") + " · " + rupiah(hitungInvoice(x).total) + (x.status === "lunas" ? " · LUNAS" : "")) + "</option>").join("");
+  }
+
+  function bukaInvoice(inv) {
+    invoice = inv;
+    const f = $("form-invoice");
+    for (const k of ["nomor", "status", "tanggal", "jatuh_tempo", "pembeli", "pic", "hp", "email", "npwp", "alamat", "lain_ket", "metode", "catatan"]) f.elements[k].value = inv[k] ?? "";
+    for (const k of ["diskon", "ongkir", "asuransi", "dibayar", "lain"]) f.elements[k].value = inv[k] ? inv[k].toLocaleString("id-ID") : "";
+    f.elements.termasuk_pajak.checked = inv.termasuk_pajak !== false;
+    isiRiwayat();
+    renderItemInvoice();
+    renderInvoice();
+  }
+
+  function bacaFormInvoice() {
+    const f = $("form-invoice");
+    for (const k of ["nomor", "status", "tanggal", "jatuh_tempo", "pembeli", "pic", "hp", "email", "npwp", "alamat", "lain_ket", "metode", "catatan"]) invoice[k] = f.elements[k].value.trim();
+    for (const k of ["diskon", "ongkir", "asuransi", "dibayar", "lain"]) invoice[k] = angkaInv(f.elements[k].value);
+    invoice.termasuk_pajak = f.elements.termasuk_pajak.checked;
+    document.querySelectorAll("#inv-item [data-baris]").forEach((tr) => {
+      const it = invoice.item[+tr.dataset.baris];
+      it.nama = tr.querySelector("[data-nama]").value.trim() || it.nama;
+      it.jumlah = Math.max(1, angkaInv(tr.querySelector("[data-jumlah]").value));
+      it.harga = angkaInv(tr.querySelector("[data-harga]").value);
+    });
+  }
+
+  function renderItemInvoice() {
+    $("inv-item").innerHTML = invoice.item.length ? '<table class="tabel inv-tabel-item"><thead><tr><th>Produk</th><th>Jumlah</th><th>Harga satuan (Rp)</th><th class="angka">Total</th><th></th></tr></thead><tbody>' +
+      invoice.item.map((it, i) => '<tr data-baris="' + i + '">' +
+        '<td><input data-nama value="' + esc(it.nama) + '"><small class="muted">' + esc(it.id) + (it.berat_g ? " · " + it.berat_g + " gr" : "") + "</small></td>" +
+        '<td><input data-jumlah type="number" min="1" value="' + it.jumlah + '"></td>' +
+        '<td><input data-harga inputmode="numeric" value="' + it.harga.toLocaleString("id-ID") + '"></td>' +
+        '<td class="angka">' + rupiah(it.jumlah * it.harga) + "</td>" +
+        '<td><button type="button" class="hapus-item" data-hapus-item="' + i + '" aria-label="Hapus">&times;</button></td></tr>').join("") +
+      "</tbody></table>" : '<p class="muted">Belum ada produk. Pilih produk di atas lalu klik <b>+ Tambah</b>.</p>';
+  }
+
+  function tambahItem(id, jumlah) {
+    const p = produk.find((x) => x.id === id);
+    if (!p) return false;
+    const ada = invoice.item.find((x) => x.id === id);
+    if (ada) ada.jumlah += jumlah;
+    else invoice.item.push({ id: p.id, nama: p.nama, mpn: p.mpn || "", berat_g: Math.round((p.berat_kg || 0) * 1000), jumlah,
+      harga: hargaJual(p.id) ?? (hitungHarga(p) || {}).final ?? 0 });
+    return true;
+  }
+
+  function renderInvoice() {
+    const inv = invoice, pj = penjual(), h = hitungInvoice(inv);
+    const baris = (label, nilai, kelas) => '<tr class="' + (kelas || "") + '"><td>' + label + "</td><td>" + nilai + "</td></tr>";
+    const info = (label, nilai) => nilai ? "<tr><td>" + label + "</td><td>:</td><td>" + nilai + "</td></tr>" : "";
+    $("invoice-cetak").innerHTML =
+      (inv.status === "lunas" ? '<div class="inv-cap">LUNAS</div>' : "") +
+      '<header class="inv-kepala"><img src="assets/logo.svg?v=5" alt="' + esc(pj.nama) + '"><div><div class="inv-judul">INVOICE</div><div class="inv-nomor">' + esc(inv.nomor) + "</div></div></header>" +
+      '<div class="inv-pihak">' +
+        "<div><h4>DITERBITKAN ATAS NAMA</h4><table>" + info("Penjual", "<b>" + esc(pj.nama) + "</b>") + info("Alamat", esc(pj.alamat)) +
+          info("Telepon", esc(pj.telepon)) + info("Email", esc(pj.email)) + info("NPWP", esc(pj.npwp)) + "</table></div>" +
+        "<div><h4>UNTUK</h4><table>" + info("Pembeli", "<b>" + esc(inv.pembeli || "—") + "</b>") + info("Up.", esc(inv.pic)) +
+          info("Tanggal Pembelian", "<b>" + esc(tanggalId(inv.tanggal)) + "</b>") + info("Jatuh Tempo", esc(tanggalId(inv.jatuh_tempo))) +
+          info("No. HP", esc(inv.hp)) + info("Email", esc(inv.email)) + info("NPWP", esc(inv.npwp)) +
+          info("Alamat Pengiriman", esc(inv.alamat).replace(/\n/g, "<br>") || "&nbsp;") + "</table></div>" +
+      "</div>" +
+      '<table class="inv-produk"><thead><tr><th>INFO PRODUK</th><th>JUMLAH</th><th>HARGA SATUAN</th><th>TOTAL HARGA</th></tr></thead><tbody>' +
+        (inv.item.length ? inv.item.map((it) => "<tr><td><div class=\"inv-nama\">" + esc(it.nama) + '</div><div class="inv-sub">' + esc(it.id) +
+          (it.mpn ? " · Kode: " + esc(it.mpn) : "") + (it.berat_g ? " · Berat: " + it.berat_g.toLocaleString("id-ID") + " gr" : "") + "</div></td>" +
+          "<td>" + it.jumlah + "</td><td>" + rupiah(it.harga) + "</td><td>" + rupiah(it.jumlah * it.harga) + "</td></tr>").join("")
+          : '<tr><td colspan="4" class="inv-sub">Belum ada produk</td></tr>') +
+      "</tbody></table>" +
+      '<div class="inv-bawah"><div></div><table class="inv-ringkas">' +
+        baris("SUBTOTAL HARGA BARANG", "<b>" + rupiah(h.subtotal) + "</b>", "tebal") +
+        (inv.diskon ? baris("Diskon", "-" + rupiah(inv.diskon)) : "") +
+        (inv.ongkir ? baris("Ongkos Kirim" + (h.berat ? " (" + (h.berat / 1000).toLocaleString("id-ID") + " kg)" : ""), rupiah(inv.ongkir)) : "") +
+        (inv.asuransi ? baris("Asuransi Pengiriman", rupiah(inv.asuransi)) : "") +
+        (inv.lain ? baris(esc(inv.lain_ket || "Biaya lain"), rupiah(inv.lain)) : "") +
+        baris("TOTAL TAGIHAN", "<b>" + rupiah(h.total) + "</b>", "tebal garis") +
+        (inv.dibayar ? baris("Sudah Dibayar", "-" + rupiah(inv.dibayar)) + baris("SISA TAGIHAN", "<b>" + rupiah(h.sisa) + "</b>", "tebal garis") : "") +
+        '<tr><td colspan="2" class="inv-terbilang">Terbilang: <i>' + esc(terbilangRp(inv.dibayar ? h.sisa : h.total)) + "</i>" +
+          (inv.termasuk_pajak ? "<br>*Harga sudah termasuk PPN &amp; PPh" : "") + "</td></tr>" +
+      "</table></div>" +
+      '<div class="inv-bayar"><div><div class="inv-sub">Metode Pembayaran:</div><b>' + esc(inv.metode || "-") + "</b></div>" +
+        (inv.catatan ? '<div class="inv-catatan">' + esc(inv.catatan).replace(/\n/g, "<br>") + "</div>" : "") + "</div>" +
+      '<footer class="inv-kaki">' + esc(pj.kaki) + (pj.telepon ? "<br>Hubungi <b>" + esc(pj.nama) + "</b> di " + esc(pj.telepon) + " apabila membutuhkan bantuan." : "") + "</footer>";
+  }
+
+  // Tempel pesan WhatsApp dari tombol "Pesan via WhatsApp" di toko → isi pembeli & produk
+  function isiDariWhatsApp(teks) {
+    let n = 0;
+    const re = /\(([^()\n]+)\)[^\n]*\n\s*(\d+)\s*[×x]/g;
+    let m;
+    while ((m = re.exec(teks))) if (tambahItem(m[1].trim(), +m[2])) n++;
+    const ambil = (label) => { const r = teks.match(new RegExp("^\\s*(?:" + label + ")\\s*:\\s*(.+)$", "mi")); return r ? r[1].trim() : ""; };
+    const f = $("form-invoice");
+    const nama = ambil("Nama|Name"), hp = ambil("HP|Phone"), alamat = ambil("Alamat|Address"), catatan = ambil("Catatan|Notes");
+    if (nama) f.elements.pembeli.value = nama;
+    if (hp) f.elements.hp.value = hp;
+    if (alamat) f.elements.alamat.value = alamat;
+    if (catatan && !f.elements.catatan.value.includes(catatan)) f.elements.catatan.value = ("Catatan pembeli: " + catatan + "\n" + f.elements.catatan.value).trim();
+    return n;
+  }
+
+  $("form-invoice").addEventListener("input", (e) => {
+    if (e.target.id === "inv-pesan-wa" || e.target.id === "inv-jumlah") return;
+    bacaFormInvoice();
+    if (e.target.matches("[data-jumlah], [data-harga]")) {
+      const tr = e.target.closest("tr"), it = invoice.item[+tr.dataset.baris];
+      tr.querySelector(".angka").textContent = rupiah(it.jumlah * it.harga);
+    }
+    renderInvoice();
+  });
+  $("form-invoice").addEventListener("click", (e) => {
+    const hapus = e.target.closest("[data-hapus-item]");
+    if (!hapus) return;
+    bacaFormInvoice();
+    invoice.item.splice(+hapus.dataset.hapusItem, 1);
+    renderItemInvoice(); renderInvoice();
+  });
+  $("inv-tambah").onclick = () => {
+    bacaFormInvoice();
+    if (!tambahItem($("inv-produk").value, Math.max(1, angkaInv($("inv-jumlah").value)))) return;
+    $("inv-jumlah").value = 1;
+    renderItemInvoice(); renderInvoice();
+  };
+  $("inv-isi-wa").onclick = () => {
+    bacaFormInvoice();
+    const n = isiDariWhatsApp($("inv-pesan-wa").value);
+    bacaFormInvoice(); renderItemInvoice(); renderInvoice();
+    status(n ? n + " produk dan data pembeli diisi dari pesan WhatsApp. Periksa kembali sebelum disimpan."
+      : "Tidak ada produk yang dikenali di pesan itu. Pastikan pesan berisi kode produk dalam kurung, misalnya (CDS-101).", n ? "" : "error");
+  };
+  $("form-invoice").onsubmit = (e) => {
+    e.preventDefault();
+    bacaFormInvoice();
+    const list = riwayatInvoice().filter((x) => x.id !== invoice.id);
+    if (list.some((x) => x.nomor === invoice.nomor)) return status("No. invoice " + esc(invoice.nomor) + " sudah dipakai invoice lain.", "error");
+    invoice.disimpan = new Date().toISOString();
+    list.push(JSON.parse(JSON.stringify(invoice)));
+    simpanRiwayat(list);
+    isiRiwayat();
+    status("Invoice " + esc(invoice.nomor) + " tersimpan di perangkat ini.");
+  };
+  $("inv-riwayat").onchange = (e) => {
+    const x = riwayatInvoice().find((i) => i.id === e.target.value);
+    bukaInvoice(x || invoiceKosong());
+  };
+  $("inv-baru").onclick = () => { bukaInvoice(invoiceKosong()); status(""); };
+  $("inv-duplikat").onclick = () => {
+    bacaFormInvoice();
+    bukaInvoice({ ...JSON.parse(JSON.stringify(invoice)), id: "inv-" + Date.now(), nomor: nomorBaru(), status: "belum", tanggal: hariIni(), dibayar: 0 });
+    status("Salinan dibuat dengan nomor baru. Klik Simpan untuk menyimpannya.");
+  };
+  $("inv-hapus").onclick = () => {
+    if (!riwayatInvoice().some((x) => x.id === invoice.id)) return bukaInvoice(invoiceKosong());
+    if (!confirm("Hapus invoice " + invoice.nomor + " dari perangkat ini?")) return;
+    simpanRiwayat(riwayatInvoice().filter((x) => x.id !== invoice.id));
+    bukaInvoice(invoiceKosong());
+    status("Invoice dihapus.");
+  };
+  $("inv-cetak").onclick = () => {
+    bacaFormInvoice(); renderInvoice();
+    const judul = document.title;
+    document.title = invoice.nomor.replace(/[\\/:*?"<>|]+/g, "-") + (invoice.pembeli ? " - " + invoice.pembeli : ""); // nama file PDF
+    document.body.classList.add("cetak-invoice");
+    window.print();
+    document.body.classList.remove("cetak-invoice");
+    document.title = judul;
+  };
+  $("inv-wa").onclick = () => {
+    bacaFormInvoice();
+    const h = hitungInvoice(invoice);
+    let hp = invoice.hp.replace(/[^\d]/g, "");
+    if (hp.startsWith("0")) hp = "62" + hp.slice(1);
+    const teks = "Halo " + (invoice.pic || invoice.pembeli || "") + ",\n\nBerikut invoice *" + invoice.nomor + "* dari " + penjual().nama + ":\n\n" +
+      invoice.item.map((it, i) => (i + 1) + ". " + it.nama + "\n   " + it.jumlah + " × " + rupiah(it.harga) + " = " + rupiah(it.jumlah * it.harga)).join("\n") +
+      "\n\nSubtotal: " + rupiah(h.subtotal) +
+      (invoice.diskon ? "\nDiskon: -" + rupiah(invoice.diskon) : "") + (invoice.ongkir ? "\nOngkos kirim: " + rupiah(invoice.ongkir) : "") +
+      (invoice.asuransi ? "\nAsuransi: " + rupiah(invoice.asuransi) : "") + (invoice.lain ? "\n" + (invoice.lain_ket || "Biaya lain") + ": " + rupiah(invoice.lain) : "") +
+      "\n*Total tagihan: " + rupiah(h.total) + "*" + (invoice.dibayar ? "\nSudah dibayar: " + rupiah(invoice.dibayar) + "\n*Sisa tagihan: " + rupiah(h.sisa) + "*" : "") +
+      (invoice.status === "lunas" ? "\n\nStatus: LUNAS. Terima kasih." : (invoice.catatan ? "\n\n" + invoice.catatan : "")) +
+      "\n\nInvoice PDF terlampir.";
+    window.open("https://wa.me/" + hp + "?text=" + encodeURIComponent(teks), "_blank");
+  };
+  $("form-penjual").onsubmit = async (e) => {
+    e.preventDefault();
+    const f = e.currentTarget, data = {};
+    for (const k of ["nama", "alamat", "telepon", "email", "npwp", "awalan", "kaki"]) data[k] = f.elements[k].value.trim();
+    const cadangan = JSON.stringify(config);
+    config.invoice = data;
+    renderInvoice();
+    status("Menyimpan data penjual…", "proses");
+    try { await simpanConfigKeGitHub("Admin: ubah data penjual di invoice"); status("Data penjual tersimpan."); }
+    catch (err) { config = JSON.parse(cadangan); status("Gagal menyimpan: " + esc(err.message), "error"); }
+  };
+
   async function mulai() {
     // repo diambil dari pengaturan toko; cadangan: dari alamat <user>.github.io/<repo>/
     try {

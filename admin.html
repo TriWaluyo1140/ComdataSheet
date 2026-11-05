@@ -7,7 +7,7 @@
   <title>Admin — ComdataSheet</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
   <link rel="stylesheet" href="assets/style.css?v=20">
-  <link rel="stylesheet" href="assets/admin.css?v=6">
+  <link rel="stylesheet" href="assets/admin.css?v=7">
 </head>
 <body class="admin">
   <header class="topbar">
@@ -69,6 +69,7 @@
     <nav class="tab" role="tablist">
       <button data-tab="produk" class="aktif">Produk</button>
       <button data-tab="harga">Update Harga (Excel)</button>
+      <button data-tab="invoice">Invoice</button>
       <button data-tab="konten">Konten Halaman</button>
       <button data-tab="toko">Pengaturan Toko</button>
     </nav>
@@ -111,6 +112,90 @@
       </div>
     </section>
 
+    <!-- Tab Invoice -->
+    <section data-isi="invoice" hidden>
+      <div class="inv-layout">
+        <div class="inv-kiri">
+          <div class="kartu inv-riwayat">
+            <label>Invoice tersimpan di perangkat ini<select id="inv-riwayat"><option value="">— Invoice baru —</option></select></label>
+            <div class="inv-tombol-kecil">
+              <button type="button" class="btn btn-garis kecil" id="inv-baru">+ Invoice baru</button>
+              <button type="button" class="btn btn-garis kecil" id="inv-duplikat">Duplikat</button>
+              <button type="button" class="btn bahaya kecil" id="inv-hapus">Hapus</button>
+            </div>
+          </div>
+
+          <form id="form-invoice" class="kartu form-grid" autocomplete="off">
+            <details class="penuh-lebar inv-tempel">
+              <summary>Isi otomatis dari pesan WhatsApp pesanan</summary>
+              <textarea id="inv-pesan-wa" rows="6" placeholder="Tempel pesan pesanan dari WhatsApp di sini (yang dikirim pelanggan lewat tombol Pesan via WhatsApp)…"></textarea>
+              <button type="button" class="btn kecil" id="inv-isi-wa">Isi otomatis</button>
+            </details>
+
+            <h3>Invoice</h3>
+            <label>No. invoice<input name="nomor" required></label>
+            <label>Status<select name="status"><option value="belum">Belum lunas</option><option value="lunas">Lunas</option></select></label>
+            <label>Tanggal pembelian<input name="tanggal" type="date" required></label>
+            <label>Jatuh tempo <small>opsional</small><input name="jatuh_tempo" type="date"></label>
+
+            <h3>Pembeli</h3>
+            <label class="penuh-lebar">Nama pembeli / perusahaan<input name="pembeli" required placeholder="PT Contoh Teknik"></label>
+            <label>Up. / PIC <small>opsional</small><input name="pic"></label>
+            <label>No. HP / WhatsApp<input name="hp" inputmode="tel"></label>
+            <label>Email <small>opsional</small><input name="email" type="email"></label>
+            <label>NPWP <small>opsional</small><input name="npwp"></label>
+            <label class="penuh-lebar">Alamat pengiriman<textarea name="alamat" rows="2"></textarea></label>
+
+            <h3>Produk</h3>
+            <div class="penuh-lebar inv-pilih">
+              <select id="inv-produk"></select>
+              <input id="inv-jumlah" type="number" min="1" value="1" aria-label="Jumlah">
+              <button type="button" class="btn kecil" id="inv-tambah">+ Tambah</button>
+            </div>
+            <div class="penuh-lebar" id="inv-item"></div>
+
+            <h3>Biaya lain</h3>
+            <label>Diskon (Rp)<input name="diskon" inputmode="numeric" placeholder="0"></label>
+            <label>Ongkos kirim (Rp)<input name="ongkir" inputmode="numeric" placeholder="0"></label>
+            <label>Asuransi pengiriman (Rp)<input name="asuransi" inputmode="numeric" placeholder="0"></label>
+            <label>Uang muka / sudah dibayar (Rp)<input name="dibayar" inputmode="numeric" placeholder="0"></label>
+            <label>Biaya lain — keterangan<input name="lain_ket" placeholder="mis. Biaya packing kayu"></label>
+            <label>Biaya lain (Rp)<input name="lain" inputmode="numeric" placeholder="0"></label>
+            <label class="penuh-lebar cek"><input type="checkbox" name="termasuk_pajak" checked> Tulis "Harga sudah termasuk PPN &amp; PPh"</label>
+
+            <h3>Pembayaran</h3>
+            <label class="penuh-lebar">Metode pembayaran<input name="metode" placeholder="Transfer Bank"></label>
+            <label class="penuh-lebar">Info pembayaran / catatan<textarea name="catatan" rows="3"></textarea></label>
+
+            <div class="penuh-lebar inv-aksi">
+              <button type="submit" class="btn">Simpan</button>
+              <button type="button" class="btn" id="inv-cetak">🖨 Cetak / Simpan PDF</button>
+              <button type="button" class="btn btn-wa-kecil" id="inv-wa">Kirim ringkasan via WhatsApp</button>
+            </div>
+            <p class="penuh-lebar muted">Invoice disimpan di browser perangkat ini saja (tidak diunggah ke GitHub), agar data pembeli tidak terlihat publik.</p>
+          </form>
+
+          <details class="kartu inv-penjual">
+            <summary><b>Data penjual di invoice</b> <span class="muted">— nama, alamat, telepon, NPWP</span></summary>
+            <form id="form-penjual" class="form-grid">
+              <label class="penuh-lebar">Nama penjual / perusahaan<input name="nama"></label>
+              <label class="penuh-lebar">Alamat<textarea name="alamat" rows="2"></textarea></label>
+              <label>Telepon / WhatsApp<input name="telepon"></label>
+              <label>Email<input name="email"></label>
+              <label>NPWP <small>opsional</small><input name="npwp"></label>
+              <label>Awalan no. invoice<input name="awalan" placeholder="INV/CDS"></label>
+              <label class="penuh-lebar">Teks kaki invoice<input name="kaki"></label>
+              <div class="penuh-lebar"><button type="submit" class="btn">Simpan data penjual</button></div>
+            </form>
+          </details>
+        </div>
+
+        <div class="inv-kanan">
+          <div class="inv-kertas" id="invoice-cetak"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Tab Konten Halaman -->
     <section data-isi="konten" hidden>
       <form id="form-konten" class="kartu form-grid"></form>
@@ -133,6 +218,6 @@
   </aside>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="assets/admin.js?v=12"></script>
+  <script src="assets/admin.js?v=13"></script>
 </body>
 </html>
