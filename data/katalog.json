@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-06T23:59:54+00:00",
+  "diperbarui": "2026-11-07T05:49:03+00:00",
   "kurs": {
-    "usd_idr": 18079.99,
-    "diperbarui": "2026-11-06T23:59:49+00:00"
+    "usd_idr": 18098.98,
+    "diperbarui": "2026-11-07T05:48:59+00:00"
   },
   "produk": [
     {
@@ -108,8 +108,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 10646000,
-      "harga_sebelumnya": 10677000,
+      "harga_idr": 10658000,
+      "harga_sebelumnya": 10646000,
       "halaman": "produk/cds-101-microhard-p900-enc-miniature-mesh-1w-900mhz.html"
     },
     {
@@ -150,8 +150,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 12259000,
-      "harga_sebelumnya": 12295000,
+      "harga_idr": 12272000,
+      "harga_sebelumnya": 12259000,
       "halaman": "produk/cds-102-microhard-p2400-enclosed-wireless-modem-1w.html"
     },
     {
@@ -192,8 +192,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 23873000,
-      "harga_sebelumnya": 23942000,
+      "harga_idr": 23898000,
+      "harga_sebelumnya": 23873000,
       "halaman": "produk/cds-103-microhard-p400-345kbps-400-900mhz.html"
     },
     {
@@ -223,8 +223,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 19034000,
-      "harga_sebelumnya": 19089000,
+      "harga_idr": 19054000,
+      "harga_sebelumnya": 19034000,
       "halaman": "produk/cds-104-bladerf-2-0-micro-xa4.html"
     },
     {
@@ -254,8 +254,8 @@
       "lama_indent_hari": null,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 23228000,
-      "harga_sebelumnya": 23295000,
+      "harga_idr": 23252000,
+      "harga_sebelumnya": 23228000,
       "halaman": "produk/cds-105-bladerf-2-0-micro-xa5.html"
     },
     {
@@ -285,8 +285,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 29357000,
-      "harga_sebelumnya": 29442000,
+      "harga_idr": 29388000,
+      "harga_sebelumnya": 29357000,
       "halaman": "produk/cds-106-bladerf-2-0-micro-xa9.html"
     },
     {
@@ -313,8 +313,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 1614000,
-      "harga_sebelumnya": 1618000,
+      "harga_idr": 1615000,
+      "harga_sebelumnya": 1614000,
       "halaman": "produk/cds-107-bladerf-2-0-micro-case.html"
     },
     {
@@ -334,8 +334,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 1614000,
-      "harga_sebelumnya": 1618000,
+      "harga_idr": 1615000,
+      "harga_sebelumnya": 1614000,
       "halaman": "produk/cds-108-bt-100-bias-tee-power-amplifier.html"
     },
     {
@@ -355,8 +355,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 1614000,
-      "harga_sebelumnya": 1618000,
+      "harga_idr": 1615000,
+      "harga_sebelumnya": 1614000,
       "halaman": "produk/cds-109-bt-200-bias-tee-low-noise-amplifier.html"
     },
     {
@@ -384,8 +384,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 1452000,
-      "harga_sebelumnya": 1456000,
+      "harga_idr": 1454000,
+      "harga_sebelumnya": 1452000,
       "halaman": "produk/cds-110-tri-band-antenna.html"
     }
   ]
