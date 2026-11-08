@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-07T23:36:53+00:00",
+  "diperbarui": "2026-11-08T05:11:56+00:00",
   "kurs": {
-    "usd_idr": 18098.98,
-    "diperbarui": "2026-11-07T23:36:48+00:00"
+    "usd_idr": 18097.9,
+    "diperbarui": "2026-11-08T05:11:52+00:00"
   },
   "produk": [
     {
@@ -108,8 +108,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 10658000,
-      "harga_sebelumnya": 10646000,
+      "harga_idr": 10657000,
+      "harga_sebelumnya": 10658000,
       "halaman": "produk/cds-101-microhard-p900-enc-miniature-mesh-1w-900mhz.html"
     },
     {
@@ -192,8 +192,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 23898000,
-      "harga_sebelumnya": 23873000,
+      "harga_idr": 23897000,
+      "harga_sebelumnya": 23898000,
       "halaman": "produk/cds-103-microhard-p400-345kbps-400-900mhz.html"
     },
     {
@@ -223,8 +223,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 19054000,
-      "harga_sebelumnya": 19034000,
+      "harga_idr": 19053000,
+      "harga_sebelumnya": 19054000,
       "halaman": "produk/cds-104-bladerf-2-0-micro-xa4.html"
     },
     {
@@ -254,8 +254,8 @@
       "lama_indent_hari": null,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 23252000,
-      "harga_sebelumnya": 23228000,
+      "harga_idr": 23251000,
+      "harga_sebelumnya": 23252000,
       "halaman": "produk/cds-105-bladerf-2-0-micro-xa5.html"
     },
     {
@@ -285,8 +285,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 29388000,
-      "harga_sebelumnya": 29357000,
+      "harga_idr": 29386000,
+      "harga_sebelumnya": 29388000,
       "halaman": "produk/cds-106-bladerf-2-0-micro-xa9.html"
     },
     {
