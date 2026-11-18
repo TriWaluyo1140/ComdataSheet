@@ -67,10 +67,10 @@
       }
     ]
   },
-  "diperbarui": "2026-11-17T23:24:05+00:00",
+  "diperbarui": "2026-11-18T06:35:19+00:00",
   "kurs": {
-    "usd_idr": 18273.21,
-    "diperbarui": "2026-11-17T23:23:59+00:00"
+    "usd_idr": 18278.2,
+    "diperbarui": "2026-11-18T06:35:14+00:00"
   },
   "produk": [
     {
@@ -108,8 +108,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 10760000,
-      "harga_sebelumnya": 10730000,
+      "harga_idr": 10763000,
+      "harga_sebelumnya": 10760000,
       "halaman": "produk/cds-101-microhard-p900-enc-miniature-mesh-1w-900mhz.html"
     },
     {
@@ -150,8 +150,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 12390000,
-      "harga_sebelumnya": 12356000,
+      "harga_idr": 12394000,
+      "harga_sebelumnya": 12390000,
       "halaman": "produk/cds-102-microhard-p2400-enclosed-wireless-modem-1w.html"
     },
     {
@@ -192,8 +192,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 24128000,
-      "harga_sebelumnya": 24060000,
+      "harga_idr": 24135000,
+      "harga_sebelumnya": 24128000,
       "halaman": "produk/cds-103-microhard-p400-345kbps-400-900mhz.html"
     },
     {
@@ -223,8 +223,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 19237000,
-      "harga_sebelumnya": 19183000,
+      "harga_idr": 19243000,
+      "harga_sebelumnya": 19237000,
       "halaman": "produk/cds-104-bladerf-2-0-micro-xa4.html"
     },
     {
@@ -254,8 +254,8 @@
       "lama_indent_hari": null,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 23476000,
-      "harga_sebelumnya": 23410000,
+      "harga_idr": 23482000,
+      "harga_sebelumnya": 23476000,
       "halaman": "produk/cds-105-bladerf-2-0-micro-xa5.html"
     },
     {
@@ -285,8 +285,8 @@
       "lama_indent_hari": 14,
       "jenis_supplier": "import",
       "mata_uang_sumber": "USD",
-      "harga_idr": 29671000,
-      "harga_sebelumnya": 29588000,
+      "harga_idr": 29679000,
+      "harga_sebelumnya": 29671000,
       "halaman": "produk/cds-106-bladerf-2-0-micro-xa9.html"
     },
     {
